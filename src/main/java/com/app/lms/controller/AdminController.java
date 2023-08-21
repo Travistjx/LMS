@@ -33,6 +33,7 @@ public class AdminController {
     public String listRegisteredUsers(){
         return "adminportal";
     }
+
     @GetMapping("/adminportal/addbooks")
     public String showAddBooksForm(Model model){
         BookDto book = new BookDto();
