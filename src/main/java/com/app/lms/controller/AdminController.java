@@ -1,10 +1,8 @@
 package com.app.lms.controller;
 
-import com.app.lms.entity.Book;
 import com.app.lms.entity.User;
 import com.app.lms.service.AdminService;
 import com.app.lms.service.UserService;
-import com.app.lms.web.AuthorDto;
 import com.app.lms.web.BookDto;
 import com.app.lms.web.UserDto;
 import org.springframework.stereotype.Controller;
