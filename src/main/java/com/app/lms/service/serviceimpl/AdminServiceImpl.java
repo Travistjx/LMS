@@ -2,7 +2,6 @@ package com.app.lms.service.serviceimpl;
 
 import com.app.lms.entity.Author;
 import com.app.lms.entity.Book;
-import com.app.lms.entity.User;
 import com.app.lms.repository.AuthorRepository;
 import com.app.lms.repository.BookRepository;
 import com.app.lms.service.AdminService;
@@ -14,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;

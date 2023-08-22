@@ -1,8 +1,8 @@
 package com.app.lms.controller;
 
-import com.app.lms.entity.User;
-import com.app.lms.service.UserService;
-import com.app.lms.web.UserDto;
+import com.app.lms.entity.Member;
+import com.app.lms.service.MemberService;
+import com.app.lms.web.MemberDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
@@ -15,15 +15,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.IOException;
-import java.util.List;
 
 @Controller
 public class AuthController {
 
-    private final UserService userService;
+    private final MemberService memberService;
 
-    public AuthController(UserService userService) {
-        this.userService = userService;
+    public AuthController(MemberService memberService) {
+        this.memberService = memberService;
     }
 
     @GetMapping("/")
@@ -39,7 +38,7 @@ public class AuthController {
         if(role.contains("ROLE_ADMIN")){
             response.sendRedirect(response.encodeRedirectURL(request.getContextPath() + "/adminportal"));
         }
-        else if(role.contains("ROLE_USER")) {
+        else if(role.contains("ROLE_MEMBER")) {
             response.sendRedirect(response.encodeRedirectURL(request.getContextPath() + "/start"));
         }
     }
@@ -55,19 +54,19 @@ public class AuthController {
     }
 
     // handler method to handle user registration request
-    @GetMapping("register")
+    @GetMapping("/register")
     public String showRegistrationForm(Model model){
-        UserDto user = new UserDto();
-        model.addAttribute("user", user);
+        MemberDto member = new MemberDto();
+        model.addAttribute("member", member);
         return "register";
     }
 
     // handler method to handle register user form submit request
     @PostMapping("/register/save")
-    public String registration( @ModelAttribute("user") UserDto user,
+    public String registration( @ModelAttribute("user") MemberDto user,
                                BindingResult result,
                                Model model){
-        User existing = userService.findByEmail(user.getEmail());
+        Member existing = memberService.findByEmail(user.getEmail());
         if (existing != null) {
             result.rejectValue("email", null, "There is already an account registered with that email");
         }
@@ -75,7 +74,7 @@ public class AuthController {
             model.addAttribute("user", user);
             return "register";
         }
-        userService.saveUser(user);
+        memberService.saveUser(user);
         return "redirect:/register?success";
     }
 
