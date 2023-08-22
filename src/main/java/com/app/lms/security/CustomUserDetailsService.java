@@ -1,8 +1,8 @@
 package com.app.lms.security;
 
+import com.app.lms.entity.Member;
 import com.app.lms.entity.Role;
-import com.app.lms.entity.User;
-import com.app.lms.repository.UserRepository;
+import com.app.lms.repository.MemberRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -17,20 +17,20 @@ import java.util.stream.Collectors;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private UserRepository userRepository;
+    private MemberRepository memberRepository;
 
-    public CustomUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public CustomUserDetailsService(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email);
+        Member member = memberRepository.findByEmail(email);
 
-        if (user != null) {
-            return new org.springframework.security.core.userdetails.User(user.getEmail(),
-                    user.getPassword(),
-                    mapRolesToAuthorities(user.getRoles()));
+        if (member != null) {
+            return new org.springframework.security.core.userdetails.User(member.getEmail(),
+                    member.getPassword(),
+                    mapRolesToAuthorities(member.getRoles()));
         }else{
             throw new UsernameNotFoundException("Invalid username or password.");
         }

@@ -1,10 +1,10 @@
 package com.app.lms.controller;
 
-import com.app.lms.entity.User;
+import com.app.lms.entity.Member;
 import com.app.lms.service.AdminService;
-import com.app.lms.service.UserService;
+import com.app.lms.service.MemberService;
 import com.app.lms.web.BookDto;
-import com.app.lms.web.UserDto;
+import com.app.lms.web.MemberDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,11 +19,11 @@ import java.util.List;
 @Controller
 public class AdminController {
 
-    private final UserService userService;
+    private final MemberService memberService;
     private final AdminService adminService;
 
-    public AdminController(UserService userService, AdminService adminService) {
-        this.userService = userService;
+    public AdminController(MemberService memberService, AdminService adminService) {
+        this.memberService = memberService;
         this.adminService = adminService;
     }
 
@@ -40,25 +40,25 @@ public class AdminController {
     }
     @GetMapping("/adminportal/createaccount")
     public String createAccount(Model model){
-        UserDto user = new UserDto();
-        model.addAttribute("user", user);
+        MemberDto member = new MemberDto();
+        model.addAttribute("member", member);
         return "createaccount";
     }
 
     // handler method to handle create user form submit request
     @PostMapping("/adminportal/createaccount/save")
-    public String registration( @ModelAttribute("user") UserDto user,
+    public String registration( @ModelAttribute("member") MemberDto member,
                                 BindingResult result,
                                 Model model){
-        User existing = userService.findByEmail(user.getEmail());
+        Member existing = memberService.findByEmail(member.getEmail());
         if (existing != null) {
             result.rejectValue("email", null, "There is already an account registered with that email");
         }
         if (result.hasErrors()) {
-            model.addAttribute("user", user);
+            model.addAttribute("member", member);
             return "createaccount";
         }
-        userService.saveUser(user);
+        memberService.saveUser(member);
         return "redirect:/adminportal/createaccount?success";
     }
 

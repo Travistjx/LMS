@@ -1,16 +1,16 @@
 package com.app.lms.web;
 
-public class UserDto {
+public class MemberDto {
     private String firstName;
     private String lastName;
     private String email;
     private String password;
 
-    public UserDto(){
+    public MemberDto(){
 
     }
 
-    public UserDto(String firstName, String lastName, String email, String password) {
+    public MemberDto(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;

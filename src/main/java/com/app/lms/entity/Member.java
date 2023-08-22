@@ -6,11 +6,11 @@
     import java.util.Iterator;
 
     @Entity
-    @Table(name= "user", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
-    public class User {
+    @Table(name= "member", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
+    public class Member {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long user_id;
+        private Long member_id;
 
         @Column(name="first_name")
         private String firstName;
@@ -22,14 +22,14 @@
         private String password;
         @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
         @JoinTable(
-                name = "users_roles",
+                name = "members_roles",
                 joinColumns = @JoinColumn(
-                        name = "user_id", referencedColumnName = "user_id"),
+                        name = "member_id", referencedColumnName = "member_id"),
                 inverseJoinColumns = @JoinColumn(
                         name = "role_id", referencedColumnName = "role_id"))
         private Collection<Role> roles;
 
-        public User() {
+        public Member() {
 
         }
 
@@ -53,7 +53,7 @@
             return false;
         }
 
-        public User(String firstName, String lastName, String email, String password, Collection<Role> roles) {
+        public Member(String firstName, String lastName, String email, String password, Collection<Role> roles) {
             this.firstName = firstName;
             this.lastName = lastName;
             this.email = email;
@@ -62,11 +62,11 @@
         }
 
         public Long getId() {
-            return user_id;
+            return member_id;
         }
 
         public void setId(Long id) {
-            this.user_id = id;
+            this.member_id = id;
         }
 
         public String getFirstName() {
