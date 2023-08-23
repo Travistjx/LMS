@@ -7,6 +7,10 @@ import com.app.lms.repository.BookRepository;
 import com.app.lms.service.AdminService;
 import com.app.lms.web.AuthorDto;
 import com.app.lms.web.BookDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -90,6 +94,19 @@ public class AdminServiceImpl implements AdminService {
         return books.stream().map((book) -> convertEntityToDto(book))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Page<BookDto> findPaginated(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+        Page<Book> bookPage = this.bookRepository.findAll(pageable);
+
+        List<BookDto> bookDtoList = bookPage.getContent().stream()
+                .map(this::convertEntityToDto)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(bookDtoList, pageable, bookPage.getTotalElements());
+    }
+
 
     private BookDto convertEntityToDto(Book book){
         BookDto bookDto = new BookDto();

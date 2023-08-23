@@ -1,17 +1,16 @@
 package com.app.lms.controller;
 
+import com.app.lms.entity.Book;
 import com.app.lms.entity.Member;
 import com.app.lms.service.AdminService;
 import com.app.lms.service.MemberService;
 import com.app.lms.web.BookDto;
 import com.app.lms.web.MemberDto;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -64,9 +63,17 @@ public class AdminController {
 
     @GetMapping("/adminportal/books")
     public String showBooks(Model model){
+//        List<BookDto> books = adminService.findAllBooks();
+//        model.addAttribute("books", books);
+//        return "books";
+        return findPaginated(1, model);
+    }
+
+    @GetMapping("/adminportal/managebooks")
+    public String manageBooks(Model model){
         List<BookDto> books = adminService.findAllBooks();
         model.addAttribute("books", books);
-        return "books";
+        return "managebooks";
     }
 
     @PostMapping("/adminportal/addbooks/save")
@@ -84,5 +91,17 @@ public class AdminController {
 //        }
         adminService.saveBook(book, file);
         return "redirect:/adminportal/addbooks?success";
+    }
+
+    @GetMapping("/adminportal/books/page/{pageNo}")
+    public String findPaginated(@PathVariable (value = "pageNo") int pageNo, Model model){
+        int pageSize = 3;
+        Page<BookDto> page = adminService.findPaginated(pageNo, pageSize);
+        List<BookDto> listBooks = page.getContent();
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("books", listBooks);
+        return "books";
     }
 }

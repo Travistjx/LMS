@@ -17,7 +17,7 @@ class MemberRepositoryTest {
     private MemberRepository underTest;
 
     @Test
-    void itShouldCheckIfUserExistsByEmail() {
+    void itShouldCheckIfMemberExistsByEmail() {
 
         //given
         Member member = new Member();
@@ -39,5 +39,20 @@ class MemberRepositoryTest {
 
         //then
         assertThat(exists).isTrue();
+    }
+
+    @Test
+    void itShouldCheckIfMemberDoesNotExistsByEmail() {
+
+        //given
+        String email = "georgeng@gmail.com";
+
+        //when
+        boolean exists = true;
+        Member newMember = underTest.findByEmail(email);
+        if (newMember == null) exists = false;
+
+        //then
+        assertThat(exists).isFalse();
     }
 }
