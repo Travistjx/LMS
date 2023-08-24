@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 public class AdminController {
@@ -69,11 +71,38 @@ public class AdminController {
         return findPaginated(1, model);
     }
 
+    @GetMapping("/adminportal/updatebooks/{id}")
+    public String showUpdateBookForm(@PathVariable (value = "id") long id, Model model){
+        Optional<BookDto> bookOptional = adminService.findById(id);
+        if (bookOptional.isPresent()) {
+            BookDto book = bookOptional.get();
+            model.addAttribute("book", book);
+
+            String authors = book.getAuthors().stream()
+                    .map(author -> author.getFirstName() + ' ' + author.getLastName())
+                    .collect(Collectors.joining(", "));
+            model.addAttribute("authors", authors);
+        }
+        else {
+            return "managebooks";
+        }
+        return "updatebooks";
+    }
+
     @GetMapping("/adminportal/managebooks")
     public String manageBooks(Model model){
         List<BookDto> books = adminService.findAllBooks();
         model.addAttribute("books", books);
         return "managebooks";
+    }
+
+    @PutMapping("/adminportal/updatebooks/{id}/save")
+    public String updateBooks(@ModelAttribute("book") BookDto book,
+                              @RequestParam("imageFile") MultipartFile file,
+                              @RequestParam("currentAuthors") String authors,
+                              @PathVariable (value = "id") Long id){
+        adminService.updateBooks(book, id, file, authors);
+        return "redirect:/adminportal/updatebooks/{id}?success";
     }
 
     @PostMapping("/adminportal/addbooks/save")

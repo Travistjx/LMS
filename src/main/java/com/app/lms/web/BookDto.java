@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class BookDto {
+
+    private Long book_id;
     private String title;
     private String description;
     private String category;
+
+
     private String publication_year;
     private Collection<AuthorDto> authors;
     private String image;
@@ -71,5 +75,13 @@ public class BookDto {
 
     public void setPublication_year(String publication_year) {
         this.publication_year = publication_year;
+    }
+
+    public Long getBook_id() {
+        return book_id;
+    }
+
+    public void setBook_id(Long book_id) {
+        this.book_id = book_id;
     }
 }

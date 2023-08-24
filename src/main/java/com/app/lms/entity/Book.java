@@ -93,11 +93,11 @@ public class Book {
         this.publication_year = publication_year;
     }
 
-    public Collection<Author> getAuthor() {
+    public Collection<Author> getAuthors() {
         return authors;
     }
 
-    public void setAuthor(Collection<Author> author) {
+    public void setAuthors(Collection<Author> author) {
         this.authors = author;
     }
 }

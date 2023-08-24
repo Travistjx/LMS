@@ -16,11 +16,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.Base64;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -64,17 +61,19 @@ public class AdminServiceImpl implements AdminService {
                     currentAuthorDto.getFirstName(), currentAuthorDto.getLastName());
 
             if (author == null) {
-                author = new Author();
-                author.setLastName(currentAuthorDto.getLastName());
-                author.setFirstName(currentAuthorDto.getFirstName());
-                authorRepository.save(author);
+                Author newAuthor = new Author();
+                newAuthor.setLastName(currentAuthorDto.getLastName());
+                newAuthor.setFirstName(currentAuthorDto.getFirstName());
+                authors.add(newAuthor);
+            }
+            else {
+                authors.add(author);
             }
 
-            authors.add(author);
         }
 
         // Set the authors collection in the book
-        book.setAuthor(authors);
+        book.setAuthors(authors);
 
         bookRepository.save(book);
     }
@@ -107,6 +106,57 @@ public class AdminServiceImpl implements AdminService {
         return new PageImpl<>(bookDtoList, pageable, bookPage.getTotalElements());
     }
 
+    @Override
+    public Optional<BookDto> findById(long id) {
+        Optional<Book> bookOptional = bookRepository.findById(id);
+        return bookOptional.map(this::convertEntityToDto);
+    }
+
+
+    @Override
+    public void updateBooks(BookDto book, Long bookId, MultipartFile file, String authors) {
+        Optional<Book> selectedBook = bookRepository.findById(bookId);
+
+        if (selectedBook.isPresent()){
+            Book existingBook = selectedBook.get();
+            Collection<Author> listAuthor = new ArrayList<>();
+            String[] authorNames = authors.split(", ");
+            for (String authorName : authorNames) {
+                String[] nameParts = authorName.split(" ");
+                if (nameParts.length == 2) {
+                    Author oldAuthor = authorRepository.findByFirstNameAndLastName(nameParts[0],nameParts[1]);
+                    if (oldAuthor == null){
+                        Author newAuthor = new Author();
+                        newAuthor.setFirstName(nameParts[0]);
+                        newAuthor.setLastName(nameParts[1]);
+                        listAuthor.add(newAuthor);
+                    }
+                    else{
+                        listAuthor.add(oldAuthor);
+                    }
+                }
+            }
+
+            if (!file.isEmpty()){
+                try {
+                    existingBook.setImage(Base64.getEncoder().encodeToString(file.getBytes()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+            existingBook.setAuthors(listAuthor);
+            existingBook.setTitle(book.getTitle());
+            existingBook.setPublication_year((book.getPublication_year()));
+            existingBook.setCategory(book.getCategory());
+            existingBook.setDescription(book.getDescription());
+
+            bookRepository.save(existingBook);
+        }
+
+    }
+
 
     private BookDto convertEntityToDto(Book book){
         BookDto bookDto = new BookDto();
@@ -114,9 +164,10 @@ public class AdminServiceImpl implements AdminService {
         bookDto.setDescription(book.getDescription());
         bookDto.setPublication_year(book.getPublication_year());
         bookDto.setTitle(book.getTitle());
+        bookDto.setBook_id(book.getBook_id());
         Collection <AuthorDto> authorsDto = new ArrayList<>();
 
-        for (Author author : book.getAuthor()) {
+        for (Author author : book.getAuthors()) {
             AuthorDto authorDto = new AuthorDto();
             authorDto.setFirstName(author.getFirstName());
             authorDto.setLastName(author.getLastName());

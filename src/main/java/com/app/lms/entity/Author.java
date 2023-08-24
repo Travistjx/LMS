@@ -10,6 +10,12 @@ public class Author {
     private Long author_id;
 
     private String firstName;
+
+    public Author(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
     private String lastName;
 
     public Author() {
