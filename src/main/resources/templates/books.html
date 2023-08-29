@@ -35,7 +35,7 @@
     <div class="container" >
         <div class="row" >
             <div class="col-sm-4" th:each="book : ${books}">
-                <div class="mb-4 text-center book-card" onclick="openModal()">
+                <div class="mb-4 text-center book-card">
                     <div class="d-flex justify-content-center">
                         <img th:if="${book.image != null}"
                              th:src="'data:image/jpeg;base64,' + ${book.image}" style="width: 200px;height: 300px;"
@@ -54,12 +54,12 @@
                         <!--<p class="card-text" th:text="${book.category}"></p>-->
                         <!--<p class="card-text" th:text="${book.publication_year}"></p>-->
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" th:data-bs-target="'#exampleModal-' + ${book.book_id}">
                             View In Detail
                         </button>
 
                         <!-- Modal -->
-                        <div class="modal fade" id="exampleModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal fade" th:id="'exampleModal-' + ${book.book_id}" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                                 <div class="modal-content">
                                     <div class="modal-body">

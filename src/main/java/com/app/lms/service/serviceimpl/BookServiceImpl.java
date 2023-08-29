@@ -4,7 +4,7 @@ import com.app.lms.entity.Author;
 import com.app.lms.entity.Book;
 import com.app.lms.repository.AuthorRepository;
 import com.app.lms.repository.BookRepository;
-import com.app.lms.service.AdminService;
+import com.app.lms.service.BookService;
 import com.app.lms.web.AuthorDto;
 import com.app.lms.web.BookDto;
 import org.springframework.data.domain.Page;
@@ -20,11 +20,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class AdminServiceImpl implements AdminService {
+public class BookServiceImpl implements BookService {
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
 
-    public AdminServiceImpl(BookRepository bookRepository,
+    public BookServiceImpl(BookRepository bookRepository,
                            AuthorRepository authorRepository
                           ) {
         this.bookRepository = bookRepository;
@@ -157,6 +157,9 @@ public class AdminServiceImpl implements AdminService {
 
     }
 
+    public void deleteBooks (Long id){
+        bookRepository.deleteById(id);
+    }
 
     private BookDto convertEntityToDto(Book book){
         BookDto bookDto = new BookDto();

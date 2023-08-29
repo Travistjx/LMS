@@ -1,8 +1,7 @@
 package com.app.lms.controller;
 
-import com.app.lms.entity.Book;
 import com.app.lms.entity.Member;
-import com.app.lms.service.AdminService;
+import com.app.lms.service.BookService;
 import com.app.lms.service.MemberService;
 import com.app.lms.web.BookDto;
 import com.app.lms.web.MemberDto;
@@ -21,15 +20,15 @@ import java.util.stream.Collectors;
 public class AdminController {
 
     private final MemberService memberService;
-    private final AdminService adminService;
+    private final BookService bookService;
 
-    public AdminController(MemberService memberService, AdminService adminService) {
+    public AdminController(MemberService memberService, BookService bookService) {
         this.memberService = memberService;
-        this.adminService = adminService;
+        this.bookService = bookService;
     }
 
     @GetMapping("/adminportal")
-    public String listRegisteredUsers(){
+    public String homePage(){
         return "adminportal";
     }
 
@@ -39,11 +38,34 @@ public class AdminController {
         model.addAttribute("book", book);
         return "addbooks";
     }
+
+    @GetMapping("/adminportal/managebooks")
+    public String manageBooks(Model model){
+//        List<BookDto> books = adminService.findAllBooks();
+//        model.addAttribute("books", books);
+
+        return findPaginatedManageBooks(1, model);
+    }
     @GetMapping("/adminportal/createaccount")
     public String createAccount(Model model){
         MemberDto member = new MemberDto();
         model.addAttribute("member", member);
         return "createaccount";
+    }
+
+    @GetMapping("/adminportal/manageaccounts")
+    public String manageAccount(Model model){
+        List<MemberDto> members = memberService.findAllUsers();
+        model.addAttribute("members", members);
+        return "manageaccounts";
+    }
+
+    @GetMapping("/adminportal/books")
+    public String showBooks(Model model){
+//        List<BookDto> books = adminService.findAllBooks();
+//        model.addAttribute("books", books);
+//        return "books";
+        return findPaginatedAllBooks(1, model);
     }
 
     // handler method to handle create user form submit request
@@ -63,17 +85,35 @@ public class AdminController {
         return "redirect:/adminportal/createaccount?success";
     }
 
-    @GetMapping("/adminportal/books")
-    public String showBooks(Model model){
-//        List<BookDto> books = adminService.findAllBooks();
-//        model.addAttribute("books", books);
-//        return "books";
-        return findPaginated(1, model);
+    @GetMapping("/adminportal/updateaccounts/{id}")
+    public String showUpdateAccountForm(@PathVariable (value = "id") Long id, Model model){
+        Optional<MemberDto> memberOptional = memberService.findById(id);
+        if (memberOptional.isPresent()) {
+            MemberDto member = memberOptional.get();
+            model.addAttribute("member", member);
+
+            String roles = member.getRoles().stream()
+                    .map(role -> role.getName())
+                    .collect(Collectors.joining(", "));
+            model.addAttribute("roles", roles);
+        }
+        else {
+            return "manageaccounts";
+        }
+        return "updateaccounts";
+    }
+
+    @PutMapping("/adminportal/updateaccounts/{id}/save")
+    public String updateAccounts(@ModelAttribute("member") MemberDto member,
+                              @RequestParam("currentRoles") String roles,
+                              @PathVariable (value = "id") Long id){
+        memberService.updateAccounts(member, id, roles);
+        return "redirect:/adminportal/updateaccounts/{id}?success";
     }
 
     @GetMapping("/adminportal/updatebooks/{id}")
-    public String showUpdateBookForm(@PathVariable (value = "id") long id, Model model){
-        Optional<BookDto> bookOptional = adminService.findById(id);
+    public String showUpdateBookForm(@PathVariable (value = "id") Long id, Model model){
+        Optional<BookDto> bookOptional = bookService.findById(id);
         if (bookOptional.isPresent()) {
             BookDto book = bookOptional.get();
             model.addAttribute("book", book);
@@ -89,20 +129,19 @@ public class AdminController {
         return "updatebooks";
     }
 
-    @GetMapping("/adminportal/managebooks")
-    public String manageBooks(Model model){
-        List<BookDto> books = adminService.findAllBooks();
-        model.addAttribute("books", books);
-        return "managebooks";
-    }
-
     @PutMapping("/adminportal/updatebooks/{id}/save")
     public String updateBooks(@ModelAttribute("book") BookDto book,
                               @RequestParam("imageFile") MultipartFile file,
                               @RequestParam("currentAuthors") String authors,
                               @PathVariable (value = "id") Long id){
-        adminService.updateBooks(book, id, file, authors);
+        bookService.updateBooks(book, id, file, authors);
         return "redirect:/adminportal/updatebooks/{id}?success";
+    }
+
+    @DeleteMapping("/adminportal/managebooks/{id}")
+    public String deleteBooks(@PathVariable (value = "id") Long id){
+        bookService.deleteBooks(id);
+        return "redirect:/adminportal/managebooks?success";
     }
 
     @PostMapping("/adminportal/addbooks/save")
@@ -118,19 +157,31 @@ public class AdminController {
 //            model.addAttribute("book", book);
 //            return "addbooks";
 //        }
-        adminService.saveBook(book, file);
+        bookService.saveBook(book, file);
         return "redirect:/adminportal/addbooks?success";
     }
 
     @GetMapping("/adminportal/books/page/{pageNo}")
-    public String findPaginated(@PathVariable (value = "pageNo") int pageNo, Model model){
+    public String findPaginatedAllBooks(@PathVariable (value = "pageNo") int pageNo, Model model){
         int pageSize = 3;
-        Page<BookDto> page = adminService.findPaginated(pageNo, pageSize);
+        Page<BookDto> page = bookService.findPaginated(pageNo, pageSize);
         List<BookDto> listBooks = page.getContent();
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
         model.addAttribute("books", listBooks);
         return "books";
+    }
+
+    @GetMapping("/adminportal/managebooks/page/{pageNo}")
+    public String findPaginatedManageBooks(@PathVariable (value = "pageNo") int pageNo, Model model){
+        int pageSize = 3;
+        Page<BookDto> page = bookService.findPaginated(pageNo, pageSize);
+        List<BookDto> listBooks = page.getContent();
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("books", listBooks);
+        return "managebooks";
     }
 }

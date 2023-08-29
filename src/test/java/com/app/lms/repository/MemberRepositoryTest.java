@@ -14,7 +14,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 class MemberRepositoryTest {
 
     @Autowired
-    private MemberRepository underTest;
+    private MemberRepository memberRepository;
 
     @Test
     void itShouldCheckIfMemberExistsByEmail() {
@@ -30,11 +30,11 @@ class MemberRepositoryTest {
         Role role = new Role();
         role.setName("ROLE_MEMBER");
         member.setRoles(Arrays.asList(role));
-        underTest.save(member);
+        memberRepository.save(member);
 
         //when
         boolean exists = false;
-        Member newMember = underTest.findByEmail("georgeng@gmail.com");
+        Member newMember = memberRepository.findByEmail("georgeng@gmail.com");
         if (newMember != null) exists = true;
 
         //then
@@ -49,7 +49,7 @@ class MemberRepositoryTest {
 
         //when
         boolean exists = true;
-        Member newMember = underTest.findByEmail(email);
+        Member newMember = memberRepository.findByEmail(email);
         if (newMember == null) exists = false;
 
         //then
