@@ -2,19 +2,19 @@ package com.app.lms.controller;
 
 import com.app.lms.entity.Member;
 import com.app.lms.service.MemberService;
+import com.app.lms.web.BookDto;
 import com.app.lms.web.MemberDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 public class AuthController {
@@ -39,7 +39,7 @@ public class AuthController {
             response.sendRedirect(response.encodeRedirectURL(request.getContextPath() + "/adminportal"));
         }
         else if(role.contains("ROLE_MEMBER")) {
-            response.sendRedirect(response.encodeRedirectURL(request.getContextPath() + "/start"));
+            response.sendRedirect(response.encodeRedirectURL(request.getContextPath() + "/home"));
         }
     }
 
@@ -48,10 +48,8 @@ public class AuthController {
         return "login";
     }
 
-    @GetMapping("/start")
-    public String start() {
-        return "start";
-    }
+
+
 
     // handler method to handle user registration request
     @GetMapping("/register")
@@ -63,19 +61,20 @@ public class AuthController {
 
     // handler method to handle register user form submit request
     @PostMapping("/register/save")
-    public String registration( @ModelAttribute("user") MemberDto user,
+    public String registration( @ModelAttribute("member") MemberDto member,
                                BindingResult result,
                                Model model){
-        Member existing = memberService.findByEmail(user.getEmail());
+        MemberDto existing = memberService.findByEmail(member.getEmail());
         if (existing != null) {
             result.rejectValue("email", null, "There is already an account registered with that email");
         }
         if (result.hasErrors()) {
-            model.addAttribute("user", user);
+            model.addAttribute("member", member);
             return "register";
         }
-        memberService.saveUser(user);
+        memberService.saveUser(member);
         return "redirect:/register?success";
     }
+
 
 }

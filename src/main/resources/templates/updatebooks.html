@@ -43,22 +43,39 @@
             background-color: #007bff;
             border-color: #007bff;
         }
+
+         .nav-link:hover {
+        background-color: #2e2e2e; /* Background color when hovered over */
+        color: white; /* Text color when hovered over (optional) */
+        /* Other styles like padding, border-radius, etc. */
+        }
+
+         .nav-item a {
+            color: white; /* Text color for the first nav-link */
+
+        }
+
+        .nav-item #third-link {
+            background-color: #383838;
+        }
     </style>
 </head>
 <body>
 <!-- Include a navigation bar using Thymeleaf fragment replacement -->
 <div th:replace="common/admin_navbar :: #navbar"></div>
-<br />
+<div class="container-fluid">
+    <div class="row">
 
+        <div th:replace="common/admin_sidebar :: #navbar"></div>
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div style="margin-top: 50px;">
 <div th:if="${param.success}">
     <div class="alert alert-info">Book has been successfully updated!</div>
 </div>
-<div class="card-header">
     <h2 class="text-center">Update Book</h2>
-</div>
 
 <div class="update-container">
-    <div class="card-body">
+    <div>
         <form method="post" role="form" enctype="multipart/form-data" th:action="@{'/adminportal/updatebooks/' + ${book.book_id} + '/save'}" th:object="${book}">
             <input type="hidden" name="_method" value="put" />
             <div class="text-center">

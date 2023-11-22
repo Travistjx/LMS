@@ -2,7 +2,9 @@ package com.app.lms.service;
 
 import com.app.lms.entity.Book;
 import com.app.lms.web.BookDto;
+import com.app.lms.web.MemberDto;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -23,4 +25,7 @@ public interface BookService {
     void updateBooks(BookDto book, Long id, MultipartFile file, String authors);
     void deleteBooks(Long id);
 
+    Page<BookDto> searchBooks(String query, Pageable pageable, String searchBy, String status, String sort, String order);
+
+    BookDto convertEntityToDto(Book book);
 }

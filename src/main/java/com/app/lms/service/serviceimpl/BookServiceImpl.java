@@ -1,16 +1,13 @@
 package com.app.lms.service.serviceimpl;
 
-import com.app.lms.entity.Author;
-import com.app.lms.entity.Book;
+import com.app.lms.entity.*;
 import com.app.lms.repository.AuthorRepository;
 import com.app.lms.repository.BookRepository;
 import com.app.lms.service.BookService;
 import com.app.lms.web.AuthorDto;
 import com.app.lms.web.BookDto;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import com.app.lms.web.MemberDto;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -158,16 +155,77 @@ public class BookServiceImpl implements BookService {
     }
 
     public void deleteBooks (Long id){
-        bookRepository.deleteById(id);
+        Book bookToDelete = bookRepository.findById(id).orElse(null);
+
+        if (bookToDelete != null) {
+            // Remove the roles from the member
+            bookToDelete.setAuthors(Collections.emptyList());
+
+            // Delete the member
+            bookRepository.delete(bookToDelete);
+        }
     }
 
-    private BookDto convertEntityToDto(Book book){
+    public Page<BookDto> searchBooks(String query, Pageable pageable, String searchBy, String statusFilter
+                                     , String sort, String order) {
+
+        BookStatus status = BookStatus.AVAILABLE;
+        if (statusFilter.equals("ALL")){
+            status = null;
+        }
+        else if (statusFilter.equals("AVAILABLE")){
+            status = BookStatus.AVAILABLE;
+        }
+        else if (statusFilter.equals("CHECKEDOUT")){
+            status = BookStatus.CHECKED_OUT;
+        }
+
+        Sort.Direction direction = Sort.Direction.ASC;
+
+        if (order.equals("desc")){
+            direction = Sort.Direction.DESC;
+        }
+
+        Sort sortable = Sort.by(direction, "title"); // Default sorting by title
+
+
+
+        if (sort != null) {
+            switch (sort) {
+                case "publicationYear":
+                    sortable = Sort.by(direction, "publication_year");
+                    break;
+                case "author":
+                    sortable = Sort.by(direction, "a.firstName");
+                    break;
+                case "category":
+                    sortable = Sort.by(direction, "category");
+                    break;
+            }
+        }
+
+        Page<Book> searchedBooks = null;
+        if (searchBy.equals("any")){
+            searchedBooks = bookRepository.searchForBooksWithStatusAndByAny(query, status, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
+        }
+        else {
+            searchedBooks = bookRepository.searchForBooksWithStatusAndNotAny(query, searchBy, status, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
+        }
+
+        List<BookDto> matchedBooks = searchedBooks.getContent().stream()
+                .map(this::convertEntityToDto).collect(Collectors.toList());
+
+        return new PageImpl<>(matchedBooks, pageable, searchedBooks.getTotalElements());
+    }
+
+    public BookDto convertEntityToDto(Book book){
         BookDto bookDto = new BookDto();
         bookDto.setCategory(book.getCategory());
         bookDto.setDescription(book.getDescription());
         bookDto.setPublication_year(book.getPublication_year());
         bookDto.setTitle(book.getTitle());
         bookDto.setBook_id(book.getBook_id());
+        bookDto.setStatus(book.getStatus());
         Collection <AuthorDto> authorsDto = new ArrayList<>();
 
         for (Author author : book.getAuthors()) {

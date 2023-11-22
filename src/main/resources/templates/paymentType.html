@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Payment</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .nav-link:hover {
+           background-color: #2e2e2e; /* Background color when hovered over */
+           color: white; /* Text color when hovered over (optional) */
+           /* Other styles like padding, border-radius, etc. */
+           }
+
+            .nav-item a {
+               color: white; /* Text color for the first nav-link */
+
+           }
+
+           .nav-item #first-link {
+               background-color: #383838;
+           }
+
+        body {
+    background-color: #f8f9fa; /* Set a light background color for the body */
+    font-family: Arial, sans-serif;
+}
+
+
+.payment-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.card-form {
+    width: 50%;
+    padding: 30px;
+
+}
+
+.receipt {
+    background-color: aliceblue;
+    width: 40%;
+    padding: 30px;
+    min-height: 500px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.form-group input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.form-group input[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.form-group input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Additional Styles for Card Number Input */
+#card-number {
+    font-family: 'Arial', sans-serif;
+}
+
+/* Styles for Expiry Date and CVV Inputs */
+#expiry-date,
+#cvv {
+    width: 45%;
+    display: inline-block;
+}
+
+
+
+
+/* Styles for Responsive Design */
+@media (max-width: 768px) {
+    .payment-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .card-form, .receipt {
+        width: 80%;
+        margin: 0 0 20px 0;
+    }
+}
+
+    </style>
+</head>
+<body>
+<div th:replace="common/member_navbar :: #navbar"></div>
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="common/payment_sidebar :: #navbar"></div>
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <form action = "/payment/checkout/pay" method = "post">
+            <div class="payment-container">
+                <div class="card-form">
+                    <h2 class="text-center mb-4">Enter in payment details</h2>
+                    <div class="form-group">
+                        <label for="card-number">Card Number:</label>
+                        <input type="text" id="card-number" name="cardNumber" placeholder="Enter your card number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="expiry-date">Expiry Date:</label>
+                        <input type="text" id="expiry-date" name="expiryDate" placeholder="MM/YY" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cvv">CVV:</label>
+                        <input type="text" id="cvv" name="cvv" placeholder="Enter CVV" required>
+                    </div>
+                </div>
+                <div class="receipt">
+                    <h2 class="text-center mb-4">Payment Summary</h2>
+                    <div th:each="fine : ${selectedFines}" class="receipt-item"
+                    style = "display:flex; justify-content: space-between; margin-bottom: 20px;">
+                        <!-- Receipt items here -->
+                        <div class="main-item">
+                            <span class="label" th:text="${fine.loan.book.title}"></span>
+                            <div style = "font-size: 12px;">
+                                <span class="label">Fine ID:</span>
+                                <span th:text="${fine.fine_id}"></span>
+                                <span class="label">, Loan ID:</span>
+                                <span th:text="${fine.loan.loan_id}"></span>
+                                <span class="label">, Book ID:</span>
+                                <span th:text="${fine.loan.book.book_id}"></span>
+                            </div>
+                        </div>
+                        <div class="item fine-amount">
+                            <span class="label">$</span>
+                            <span th:text="${fine.amount}"></span>
+                        </div>
+
+                    </div>
+                    <div class="total d-flex justify-content-between align-items-center"
+                         style = "margin-top: 15px; border-top: 1px solid grey; display:flex; justify-content: space-between;">
+                        <div>
+                            <span class="label" style = "margin-top: 20px;">Total Amount:</span>
+                        </div>
+                        <div>
+                            <span class="label">$</span>
+                            <span th:text="${totalFineAmount}"></span>
+                        </div>
+                    </div>
+                    <input type = "hidden" name = "confirmedFines" th:value = "${confirmedFines}">
+                    <input type = "hidden" name = "status" value = "processing">
+                    <button type = "submit" class="btn btn-primary" style = "width: 100%; margin-top: 30px;">Make Payment</button>
+                </div>
+            </div>
+            </form>
+        </main>
+    </div>
+</div>
+</body>
+</html>

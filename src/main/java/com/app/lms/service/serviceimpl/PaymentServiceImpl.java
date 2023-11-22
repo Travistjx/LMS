@@ -1,0 +1,186 @@
+package com.app.lms.service.serviceimpl;
+
+import com.app.lms.entity.*;
+import com.app.lms.repository.FineRepository;
+import com.app.lms.repository.LoanRepository;
+import com.app.lms.repository.MemberRepository;
+import com.app.lms.repository.PaymentRepository;
+import com.app.lms.service.FineService;
+import com.app.lms.service.LoanService;
+import com.app.lms.service.MemberService;
+import com.app.lms.service.PaymentService;
+import com.app.lms.web.*;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Service
+public class PaymentServiceImpl implements PaymentService {
+    private final LoanRepository loanRepository;
+    private final FineRepository fineRepository;
+
+    private final MemberRepository memberRepository;
+    private final PaymentRepository paymentRepository;
+
+    private final FineService fineService;
+
+    private final MemberService memberService;
+
+    public PaymentServiceImpl(LoanRepository loanRepository, FineRepository fineRepository, MemberRepository memberRepository,
+                              PaymentRepository paymentRepository, FineService fineService, MemberService memberService) {
+        this.loanRepository = loanRepository;
+        this.fineRepository = fineRepository;
+        this.memberRepository = memberRepository;
+        this.paymentRepository = paymentRepository;
+        this.fineService = fineService;
+        this.memberService = memberService;
+    }
+
+    @Override
+    public void makePayment (Collection<FineDto> fineDtos, Double fineAmount, String paymentMethod, String email){
+        Payment payment = new Payment();
+        List<Fine> finesList = fineDtos.stream()
+                .map(fineDto -> {
+                    Fine fine = fineRepository.findById(fineDto.getFine_id())
+                             .orElseThrow(() -> new EntityNotFoundException("Fine not found with ID: " + fineDto.getFine_id()));
+                    fine.setStatus(FineStatus.PAID);
+
+                    return fine;
+                })
+                .collect(Collectors.toList());
+
+        payment.setFines(finesList);
+        payment.setPaymentAmount(fineAmount);
+        payment.setStatus(PaymentStatus.SUCCESSFUL);
+        payment.setPaymentDateTime(LocalDateTime.now());
+        Member member = memberRepository.findByEmail(email);
+        payment.setMember(member);
+
+        Payment latestPayment = paymentRepository.findFirstByOrderByPaymentDateTimeDesc();
+        String formattedInvoiceNumber = "";
+        if (latestPayment != null) {
+            int invoiceNumber = Integer.parseInt(latestPayment.getInvoiceNumber().substring(4));
+            formattedInvoiceNumber = String.format("INV-%05d", invoiceNumber + 1);
+        } else {
+            formattedInvoiceNumber = String.format("INV-%05d", 0);
+        }
+        payment.setInvoiceNumber(formattedInvoiceNumber);
+        payment.setPaymentMethod(paymentMethod);
+        payment.setTransactionReference("XXXXXXXXXXX");
+
+        paymentRepository.save(payment);
+    }
+
+    @Override
+    public PaymentDto getPaymentsByUser (Long member_id){
+        List <Payment> paymentList = paymentRepository.findAll();
+        List<PaymentDto> selectedPayments = paymentList.stream()
+                .filter(payment -> payment.getFines().stream().findFirst()
+                        .get().getLoan().getMember().getMember_id().equals(member_id))
+                .map(this::convertEntityToDto)
+                .collect(Collectors.toList());
+
+        if (!selectedPayments.isEmpty()) {
+            return selectedPayments.get(selectedPayments.size() - 1);
+        }
+        else {
+            return null;
+        }
+    }
+
+    @Override
+    public Page<PaymentDto> searchPayments(String query, Pageable pageable, Optional<Long> id, IdType idType, String statusFilter, String searchBy) {
+        Page<Payment> selectedPayment = null;
+
+        PaymentStatus status = PaymentStatus.FAILED;
+        if (statusFilter.equals("ALL")){
+            status = null;
+        }
+        else if (statusFilter.equals("SUCCESSFUL")){
+            status = PaymentStatus.SUCCESSFUL;
+        }
+        else if (statusFilter.equals("FAILED")){
+            status = PaymentStatus.FAILED;
+        }
+        else if (statusFilter.equals("PENDING")){
+            status = PaymentStatus.PENDING;
+        }
+
+
+
+        if (id.isPresent()){
+            Long selectedId = id.get();
+
+            if (idType == IdType.MEMBER_ID) {
+                if (searchBy.equals("any")){
+                    selectedPayment = paymentRepository.searchPaymentsByMemberWithStatusAndByAny(query, selectedId, status, pageable);
+                }
+                else {
+                    selectedPayment = paymentRepository.searchPaymentsByMemberWithStatusAndNotAny(query, selectedId, status, searchBy,pageable);
+                }
+            }
+        }
+        else {
+            if (searchBy.equals("any")){
+                selectedPayment = paymentRepository.searchPaymentsWithStatusAndByAny(query, status, pageable);
+            }
+            else {
+                selectedPayment = paymentRepository.searchPaymentsWithStatusAndNotAny(query, status, searchBy, pageable);
+            }
+        }
+
+        List <PaymentDto> selectedPaymentsDto = selectedPayment.getContent().stream().map(this::convertEntityToDto)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(selectedPaymentsDto, pageable, selectedPayment.getTotalElements());
+    }
+
+
+    @Override
+    public Page<PaymentDto> findPaginated(int pageNo, int pageSize, Optional<Long> id, IdType idType) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+        Page<Payment> paymentPage = this.paymentRepository.findAll(pageable);
+
+        if (id.isPresent()){
+            Long paymentId = id.get();
+
+            if (idType == IdType.MEMBER_ID){
+                Member member = memberRepository.findById(paymentId).get();
+                paymentPage = this.paymentRepository.findAllByMember(member, pageable);
+            }
+
+        }
+
+        List <PaymentDto> selectedPaymentsDto = paymentPage.getContent().stream().map(this::convertEntityToDto)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(selectedPaymentsDto, pageable, paymentPage.getTotalElements());
+    }
+
+    public PaymentDto convertEntityToDto(Payment payment) {
+        PaymentDto paymentDto = new PaymentDto();
+        paymentDto.setFines(payment.getFines().stream().map(fineService::convertEntityToDto).collect(Collectors.toList()));
+        paymentDto.setPayment_id(payment.getPayment_id());
+        paymentDto.setStatus(payment.getStatus());
+        paymentDto.setInvoiceNumber(payment.getInvoiceNumber());
+        paymentDto.setTransactionReference(payment.getTransactionReference());
+
+        MemberDto memberDto = memberService.convertEntityToDto(payment.getMember());
+        paymentDto.setMember(memberDto);
+        paymentDto.setPaymentAmount(payment.getPaymentAmount());
+        paymentDto.setPaymentDateTime(payment.getPaymentDateTime());
+        paymentDto.setPaymentMethod(payment.getPaymentMethod());
+
+        return paymentDto;
+    }
+}

@@ -8,6 +8,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
     <style>
         /* CSS for hover effect */
         .book-card:hover {
@@ -19,22 +21,159 @@
         .image-container {
             margin: 20px; /* Adjust the value to your preferred gap size */
         }
+
+        .nav-link:hover {
+            background-color: #2e2e2e; /* Background color when hovered over */
+            color: white; /* Text color when hovered over (optional) */
+            /* Other styles like padding, border-radius, etc. */
+            }
+
+        .nav-item a {
+            color: white; /* Text color for the first nav-link */
+
+        }
+
+        .nav-item #second-link {
+            background-color: #383838;
+        }
+
+        .filter-button {
+        background-color: #ffffff;
+        border: 1px solid #ced4da;
+        color: #495057;
+        padding: 6px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .filter-button:hover {
+        background-color: #f8f9fa;
+    }
+
+    .filter-button.active-filter-button {
+    background-color: #007bff !important;
+    color: #ffffff !important;
+}
     </style>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+             // Get the current URL
+             var currentUrl = window.location.href;
+
+             if (currentUrl.indexOf('statusFilter=AVAILABLE') !== -1) {
+                changeButtonStyle('availableButton', '#007bff');
+            } else if (currentUrl.indexOf('statusFilter=CHECKEDOUT') !== -1) {
+                changeButtonStyle('checkedOutButton', '#007bff');
+            } else if (currentUrl.indexOf('statusFilter=ALL') !== -1) {
+                changeButtonStyle('allButton', '#007bff');
+            }
+
+            function changeButtonStyle(buttonId, color) {
+                var button = document.getElementById(buttonId);
+                if (button) {
+                    button.style.backgroundColor = color;
+                    button.style.color = "white";
+                }
+            }
+
+         });
+
+    </script>
 </head>
 <body>
-<div th:replace="common/admin_navbar :: #navbar"></div>
-<br />
-<br />
-<br />
+<div th:replace="common/member_navbar :: #navbar"></div>
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="common/member_sidebar :: #navbar"></div>
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
 
-<div class = "container">
-    <div class="card-header">
-        <h2 class="text-center">All Books</h2>
+<div class = "container" >
+        <h1 class="text-center" style = "margin-top: 40px;">All Books</h1>
+    <br/>
+
+
+    <form th:action="@{/allbooks}" method="get">
+        <div style = "display:flex; margin: 50px; justify-content: center;">
+            <input type="search" id="form1" style = "width:55%" class="form-control" name="query" placeholder="Type query" th:value="${param.query}" aria-label="Search" />
+            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#filterModal">
+                Add Filters
+            </button>
+        </div>
+    <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Filters</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Your filters go here -->
+
+                        <!-- Query -->
+
+                        <!-- Search By -->
+                        <div class="mb-3">
+                            <label for="searchBy" class="form-label"><b>Search By:</b></label>
+                            <select class="form-select" id="searchBy" name="searchBy">
+                                <!-- Options go here -->
+                                <option value="any" th:selected="${searchBy == 'any'}">Any</option>
+                                <option value="title" th:selected="${searchBy == 'title'}">Title</option>
+                                <option value="author" th:selected="${searchBy == 'author'}">Author</option>
+                                <option value="category" th:selected="${searchBy == 'category'}">Category</option>
+                                <option value="publicationYear" th:selected="${searchBy == 'publicationYear'}">Publication Year</option>
+                                <option value="description" th:selected="${searchBy == 'description'}">Description</option>
+                            </select>
+                        </div>
+                        <!-- Status Filter -->
+                        <div class="mb-3">
+                            <label><b>Status Filter:</b></label><br>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="statusFilter" id="allRadio" value="ALL" th:checked="${statusFilter == null or statusFilter == 'ALL'}">
+                                <label class="form-check-label" for="allRadio">All</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="statusFilter" id="availableRadio" value="AVAILABLE" th:checked="${statusFilter == 'AVAILABLE'}">
+                                <label class="form-check-label" for="availableRadio">Available</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="statusFilter" id="checkedOutRadio" value="CHECKEDOUT" th:checked="${statusFilter == 'CHECKEDOUT'}">
+                                <label class="form-check-label" for="checkedOutRadio">Checked Out</label>
+                            </div>
+                        </div>
+                        <!-- Sorting -->
+                    <div style = "display: flex;">
+                        <div class="mb-3">
+                            <label for="sort" class="form-label"><b>Sort By:</b></label>
+                            <select class="form-select" id="sort" name="sort">
+                                <!-- Options go here -->
+                                <option value="title" th:selected="${sort == 'title'}">Title</option>
+                                <option value="author" th:selected="${sort == 'author'}">Author</option>
+                                <option value="category" th:selected="${sort == 'category'}">Category</option>
+                                <option value="publicationYear" th:selected="${sort == 'publicationYear'}">Publication year</option>
+                            </select>
+                        </div>
+                        <div class="mb-3" style = "margin-left: 10px;">
+                            <label for="order" class="form-label"><b>Order:</b></label>
+                            <select class="form-select" id="order" name="order">
+                                <!-- Options go here -->
+                                <option value="asc" th:selected="${order == 'asc'}">Ascending</option>
+                                <option value="desc" th:selected="${order == 'desc'}">Descending</option>
+                            </select>
+                        </div>
+                    </div>
+                        <button type="submit" class="btn btn-primary">Apply Filters</button>
+
+                </div>
+            </div>
+        </div>
     </div>
-    <br><br><br>
+
+    </form>
     <div class="container" >
         <div class="row" >
             <div class="col-sm-4" th:each="book : ${books}">
+                <a data-bs-toggle="modal" th:data-bs-target="'#exampleModal-' + ${book.book_id}" style = "cursor: pointer">
                 <div class="mb-4 text-center book-card">
                     <div class="d-flex justify-content-center">
                         <img th:if="${book.image != null}"
@@ -51,18 +190,21 @@
                             <span th:if="${!authorStat.last}">, </span>
                         </span>
                         </p>
+                    </div>
+                </div>
+                </a>
                         <!--<p class="card-text" th:text="${book.category}"></p>-->
                         <!--<p class="card-text" th:text="${book.publication_year}"></p>-->
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" th:data-bs-target="'#exampleModal-' + ${book.book_id}">
-                            View In Detail
-                        </button>
+<!--                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" th:data-bs-target="'#exampleModal-' + ${book.book_id}">-->
+<!--                            View In Detail-->
+<!--                        </button>-->
 
                         <!-- Modal -->
-                        <div class="modal fade" th:id="'exampleModal-' + ${book.book_id}" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal fade" th:id="'exampleModal-' + ${book.book_id}" tabindex="-1" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                                 <div class="modal-content">
-                                    <div class="modal-body">
+                                    <div class="modal-body text-center">
                                         <div class="d-flex justify-content-center">
                                             <div class = "image-container">
                                                 <img th:if="${book.image != null}"
@@ -93,43 +235,75 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-primary">Edit</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
 
-            </div>
         </div>
     </div>
 
-    <div th:if = "${totalPages > 1}">
-        <div class = "row col-sm-10">
-            <div class = "col-sm-2">
-                Total Rows: [[${totalItems}]]
-            </div>
-            <div class = "col-sm-1">
-					<span th:each="i: ${#numbers.sequence(1, totalPages)}">
-						<a th:if="${currentPage != i}" th:href="@{'/adminportal/books/page/' + ${i}}">[[${i}]]</a>
-						<span th:unless="${currentPage != i}">[[${i}]]</span>  &nbsp; &nbsp;
-					</span>
-            </div>
-            <div class = "col-sm-1">
-                <a th:if="${currentPage < totalPages}" th:href="@{'/adminportal/books/page/' + ${currentPage + 1}}">Next</a>
-                <span th:unless="${currentPage < totalPages}">Next</span>
+        <div th:if="${totalPages > 1}">
+            <div class="row col-sm-10 align-items-center">
+                <div class="col-sm-6">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item">
+                            <a class="page-link" th:href="@{'/allbooks' + (${query} != null ? '?query=' + ${query} + '&amp;' : '?') + (${searchBy} != null ? 'searchBy=' + ${searchBy} + '&amp;' : '') + (${statusFilter} != null ? 'statusFilter=' + ${statusFilter} + '&amp;' : '') + (${sort} != null ? 'sort=' + ${sort} + '&amp;' : '') + (${order} != null ? 'order=' + ${order} + '&amp;' : '') + 'page=1'}">
+                                <i class="bi bi-chevron-double-left"></i>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a th:if="${currentPage > 1}" class="page-link" th:href="@{'/allbooks' + (${query} != null ? '?query=' + ${query} + '&amp;' : '?') + (${searchBy} != null ? 'searchBy=' + ${searchBy} + '&amp;' : '') + (${statusFilter} != null ? 'statusFilter=' + ${statusFilter} + '&amp;' : '') + (${sort} != null ? 'sort=' + ${sort} + '&amp;' : '') + (${order} != null ? 'order=' + ${order} + '&amp;' : '') + 'page=' + ${currentPage - 1}}">
+                                <i class="bi bi-arrow-left"></i>
+                            </a>
+                            <span th:unless="${currentPage > 1}" class="page-link disabled">
+                        <i class="bi bi-arrow-left"></i>
+                    </span>
+                        </li>
+
+                        <li class="page-item" th:each="i: ${#numbers.sequence(currentPage - 1 > 0 ? currentPage - 1 : 1, currentPage + 1 < totalPages ? currentPage + 1 : totalPages)}">
+                            <a class="page-link" th:if="${currentPage != i}" th:href="@{'/allbooks' + (${query} != null ? '?query=' + ${query} + '&amp;' : '?') + (${searchBy} != null ? 'searchBy=' + ${searchBy} + '&amp;' : '') + (${statusFilter} != null ? 'statusFilter=' + ${statusFilter} + '&amp;' : '') + (${sort} != null ? 'sort=' + ${sort} + '&amp;' : '') + (${order} != null ? 'order=' + ${order} + '&amp;' : '') + 'page=' + ${i}}">
+                                <span th:text="${i}" th:class="${currentPage == i ? 'font-weight-bold' : ''}"></span>
+                            </a>
+                            <span class="page-link" th:unless="${currentPage != i}">
+                        <span th:text="${i}" th:class="${currentPage == i ? 'font-weight-bold text-dark' : 'text-muted'}"></span>
+                    </span>
+                        </li>
+
+                        <li class="page-item">
+                            <a th:if="${currentPage < totalPages}" class="page-link" th:href="@{'/allbooks' + (${query} != null ? '?query=' + ${query} + '&amp;' : '?') + (${searchBy} != null ? 'searchBy=' + ${searchBy} + '&amp;' : '') + (${statusFilter} != null ? 'statusFilter=' + ${statusFilter} + '&amp;' : '') + (${sort} != null ? 'sort=' + ${sort} + '&amp;' : '') + (${order} != null ? 'order=' + ${order} + '&amp;' : '') + 'page=' + ${currentPage + 1}}">
+                                <i class="bi bi-arrow-right"></i>
+                            </a>
+                            <span th:unless="${currentPage < totalPages}" class="page-link disabled">
+                        <i class="bi bi-arrow-right"></i>
+                    </span>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" th:href="@{'/allbooks' + (${query} != null ? '?query=' + ${query} + '&amp;' : '?') + (${searchBy} != null ? 'searchBy=' + ${searchBy} + '&amp;' : '') + (${statusFilter} != null ? 'statusFilter=' + ${statusFilter} + '&amp;' : '') + (${sort} != null ? 'sort=' + ${sort} + '&amp;' : '') + (${order} != null ? 'order=' + ${order} + '&amp;' : '') + 'page=' + ${totalPages}}">
+                                <i class="bi bi-chevron-double-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-3 text-center">
+                    <form method="get" th:action="@{'/allbooks'}" id = "pageFilter">
+
+                <span class="text-dark font-weight-bold">
+                    <input type="hidden" name="query" th:if="${query}" th:value="${query}" />
+                    <input type="hidden" name="searchBy" th:if="${searchBy}" th:value="${searchBy}" />
+                    <input type="hidden" name="statusFilter" th:if="${statusFilter}" th:value="${statusFilter}" />
+                    Page <input type="number" name="page" class="form-control" style="width: 60px; display: inline-block;" th:value="${currentPage}" /> out of <span th:text="${totalPages}"></span>
+                </span>
+                    </form>
+                </div>
             </div>
 
-            <div class="col-sm-1">
-                <a th:if="${currentPage < totalPages}" th:href="@{'/adminportal/books/page/' + ${totalPages}  }">Last</a>
-                <span th:unless="${currentPage < totalPages}">Last</span>
-            </div>
         </div>
     </div>
 </div>
-
-
+        </main>
+    </div>
+</div>
 </body>
 </html>

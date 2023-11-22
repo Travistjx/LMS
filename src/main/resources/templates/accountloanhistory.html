@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+  <meta charset="UTF-8">
+  <title>Loan History</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    /*Ensure table is centered and there's gap around it*/
+    .table-container {
+        margin: 50px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .nav-link:hover {
+        background-color: #2e2e2e; /* Background color when hovered over */
+        color: white; /* Text color when hovered over (optional) */
+        /* Other styles like padding, border-radius, etc. */
+        }
+
+        .nav-item a {
+            color: white; /* Text color for the first nav-link */
+
+        }
+
+        .nav-item #fifth-link {
+            background-color: #383838;
+        }
+
+         .filter-button {
+        background-color: #ffffff;
+        border: 1px solid #ced4da;
+        color: #495057;
+        padding: 6px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .filter-button:hover {
+        background-color: #f8f9fa;
+    }
+
+    .filter-button.active-filter-button {
+    background-color: #007bff !important;
+    color: #ffffff !important;
+}
+
+    .up-arrow {
+        width: 0;
+        height: 0;
+        border: solid 5px transparent;
+        background: transparent;
+        border-bottom: solid 7px grey;
+        border-top-width: 0;
+        cursor: pointer;
+
+    }
+
+    .down-arrow {
+        width: 0;
+        height: 0;
+        border: solid 5px transparent;
+        background: transparent;
+        border-top: solid 7px grey;
+        border-bottom-width: 0;
+        margin-top:1px;
+        cursor: pointer;
+    }
+
+    .arrow-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-left: 10px; /* Add some spacing between the arrows and the text */
+    }
+
+    .sortable-header {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+
+    }
+
+  </style>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+         // Get the current URL
+         var currentUrl = window.location.href;
+
+         if (currentUrl.indexOf('statusFilter=RETURNED') !== -1) {
+            changeButtonStyle('returnButton', '#007bff');
+        } else if (currentUrl.indexOf('statusFilter=ACTIVE') !== -1) {
+            changeButtonStyle('activeButton', '#007bff');
+        } else if (currentUrl.indexOf('statusFilter=OVERDUE') !== -1) {
+            changeButtonStyle('overdueButton', '#007bff');
+        } else if (currentUrl.indexOf('statusFilter=ALL') !== -1) {
+            changeButtonStyle('allButton', '#007bff');
+        }
+
+        function changeButtonStyle(buttonId, color) {
+            var button = document.getElementById(buttonId);
+            if (button) {
+                button.style.backgroundColor = color;
+                button.style.color = "white";
+            }
+        }
+
+     });
+
+    function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("myTable");
+            switching = true;
+
+            //Set the sorting direction to ascending:
+            dir = "asc";
+
+            /*Make a loop that will continue until
+            no switching has been done:*/
+
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+
+                /*Loop through all table rows (except the
+                first, which contains table headers):*/
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+
+                    /*Get the two elements you want to compare,
+                    one from current row and one from the next:*/
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+
+                    /*check if the two rows should switch place,
+                     based on the direction, asc or desc:*/
+                    if (dir == "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                          //if so, mark as a switch and break the loop:
+                          shouldSwitch= true;
+                          break;
+                        }
+                    }
+                    else if (dir == "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                          //if so, mark as a switch and break the loop:
+                          shouldSwitch = true;
+                          break;
+                        }
+                    }
+                }
+
+                if (shouldSwitch) {
+                    /*If a switch has been marked, make the switch
+                    and mark that a switch has been done:*/
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+
+                    switching = true;
+
+                    //Each time a switch is done, increase this count by 1:
+                    switchcount ++;
+                }
+                else {
+                        /*If no switching has been done AND the direction is "asc",
+                        set the direction to "desc" and run the while loop again.*/
+                        if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        updateArrows(n, dir);
+    }
+
+
+     function updateArrows(columnIndex, direction) {
+        var arrows = document.querySelectorAll(".arrow-container");
+        arrows[columnIndex].querySelector(".up-arrow").style.borderBottom = direction === "asc" ? "solid 7px black" : "solid 7px grey";
+        arrows[columnIndex].querySelector(".down-arrow").style.borderTop = direction === "desc" ? "solid 7px black" : "solid 7px grey";
+    }
+
+    function sortTableNumber(n) {
+                var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+                table = document.getElementById("myTable");
+                switching = true;
+
+                //Set the sorting direction to ascending:
+                dir = "asc";
+
+                /*Make a loop that will continue until
+                no switching has been done:*/
+
+                while (switching) {
+                    switching = false;
+                    rows = table.rows;
+
+                    /*Loop through all table rows (except the
+                    first, which contains table headers):*/
+                    for (i = 1; i < (rows.length - 1); i++) {
+                        shouldSwitch = false;
+
+                        /*Get the two elements you want to compare,
+                        one from current row and one from the next:*/
+                        x = rows[i].getElementsByTagName("TD")[n];
+                        y = rows[i + 1].getElementsByTagName("TD")[n];
+
+                        /*check if the two rows should switch place,
+                         based on the direction, asc or desc:*/
+                        if (dir == "asc") {
+                            if (Number(x.innerHTML) > Number(y.innerHTML)) {
+                                //if so, mark as a switch and break the loop:
+                                shouldSwitch = true;
+                                break;
+                              }
+                        }
+                        else if (dir == "desc") {
+                            if (Number(x.innerHTML) < Number(y.innerHTML)) {
+                                //if so, mark as a switch and break the loop:
+                                shouldSwitch = true;
+                                break;
+                              }
+                        }
+                    }
+
+                    if (shouldSwitch) {
+                        /*If a switch has been marked, make the switch
+                        and mark that a switch has been done:*/
+                        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+
+                        switching = true;
+
+                        //Each time a switch is done, increase this count by 1:
+                        switchcount ++;
+                    }
+                    else {
+                            /*If no switching has been done AND the direction is "asc",
+                            set the direction to "desc" and run the while loop again.*/
+                            if (switchcount == 0 && dir == "asc") {
+                            dir = "desc";
+                            switching = true;
+                        }
+                    }
+                }
+            updateArrows(n, dir);
+        }
+  </script>
+</head>
+<div th:replace="common/admin_navbar :: #navbar"></div>
+<div class="container-fluid">
+  <div class="row">
+    <div th:replace="common/admin_sidebar :: #navbar"></div>
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <div style="margin-top: 50px;">
+<div th:if="${param.success}">
+    <div class="alert alert-info">Book has been successfully deleted!</div>
+</div>
+        <a th:href = "@{/adminportal/manageaccounts}">< Back to manage accounts</a>
+
+  <h2 class="text-center">Loan History</h2>
+
+<br/>
+        <div class="form-outline" style="margin: 50px;">
+          <form th:action="@{/adminportal/manageaccounts/loanhistory}" method="get" id="filterForm">
+            <div style="display: flex; justify-content: center;">
+              <input type="hidden" name="memberId" th:value="${member_id}"/>
+              <input type="search" id="form1" class="form-control" name="query" placeholder="Type query" th:value="${param.query}" aria-label="Search" style="width: 80%;" />
+              <select class="form-select" id="searchBy" name="searchBy" style = "width: 15%">
+                <option value="any" th:selected="${searchBy == 'any'}">Any</option>
+                <option value="loanId" th:selected="${searchBy == 'loanId'}">Loan Id</option>
+                <option value="bookId" th:selected="${searchBy == 'bookId'}">Book Id</option>
+                <option value="title" th:selected="${searchBy == 'title'}">Title</option>
+                <option value="loanDateTime" th:selected="${searchBy == 'loanDateTime'}">Loan Date/Time</option>
+                <option value="dueDateTime" th:selected="${searchBy == 'dueDateTime'}">Due Date/Time</option>
+                <option value="returnedDateTime" th:selected="${searchBy == 'returnedDateTime'}">Returned Date/Time</option>
+                <option value="daysOverdue" th:selected="${searchBy == 'daysOverdue'}">Days Overdue</option>
+                <option value="fine" th:selected="${searchBy == 'fine'}">Fine</option>
+              </select>
+              <button class="filter-button" type="submit" name="statusFilter" value="ALL" id = "allButton">All</button>
+              <button class="filter-button" type="submit" name="statusFilter" value="OVERDUE" id = "overdueButton">Overdue</button>
+              <button class="filter-button" type="submit" name="statusFilter" value="ACTIVE" id = "activeButton">Active</button>
+              <button class="filter-button" type="submit" name="statusFilter" value="RETURNED" id = "returnButton">Returned</button>
+            </div>
+            <input type="hidden" name="page" th:value="1">
+          </form>
+        </div>
+<div class="table-container">
+  <table class="table table-bordered" id = "myTable">
+    <thead>
+    <tr>
+      <th onclick="sortTableNumber(0)">
+        <div class="sortable-header">
+          Loan Id
+          <div class="arrow-container">
+            <div class="up-arrow"></div>
+            <div class="down-arrow"></div>
+          </div>
+        </div>
+      </th>
+      <th onclick="sortTableNumber(1)">
+        <div class="sortable-header">
+          Book Id
+          <div class="arrow-container">
+            <div class="up-arrow"></div>
+            <div class="down-arrow"></div>
+          </div>
+        </div>
+      </th>
+      <th onclick="sortTable(2)">
+        <div class="sortable-header">
+          Title
+          <div class="arrow-container">
+            <div class="up-arrow"></div>
+            <div class="down-arrow"></div>
+          </div>
+        </div>
+      </th>
+      <th onclick="sortTable(3)">
+        <div class="sortable-header">
+          Loan Date/Time
+          <div class="arrow-container">
+            <div class="up-arrow"></div>
+            <div class="down-arrow"></div>
+          </div>
+        </div>
+      </th>
+      <th onclick="sortTable(4)">
+        <div class="sortable-header">
+          Due Date/Time
+          <div class="arrow-container">
+            <div class="up-arrow"></div>
+            <div class="down-arrow"></div>
+          </div>
+        </div>
+      </th>
+      <th onclick="sortTable(5)">
+        <div class="sortable-header">
+          Returned Date/Time
+          <div class="arrow-container">
+            <div class="up-arrow"></div>
+            <div class="down-arrow"></div>
+          </div>
+        </div>
+      </th>
+      <th onclick="sortTable(6)">
+        <div class="sortable-header">
+          Status
+          <div class="arrow-container">
+            <div class="up-arrow"></div>
+            <div class="down-arrow"></div>
+          </div>
+        </div>
+      </th>
+      <th onclick="sortTableNumber(7)">
+        <div class="sortable-header">
+          Days Overdue
+          <div class="arrow-container">
+            <div class="up-arrow"></div>
+            <div class="down-arrow"></div>
+          </div>
+        </div>
+      </th>
+      <th onclick="sortTableNumber(8)">
+        <div class="sortable-header">
+          Fine
+          <div class="arrow-container">
+            <div class="up-arrow"></div>
+            <div class="down-arrow"></div>
+          </div>
+        </div>
+      </th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="loan : ${loans}">
+      <td th:text="${loan.loan_id}"></td>
+      <td th:text="${loan.book.book_id}"></td>
+      <td th:text="${loan.book.title}"></td>
+      <td th:with="loanDateFormatted=${#temporals.format(loan.loanDateTime, 'yyyy-MM-dd, HH:mm:ss')}">
+        <span th:text="${loanDateFormatted}"></span>
+      </td>
+      <td th:with="dueDateFormatted=${#temporals.format(loan.dueDateTime, 'yyyy-MM-dd, HH:mm:ss')}">
+        <span th:text="${dueDateFormatted}"></span>
+      </td>
+      <td th:with="returnedDateFormatted=${#temporals.format(loan.returnedDateTime, 'yyyy-MM-dd, HH:mm:ss')}">
+        <span th:text="${returnedDateFormatted}"></span>
+      </td>
+      <td th:text="${loan.status}"></td>
+      <td th:text="${loan.daysOverdue}"></td>
+      <td th:text="${loan.fineAmount}"></td>
+      <td style = "display: flex; flex-direction: column;">
+        <a class="btn btn-primary" th:href="@{'/adminportal/updateloans?loanId=' + ${loan.loan_id}}" style = "margin-bottom: 5px;">Update</a>
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" th:data-bs-target="'#loanModal-' + ${loan.loan_id}">
+          Delete
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" th:id="'loanModal-' + ${loan.loan_id}" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="deleteModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-body">
+                <h5 class="card-title" th:text="${loan.loan_id}"></h5>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <form method="post" role="form" th:action="@{'/adminportal/manageaccounts/loanhistory/' + ${loan.loan_id}}">
+                  <input type="hidden" name="_method" value="DELETE" />
+                  <button type="submit" class="btn btn-danger" >Confirm Delete</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+        <div th:if="${totalPages > 1}">
+          <div class="row col-sm-10 align-items-center">
+            <div class="col-sm-6">
+              <ul class="pagination justify-content-center">
+                <li class="page-item">
+                  <a class="page-link" th:href="@{'/adminportal/manageaccounts/loanhistory' + (${member_id} != null ? '?memberId=' + ${member_id} + '&amp;' : '?') + (${query} != null ? 'query=' + ${query} + '&amp;' : '') + (${searchBy} != null ? 'searchBy=' + ${searchBy} + '&amp;' : '') + (${statusFilter} != null ? 'statusFilter=' + ${statusFilter} + '&amp;' : '') + 'page=1'}">
+                    <i class="bi bi-chevron-double-left"></i>
+                  </a>
+                </li>
+                <li class="page-item">
+                  <a th:if="${currentPage > 1}" class="page-link" th:href="@{'/adminportal/manageaccounts/loanhistory' + (${member_id} != null ? '?memberId=' + ${member_id} + '&amp;' : '?') + (${query} != null ? 'query=' + ${query} + '&amp;' : '') + (${searchBy} != null ? 'searchBy=' + ${searchBy} + '&amp;' : '') + (${statusFilter} != null ? 'statusFilter=' + ${statusFilter} + '&amp;' : '') + 'page=' + ${currentPage - 1}}">
+                    <i class="bi bi-arrow-left"></i>
+                  </a>
+                  <span th:unless="${currentPage > 1}" class="page-link disabled">
+                        <i class="bi bi-arrow-left"></i>
+                    </span>
+                </li>
+
+                <li class="page-item" th:each="i: ${#numbers.sequence(currentPage - 1 > 0 ? currentPage - 1 : 1, currentPage + 1 < totalPages ? currentPage + 1 : totalPages)}">
+                  <a class="page-link" th:if="${currentPage != i}" th:href="@{'/adminportal/manageaccounts/loanhistory' + (${member_id} != null ? '?memberId=' + ${member_id} + '&amp;' : '?') + (${query} != null ? 'query=' + ${query} + '&amp;' : '') + (${searchBy} != null ? 'searchBy=' + ${searchBy} + '&amp;' : '') + (${statusFilter} != null ? 'statusFilter=' + ${statusFilter} + '&amp;' : '') + 'page=' + ${i}}">
+                    <span th:text="${i}" th:class="${currentPage == i ? 'font-weight-bold' : ''}"></span>
+                  </a>
+                  <span class="page-link" th:unless="${currentPage != i}">
+                        <span th:text="${i}" th:class="${currentPage == i ? 'font-weight-bold text-dark' : 'text-muted'}"></span>
+                    </span>
+                </li>
+
+                <li class="page-item">
+                  <a th:if="${currentPage < totalPages}" class="page-link" th:href="@{'/adminportal/manageaccounts/loanhistory' + (${member_id} != null ? '?memberId=' + ${member_id} + '&amp;' : '?') + (${query} != null ? 'query=' + ${query} + '&amp;' : '') + (${searchBy} != null ? 'searchBy=' + ${searchBy} + '&amp;' : '') + (${statusFilter} != null ? 'statusFilter=' + ${statusFilter} + '&amp;' : '') + 'page=' + ${currentPage + 1}}">
+                    <i class="bi bi-arrow-right"></i>
+                  </a>
+                  <span th:unless="${currentPage < totalPages}" class="page-link disabled">
+                        <i class="bi bi-arrow-right"></i>
+                    </span>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" th:href="@{'/adminportal/manageaccounts/loanhistory' + (${member_id} != null ? '?memberId=' + ${member_id} + '&amp;' : '?') + (${query} != null ? 'query=' + ${query} + '&amp;' : '') + (${searchBy} != null ? 'searchBy=' + ${searchBy} + '&amp;' : '') + (${statusFilter} != null ? 'statusFilter=' + ${statusFilter} + '&amp;' : '') + 'page=' + ${totalPages}}">
+                    <i class="bi bi-chevron-double-right"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="col-sm-3 text-center">
+              <form method="get" th:action="@{'/adminportal/manageaccounts/loanhistory'}" id = "pageFilter">
+
+                <span class="text-dark font-weight-bold">
+                    <input type="hidden" name="memberId" th:if="${member_id}" th:value="${member_id}" />
+                    <input type="hidden" name="query" th:if="${query}" th:value="${query}" />
+                    <input type="hidden" name="searchBy" th:if="${searchBy}" th:value="${searchBy}" />
+                    <input type="hidden" name="statusFilter" th:if="${statusFilter}" th:value="${statusFilter}" />
+                    Page <input type="number" name="page" class="form-control" style="width: 60px; display: inline-block;" th:value="${currentPage}" /> out of <span th:text="${totalPages}"></span>
+                </span>
+              </form>
+            </div>
+          </div>
+
+        </div>
+</html>
