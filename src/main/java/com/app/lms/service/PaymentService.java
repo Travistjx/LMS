@@ -14,7 +14,8 @@ import java.util.Optional;
 
 public interface PaymentService {
     void makePayment (Collection<FineDto> fineDtos, Double fineAmount, String paymentMethod, String email);
-    Page<PaymentDto> searchPayments(String query, Pageable pageable, Optional<Long> id, IdType idType, String statusFilter, String searchBy);
+    Page<PaymentDto> searchPayments(String query, Pageable pageable, Optional<Long> id, IdType idType,
+                                    String statusFilter, String searchBy, String sort, String order);
     Page<PaymentDto> findPaginated(int pageNo, int pageSize, Optional<Long> id, IdType idType);
     PaymentDto getPaymentsByUser (Long member_id);
 }

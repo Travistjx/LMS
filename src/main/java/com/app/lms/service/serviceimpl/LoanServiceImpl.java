@@ -182,19 +182,19 @@ public class LoanServiceImpl implements LoanService {
             }
             if (idType == IdType.BOOK_ID){
                 if (searchBy.equals("any")){
-                    selectedLoans = loanRepository.searchLoansByBookWithStatusAndByAny(query, selectedId, status, pageable);
+                    selectedLoans = loanRepository.searchLoansByBookWithStatusAndByAny(query, selectedId, status, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
                 }
                 else {
-                    selectedLoans = loanRepository.searchLoansByBookWithStatusAndNotAny(query, selectedId, status, searchBy, pageable);
+                    selectedLoans = loanRepository.searchLoansByBookWithStatusAndNotAny(query, selectedId, status, searchBy, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
                 }
             }
         }
         else {
             if (searchBy.equals("any")){
-                selectedLoans = loanRepository.searchLoansWithStatusAndByAny(query, status, pageable);
+                selectedLoans = loanRepository.searchLoansWithStatusAndByAny(query, status, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
             }
             else {
-                selectedLoans = loanRepository.searchLoansWithStatusAndNotAny(query, status, searchBy, pageable);
+                selectedLoans = loanRepository.searchLoansWithStatusAndNotAny(query, status, searchBy, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
             }
         }
 

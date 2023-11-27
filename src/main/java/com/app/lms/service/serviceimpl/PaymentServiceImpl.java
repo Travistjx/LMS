@@ -11,10 +11,7 @@ import com.app.lms.service.MemberService;
 import com.app.lms.service.PaymentService;
 import com.app.lms.web.*;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -99,7 +96,8 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Page<PaymentDto> searchPayments(String query, Pageable pageable, Optional<Long> id, IdType idType, String statusFilter, String searchBy) {
+    public Page<PaymentDto> searchPayments(String query, Pageable pageable, Optional<Long> id, IdType idType,
+                                           String statusFilter, String searchBy, String sort, String order) {
         Page<Payment> selectedPayment = null;
 
         PaymentStatus status = PaymentStatus.FAILED;
@@ -116,26 +114,68 @@ public class PaymentServiceImpl implements PaymentService {
             status = PaymentStatus.PENDING;
         }
 
+        Sort.Direction direction = Sort.Direction.ASC;
 
+        if (order.equals("desc")){
+            direction = Sort.Direction.DESC;
+        }
+
+        Sort sortable = Sort.by(direction, "payment_id"); // Default sorting by title
+
+
+
+        if (sort != null) {
+            switch (sort) {
+                case "fineId":
+                    sortable = Sort.by(direction, "a.fine_id");
+                    break;
+                case "invoiceNumber":
+                    sortable = Sort.by(direction, "invoiceNumber");
+                    break;
+                case "transactionRef":
+                    sortable = Sort.by(direction, "transactionReference");
+                    break;
+                case "title":
+                    sortable = Sort.by(direction, "book.title");
+                    break;
+                case "paymentMethod":
+                    sortable = Sort.by(direction, "paymentMethod");
+                    break;
+                case "amount":
+                    sortable = Sort.by(direction, "paymentAmount");
+                    break;
+                case "paymentDateTime":
+                    sortable = Sort.by(direction, "paymentDateTime");
+                    break;
+                case "memberId":
+                    sortable = Sort.by(direction, "member.member_id");
+                    break;
+                case "name":
+                    sortable = Sort.by(direction, "member.firstName");
+                    break;
+            }
+        }
 
         if (id.isPresent()){
             Long selectedId = id.get();
 
             if (idType == IdType.MEMBER_ID) {
                 if (searchBy.equals("any")){
-                    selectedPayment = paymentRepository.searchPaymentsByMemberWithStatusAndByAny(query, selectedId, status, pageable);
+                    selectedPayment = paymentRepository.searchPaymentsByMemberWithStatusAndByAny(query,
+                            selectedId, status, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
                 }
                 else {
-                    selectedPayment = paymentRepository.searchPaymentsByMemberWithStatusAndNotAny(query, selectedId, status, searchBy,pageable);
+                    selectedPayment = paymentRepository.searchPaymentsByMemberWithStatusAndNotAny(query,
+                            selectedId, status, searchBy, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
                 }
             }
         }
         else {
             if (searchBy.equals("any")){
-                selectedPayment = paymentRepository.searchPaymentsWithStatusAndByAny(query, status, pageable);
+                selectedPayment = paymentRepository.searchPaymentsWithStatusAndByAny(query, status, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
             }
             else {
-                selectedPayment = paymentRepository.searchPaymentsWithStatusAndNotAny(query, status, searchBy, pageable);
+                selectedPayment = paymentRepository.searchPaymentsWithStatusAndNotAny(query, status, searchBy, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
             }
         }
 

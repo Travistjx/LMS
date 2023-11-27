@@ -8,10 +8,7 @@ import com.app.lms.web.AuthorDto;
 import com.app.lms.web.BookDto;
 import com.app.lms.web.MemberDto;
 import com.app.lms.web.RoleDto;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -193,7 +190,8 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Page<MemberDto> searchMembers(String query, Pageable pageable, String statusFilter, String searchBy) {
+    public Page<MemberDto> searchMembers(String query, Pageable pageable, String statusFilter, String searchBy,
+                                         String sort, String order) {
         Page<Member> memberPage = null;
         String status = "";
         if (statusFilter.equals("ALL")){
@@ -203,11 +201,34 @@ public class MemberServiceImpl implements MemberService {
             status = statusFilter;
         }
 
+        Sort.Direction direction = Sort.Direction.ASC;
+
+        if (order.equals("desc")){
+            direction = Sort.Direction.DESC;
+        }
+
+        Sort sortable = Sort.by(direction, "member_id"); // Default sorting by title
+
+
+        if (sort != null) {
+            switch (sort) {
+                case "firstName":
+                    sortable = Sort.by(direction, "firstName");
+                    break;
+                case "lastName":
+                    sortable = Sort.by(direction, "lastName");
+                    break;
+                case "email":
+                    sortable = Sort.by(direction, "email");
+                    break;
+            }
+        }
+
         if (searchBy.equals("any")){
-            memberPage = memberRepository.searchMembersWithStatusAndByAny(query, status, pageable);
+            memberPage = memberRepository.searchMembersWithStatusAndByAny(query, status, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
         }
         else {
-            memberPage = memberRepository.searchMembersWithStatusAndNotAny(query, status, searchBy, pageable);
+            memberPage = memberRepository.searchMembersWithStatusAndNotAny(query, status, searchBy, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
         }
         List<MemberDto> memberDtoList = memberPage.getContent().stream()
                 .map(this::convertEntityToDto)

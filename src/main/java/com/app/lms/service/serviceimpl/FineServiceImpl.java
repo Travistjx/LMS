@@ -157,6 +157,12 @@ public class FineServiceImpl implements FineService {
                 case "title":
                     sortable = Sort.by(direction, "loan.book.title");
                     break;
+                case "memberId":
+                    sortable = Sort.by(direction, "loan.member.member_id");
+                    break;
+                case "name":
+                    sortable = Sort.by(direction, "loan.member.firstName");
+                    break;
                 case "fine":
                     sortable = Sort.by(direction, "amount");
                     break;
@@ -179,10 +185,10 @@ public class FineServiceImpl implements FineService {
         }
         else {
             if (searchBy.equals("any")){
-                selectedFines = fineRepository.searchFinesWithStatusAndByAny(query, status, pageable);
+                selectedFines = fineRepository.searchFinesWithStatusAndByAny(query, status, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
             }
             else {
-                selectedFines = fineRepository.searchFinesWithStatusAndNotAny(query, status, searchBy, pageable);
+                selectedFines = fineRepository.searchFinesWithStatusAndNotAny(query, status, searchBy, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
             }
         }
 

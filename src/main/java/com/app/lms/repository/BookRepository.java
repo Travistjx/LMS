@@ -39,32 +39,4 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     Page<Book> searchForBooksWithStatusAndNotAny(@Param("query") String query, @Param("searchBy") String searchBy,
                                                  BookStatus statusFilter, Pageable pageable);
 
-    @Query("SELECT b FROM Book b " +
-            "WHERE(b.title LIKE %:query%)" +
-            "AND (:statusFilter IS NULL OR b.status = :statusFilter)")
-    Page<Book> searchForBooksByTitle(@Param("query") String query, Pageable pageable, BookStatus statusFilter);
-
-    @Query("SELECT b FROM Book b " +
-            "WHERE(b.description LIKE %:query%)" +
-            "AND (:statusFilter IS NULL OR b.status = :statusFilter)")
-    Page<Book> searchForBooksByDescription(@Param("query") String query, Pageable pageable, BookStatus statusFilter);
-
-    @Query("SELECT b FROM Book b " +
-            "LEFT JOIN b.authors a " +
-            "WHERE (a.firstName LIKE %:query% OR " +
-            "a.lastName LIKE %:query%)" +
-            "AND (:statusFilter IS NULL OR b.status = :statusFilter)")
-    Page<Book> searchForBooksByAuthor(@Param("query") String query, Pageable pageable, BookStatus statusFilter);
-
-    @Query("SELECT b FROM Book b " +
-            "WHERE (b.category LIKE %:query%)" +
-            "AND (:statusFilter IS NULL OR b.status = :statusFilter)")
-    Page<Book> searchForBooksByCategory(@Param("query") String query, Pageable pageable, BookStatus statusFilter);
-
-    @Query("SELECT b FROM Book b " +
-            "WHERE (b.publication_year LIKE %:query%)" +
-            "AND (:statusFilter IS NULL OR b.status = :statusFilter)")
-    Page<Book> searchForBooksByPublicationYear(@Param("query") String query, Pageable pageable, BookStatus statusFilter);
-
-
 }

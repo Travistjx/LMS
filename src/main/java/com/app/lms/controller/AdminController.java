@@ -133,12 +133,14 @@ public class AdminController {
                                            @RequestParam(name = "query", required = false) String query,
                                            @RequestParam(name = "searchBy", required = false) String searchBy,
                                            @RequestParam(name = "statusFilter", required = false) String statusFilter,
+                                           @RequestParam(name = "sort", required = false) String sort,
+                                           @RequestParam(name = "order", required = false) String order,
                                            Model model) {
         int pageSize = 5;
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
         Page<BookDto> page;
         if ((query != null && !query.isEmpty()) || searchBy != null || statusFilter != null)  {
-            page = bookService.searchBooks(query, pageable, searchBy, statusFilter, null, null);
+            page = bookService.searchBooks(query, pageable, searchBy, statusFilter, sort, order);
         } else {
             // Otherwise, retrieve paginated members
             page = bookService.findPaginated(pageNo, pageSize);
@@ -152,6 +154,8 @@ public class AdminController {
         model.addAttribute("query", query);
         model.addAttribute("searchBy", searchBy);
         model.addAttribute("statusFilter", statusFilter);
+        model.addAttribute("sort", sort);
+        model.addAttribute("order", order);
         return "managebooks";
     }
 
@@ -221,12 +225,14 @@ public class AdminController {
                                               @RequestParam(name = "query", required = false) String query,
                                               @RequestParam(name = "searchBy", required = false) String searchBy,
                                               @RequestParam(name = "statusFilter", required = false) String statusFilter,
+                                              @RequestParam(name = "sort", required = false) String sort,
+                                              @RequestParam(name = "order", required = false) String order,
                                               Model model) {
         int pageSize = 5;
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
         Page<MemberDto> page;
         if ((query != null && !query.isEmpty()) || statusFilter != null || searchBy != null) {
-            page = memberService.searchMembers(query, pageable, statusFilter, searchBy);
+            page = memberService.searchMembers(query, pageable, statusFilter, searchBy, sort, order);
         } else {
             // Otherwise, retrieve paginated members
             page = memberService.findPaginated(pageNo, pageSize);
@@ -240,6 +246,8 @@ public class AdminController {
         model.addAttribute("query", query);
         model.addAttribute("statusFilter", statusFilter);
         model.addAttribute("searchBy", searchBy);
+        model.addAttribute("sort", sort);
+        model.addAttribute("order", order);
         return "manageaccounts";
     }
 
@@ -302,12 +310,14 @@ public class AdminController {
                                               @RequestParam(name = "query", required = false) String query,
                               @RequestParam(name = "searchBy", required = false) String searchBy,
                               @RequestParam(name = "statusFilter", required = false) String statusFilter,
-                                              Model model) {
+                              @RequestParam(name = "sort", required = false) String sort,
+                              @RequestParam(name = "order", required = false) String order,
+                              Model model) {
         int pageSize = 5;
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
         Page<LoanDto> page;
         if ((query != null && !query.isEmpty()) || statusFilter != null || searchBy != null) {
-            page = loanService.searchLoans(query, pageable, Optional.empty(), IdType.NONE, statusFilter, searchBy, null ,null);
+            page = loanService.searchLoans(query, pageable, Optional.empty(), IdType.NONE, statusFilter, searchBy, sort ,order);
         } else {
             // Otherwise, retrieve paginated members
             page = loanService.findPaginated(pageNo, pageSize, Optional.empty(), IdType.NONE);
@@ -322,6 +332,8 @@ public class AdminController {
         model.addAttribute("query", query);
         model.addAttribute("statusFilter", statusFilter);
         model.addAttribute("searchBy", searchBy);
+        model.addAttribute("sort", sort);
+        model.addAttribute("order", order);
         return "manageloans";
     }
 
@@ -365,15 +377,17 @@ public class AdminController {
     public String showAccountLoanHistory(@RequestParam(name = "memberId") Long id,
                                 @RequestParam(name = "page", defaultValue = "1") int pageNo,
                               @RequestParam(name = "query", required = false) String query,
-                                         @RequestParam(name = "searchBy", required = false) String searchBy,
-                                         @RequestParam(name = "statusFilter", required = false) String statusFilter,
-
+                             @RequestParam(name = "searchBy", required = false) String searchBy,
+                             @RequestParam(name = "statusFilter", required = false) String statusFilter,
+                             @RequestParam(name = "sort", required = false) String sort,
+                             @RequestParam(name = "order", required = false) String order,
                               Model model) {
         int pageSize = 5;
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
         Page<LoanDto> page;
         if ((query != null && !query.isEmpty()) || statusFilter != null){
-            page = loanService.searchLoans(query, pageable, Optional.of(id), IdType.MEMBER_ID, statusFilter, searchBy, null, null);
+            page = loanService.searchLoans(query, pageable, Optional.of(id), IdType.MEMBER_ID,
+                    statusFilter, searchBy, sort, order);
         } else {
             // Otherwise, retrieve paginated members
             page = loanService.findPaginated(pageNo, pageSize, Optional.of(id), IdType.MEMBER_ID);
@@ -388,6 +402,8 @@ public class AdminController {
         model.addAttribute("statusFilter", statusFilter);
         model.addAttribute("member_id", id);
         model.addAttribute("searchBy", searchBy);
+        model.addAttribute("sort", sort);
+        model.addAttribute("order", order);
         return "accountloanhistory";
     }
 
@@ -397,13 +413,15 @@ public class AdminController {
                                          @RequestParam(name = "query", required = false) String query,
                                       @RequestParam(name = "searchBy", required = false) String searchBy,
                                       @RequestParam(name = "statusFilter", required = false) String statusFilter,
+                                      @RequestParam(name = "sort", required = false) String sort,
+                                      @RequestParam(name = "order", required = false) String order,
                                       Model model) {
         int pageSize = 5;
 
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
         Page<LoanDto> page;
         if ((query != null && !query.isEmpty()) || statusFilter != null || searchBy != null){
-            page = loanService.searchLoans(query, pageable, Optional.of(id), IdType.BOOK_ID, statusFilter, searchBy, null, null);
+            page = loanService.searchLoans(query, pageable, Optional.of(id), IdType.BOOK_ID, statusFilter, searchBy, sort, order);
         } else {
             // Otherwise, retrieve paginated members
             page = loanService.findPaginated(pageNo, pageSize, Optional.of(id), IdType.BOOK_ID);
@@ -418,6 +436,8 @@ public class AdminController {
         model.addAttribute("statusFilter", statusFilter);
         model.addAttribute("searchBy", searchBy);
         model.addAttribute("book_id", id);
+        model.addAttribute("sort", sort);
+        model.addAttribute("order", order);
         return "bookloanhistory";
     }
 
@@ -429,12 +449,14 @@ public class AdminController {
                               @RequestParam(name = "query", required = false) String query,
                               @RequestParam(name = "searchBy", required = false) String searchBy,
                               @RequestParam(name = "statusFilter", required = false) String statusFilter,
+                              @RequestParam(name = "sort", required = false) String sort,
+                              @RequestParam(name = "order", required = false) String order,
                               Model model) {
         int pageSize = 5;
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
         Page<FineDto> page;
         if (query != null && !query.isEmpty() || statusFilter != null || searchBy != null) {
-            page = fineService.searchFines(query, pageable, Optional.empty(), IdType.NONE, statusFilter, searchBy, null, null);
+            page = fineService.searchFines(query, pageable, Optional.empty(), IdType.NONE, statusFilter, searchBy, sort, order);
         } else {
             // Otherwise, retrieve paginated members
             page = fineService.findPaginated(pageNo, pageSize, Optional.empty(), IdType.NONE);
@@ -449,7 +471,8 @@ public class AdminController {
         model.addAttribute("query", query);
         model.addAttribute("statusFilter", statusFilter);
         model.addAttribute("searchBy", searchBy);
-
+        model.addAttribute("sort", sort);
+        model.addAttribute("order", order);
         return "manageFines";
     }
 
@@ -490,12 +513,14 @@ public class AdminController {
                                      @RequestParam(name = "query", required = false) String query,
                                   @RequestParam(name = "searchBy", required = false) String searchBy,
                                   @RequestParam(name = "statusFilter", required = false) String statusFilter,
-                                     Model model) {
+                                  @RequestParam(name = "sort", required = false) String sort,
+                                  @RequestParam(name = "order", required = false) String order,
+                                  Model model) {
         int pageSize = 5;
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
         Page<PaymentDto> page;
         if (query != null && !query.isEmpty() || statusFilter != null || searchBy != null) {
-            page = paymentService.searchPayments(query, pageable, Optional.empty(), IdType.NONE, statusFilter, searchBy);
+            page = paymentService.searchPayments(query, pageable, Optional.empty(), IdType.NONE, statusFilter, searchBy, sort, order);
         } else {
             // Otherwise, retrieve paginated members
             page = paymentService.findPaginated(pageNo, pageSize, Optional.empty(), IdType.NONE);
@@ -509,6 +534,8 @@ public class AdminController {
         model.addAttribute("query", query);
         model.addAttribute("statusFilter", statusFilter);
         model.addAttribute("searchBy", searchBy);
+        model.addAttribute("sort", sort);
+        model.addAttribute("order", order);
         return "paymentLogs";
     }
 }
