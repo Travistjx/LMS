@@ -393,6 +393,8 @@ public class MemberController {
                                   @RequestParam(name = "query", required = false) String query,
                                      @RequestParam(name = "searchBy", required = false) String searchBy,
                                      @RequestParam(name = "statusFilter", required = false) String statusFilter,
+                                     @RequestParam(name = "sort", required = false) String sort,
+                                     @RequestParam(name = "order", required = false) String order,
                                      Model model) {
         String username = principal.getName();
         MemberDto member = memberService.findByEmail(username);
@@ -401,7 +403,8 @@ public class MemberController {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
         Page<PaymentDto> page;
         if ((query != null && !query.isEmpty()) || statusFilter != null || searchBy != null){
-            page = paymentService.searchPayments(query, pageable, Optional.of(member.getMember_id()), IdType.MEMBER_ID, statusFilter, searchBy);
+            page = paymentService.searchPayments(query, pageable, Optional.of(member.getMember_id()),
+                    IdType.MEMBER_ID, statusFilter, searchBy, sort, order);
         } else {
             // Otherwise, retrieve paginated members
             page = paymentService.findPaginated(pageNo, pageSize, Optional.of(member.getMember_id()), IdType.MEMBER_ID);
@@ -415,6 +418,8 @@ public class MemberController {
         model.addAttribute("query", query);
         model.addAttribute("statusFilter", statusFilter);
         model.addAttribute("searchBy", searchBy);
+        model.addAttribute("sort", sort);
+        model.addAttribute("order", order);
         return "paymentHistory";
     }
 }

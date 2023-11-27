@@ -40,7 +40,8 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
             "((:searchBy = 'name' AND l.member.firstName LIKE %:query%) OR " +
             "(:searchBy = 'name' AND l.member.lastName LIKE %:query%)) OR " +
             "(:searchBy = 'memberId' AND l.member.member_id LIKE %:query%) OR " +
-            "(:searchBy = 'fineId' AND a.fine_id LIKE %:query%)) " +
+            "(:searchBy = 'fineId' AND a.fine_id LIKE %:query%)) OR " +
+            "(:searchBy = 'paymentType' AND l.paymentMethod LIKE %:query%) " +
             "AND (:statusFilter IS NULL OR l.status = :statusFilter)"  +
             "GROUP BY l.payment_id")
     Page<Payment> searchPaymentsWithStatusAndNotAny(@Param("query") String query,
@@ -73,6 +74,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
             "(:searchBy = 'paymentAmount' AND l.paymentAmount LIKE %:query%) OR " +
             "(:searchBy = 'transactionReference' AND l.transactionReference LIKE %:query%) OR " +
             "(:searchBy = 'paymentDateTime' AND l.paymentDateTime LIKE %:query%) OR " +
+            "(:searchBy = 'paymentType' AND l.paymentMethod LIKE %:query%) OR " +
             "(:searchBy = 'fineId' AND a.fine_id LIKE %:query%)) AND " +
             "(l.member.member_id = :member_id) " +
             "AND (:statusFilter IS NULL OR l.status = :statusFilter)"  +

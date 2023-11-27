@@ -266,30 +266,94 @@
         <a th:href = "@{/adminportal/managebooks}">< Back to manage books</a>
   <h2 class="text-center">Loan History</h2>
 <br/>
-        <div class="form-outline" style="margin: 50px;">
-          <form th:action="@{/adminportal/managebooks/loanhistory}" method="get" id="filterForm">
-            <div style="display: flex; justify-content: center;">
-              <input type="hidden" name="bookId" th:value="${book_id}"/>
-              <input type="search" id="form1" class="form-control" name="query" placeholder="Type query" th:value="${param.query}" aria-label="Search" style="width: 80%;" />
-              <select class="form-select" id="searchBy" name="searchBy" style = "width: 15%">
-                <option value="any" th:selected="${searchBy == 'any'}">Any</option>
-                <option value="loanId" th:selected="${searchBy == 'loanId'}">Loan Id</option>
-                <option value="memberId" th:selected="${searchBy == 'memberId'}">Member Id</option>
-                <option value="name" th:selected="${searchBy == 'name'}">Name</option>
-                <option value="loanDateTime" th:selected="${searchBy == 'loanDateTime'}">Loan Date/Time</option>
-                <option value="dueDateTime" th:selected="${searchBy == 'dueDateTime'}">Due Date/Time</option>
-                <option value="returnedDateTime" th:selected="${searchBy == 'returnedDateTime'}">Returned Date/Time</option>
-                <option value="daysOverdue" th:selected="${searchBy == 'daysOverdue'}">Days Overdue</option>
-                <option value="fine" th:selected="${searchBy == 'fine'}">Fine</option>
-              </select>
-              <button class="filter-button" type="submit" name="statusFilter" value="ALL" id = "allButton">All</button>
-              <button class="filter-button" type="submit" name="statusFilter" value="OVERDUE" id = "overdueButton">Overdue</button>
-              <button class="filter-button" type="submit" name="statusFilter" value="ACTIVE" id = "activeButton">Active</button>
-              <button class="filter-button" type="submit" name="statusFilter" value="RETURNED" id = "returnButton">Returned</button>
+        <form th:action="@{/adminportal/managebooks/loanhistory}" method="get">
+          <div style = "display:flex; margin: 50px; justify-content: center;">
+            <input type="hidden" name="bookId" th:value="${book_id}"/>
+            <input type="search" id="form1" style = "width:55%" class="form-control" name="query" placeholder="Type query" th:value="${param.query}" aria-label="Search" />
+            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#filterModal">
+              Add Filters
+            </button>
+          </div>
+          <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Filters</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <!-- Your filters go here -->
+
+                  <!-- Query -->
+
+                  <!-- Search By -->
+                  <div class="mb-3">
+                    <label for="searchBy" class="form-label"><b>Search By:</b></label>
+                    <select class="form-select" id="searchBy" name="searchBy" >
+                      <option value="any" th:selected="${searchBy == 'any'}">Any</option>
+                      <option value="loanId" th:selected="${searchBy == 'loanId'}">Loan Id</option>
+                      <option value="memberId" th:selected="${searchBy == 'memberId'}">Member Id</option>
+                      <option value="name" th:selected="${searchBy == 'name'}">Name</option>
+                      <option value="loanDateTime" th:selected="${searchBy == 'loanDateTime'}">Loan Date/Time</option>
+                      <option value="dueDateTime" th:selected="${searchBy == 'dueDateTime'}">Due Date/Time</option>
+                      <option value="returnedDateTime" th:selected="${searchBy == 'returnedDateTime'}">Returned Date/Time</option>
+                      <option value="daysOverdue" th:selected="${searchBy == 'daysOverdue'}">Days Overdue</option>
+                      <option value="fine" th:selected="${searchBy == 'fine'}">Fine</option>
+                    </select>
+                  </div>
+                  <!-- Status Filter -->
+                  <div class="mb-3">
+                    <label><b>Status Filter:</b></label><br>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="statusFilter" id="allRadio" value="ALL" th:checked="${statusFilter == null or statusFilter == 'ALL'}">
+                      <label class="form-check-label" for="allRadio">All</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="statusFilter" id="overdueRadio" value="OVERDUE" th:checked="${statusFilter == 'OVERDUE'}">
+                      <label class="form-check-label" for="overdueRadio">Overdue</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="statusFilter" id="activeRadio" value="ACTIVE" th:checked="${statusFilter == 'ACTIVE'}">
+                      <label class="form-check-label" for="activeRadio">Active</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="statusFilter" id="returnedRadio" value="RETURNED" th:checked="${statusFilter == 'RETURNED'}">
+                      <label class="form-check-label" for="returnedRadio">Returned</label>
+                    </div>
+                  </div>
+                  <!-- Sorting -->
+                  <div style = "display: flex;">
+                    <div class="mb-3">
+                      <label for="sort" class="form-label"><b>Sort By:</b></label>
+                      <select class="form-select" id="sort" name="sort">
+                        <!-- Options go here -->
+                        <option value="loanId" th:selected="${sort == 'loanId'}">Loan Id</option>
+                        <option value="memberId" th:selected="${sort == 'memberId'}">Member Id</option>
+                        <option value="name" th:selected="${sort == 'name'}">Name</option>
+                        <option value="loanDateTime" th:selected="${sort == 'loanDateTime'}">Loan Date/Time</option>
+                        <option value="returnedDateTime" th:selected="${sort == 'returnedDateTime'}">Returned Date/Time</option>
+                        <option value="dueDateTime" th:selected="${sort == 'dueDateTime'}">Due Date/Time</option>
+                        <option value="daysOverdue" th:selected="${sort == 'daysOverdue'}">Days Overdue</option>
+                        <option value="fine" th:selected="${sort == 'fine'}">Fine</option>
+                      </select>
+                    </div>
+                    <div class="mb-3" style = "margin-left: 10px;">
+                      <label for="order" class="form-label"><b>Order:</b></label>
+                      <select class="form-select" id="order" name="order">
+                        <!-- Options go here -->
+                        <option value="asc" th:selected="${order == 'asc'}">Ascending</option>
+                        <option value="desc" th:selected="${order == 'desc'}">Descending</option>
+                      </select>
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Apply Filters</button>
+
+                </div>
+              </div>
             </div>
-            <input type="hidden" name="page" th:value="1">
-          </form>
-        </div>
+          </div>
+
+        </form>
 <div class="table-container">
   <table class="table table-bordered" id = "myTable">
     <thead>
@@ -429,12 +493,12 @@
             <div class="col-sm-6">
               <ul class="pagination justify-content-center">
                 <li class="page-item">
-                  <a class="page-link" th:href="@{'/adminportal/managebooks/loanhistory' + (${book_id} != null ? '?bookId=' + ${book_id} + '&amp;' : '?') + (${query} != null ? 'query=' + ${query} + '&amp;' : '') + (${searchBy} != null ? 'searchBy=' + ${searchBy} + '&amp;' : '') + (${statusFilter} != null ? 'statusFilter=' + ${statusFilter} + '&amp;' : '') + 'page=1'}">
+                  <a class="page-link" th:href="@{'/adminportal/managebooks/loanhistory' + (${book_id} != null ? '?bookId=' + ${book_id} + '&amp;' : '?') + (${query} != null ? 'query=' + ${query} + '&amp;' : '?') + (${searchBy} != null ? 'searchBy=' + ${searchBy} + '&amp;' : '') + (${statusFilter} != null ? 'statusFilter=' + ${statusFilter} + '&amp;' : '') + (${sort} != null ? 'sort=' + ${sort} + '&amp;' : '') + (${order} != null ? 'order=' + ${order} + '&amp;' : '') + 'page=1'}">
                     <i class="bi bi-chevron-double-left"></i>
                   </a>
                 </li>
                 <li class="page-item">
-                  <a th:if="${currentPage > 1}" class="page-link" th:href="@{'/adminportal/managebooks/loanhistory' + (${book_id} != null ? '?bookId=' + ${book_id} + '&amp;' : '?') + (${query} != null ? 'query=' + ${query} + '&amp;' : '') + (${searchBy} != null ? 'searchBy=' + ${searchBy} + '&amp;' : '') + (${statusFilter} != null ? 'statusFilter=' + ${statusFilter} + '&amp;' : '') + 'page=' + ${currentPage - 1}}">
+                  <a th:if="${currentPage > 1}" class="page-link" th:href="@{'/adminportal/managebooks/loanhistory' + (${book_id} != null ? '?bookId=' + ${book_id} + '&amp;' : '?') +  (${query} != null ? 'query=' + ${query} + '&amp;' : '?') + (${searchBy} != null ? 'searchBy=' + ${searchBy} + '&amp;' : '') + (${statusFilter} != null ? 'statusFilter=' + ${statusFilter} + '&amp;' : '') + (${sort} != null ? 'sort=' + ${sort} + '&amp;' : '') + (${order} != null ? 'order=' + ${order} + '&amp;' : '') + 'page=' + ${currentPage - 1}}">
                     <i class="bi bi-arrow-left"></i>
                   </a>
                   <span th:unless="${currentPage > 1}" class="page-link disabled">
@@ -443,7 +507,7 @@
                 </li>
 
                 <li class="page-item" th:each="i: ${#numbers.sequence(currentPage - 1 > 0 ? currentPage - 1 : 1, currentPage + 1 < totalPages ? currentPage + 1 : totalPages)}">
-                  <a class="page-link" th:if="${currentPage != i}" th:href="@{'/adminportal/managebooks/loanhistory' + (${book_id} != null ? '?bookId=' + ${book_id} + '&amp;' : '?') + (${query} != null ? 'query=' + ${query} + '&amp;' : '') + (${searchBy} != null ? 'searchBy=' + ${searchBy} + '&amp;' : '') + (${statusFilter} != null ? 'statusFilter=' + ${statusFilter} + '&amp;' : '') + 'page=' + ${i}}">
+                  <a class="page-link" th:if="${currentPage != i}" th:href="@{'/adminportal/managebooks/loanhistory' + (${book_id} != null ? '?bookId=' + ${book_id} + '&amp;' : '?') +  (${query} != null ? 'query=' + ${query} + '&amp;' : '?') + (${searchBy} != null ? 'searchBy=' + ${searchBy} + '&amp;' : '') + (${statusFilter} != null ? 'statusFilter=' + ${statusFilter} + '&amp;' : '') + (${sort} != null ? 'sort=' + ${sort} + '&amp;' : '') + (${order} != null ? 'order=' + ${order} + '&amp;' : '') + 'page=' + ${i}}">
                     <span th:text="${i}" th:class="${currentPage == i ? 'font-weight-bold' : ''}"></span>
                   </a>
                   <span class="page-link" th:unless="${currentPage != i}">
@@ -452,7 +516,7 @@
                 </li>
 
                 <li class="page-item">
-                  <a th:if="${currentPage < totalPages}" class="page-link" th:href="@{'/adminportal/managebooks/loanhistory' + (${book_id} != null ? '?bookId=' + ${book_id} + '&amp;' : '?') + (${query} != null ? 'query=' + ${query} + '&amp;' : '') + (${searchBy} != null ? 'searchBy=' + ${searchBy} + '&amp;' : '') + (${statusFilter} != null ? 'statusFilter=' + ${statusFilter} + '&amp;' : '') + 'page=' + ${currentPage + 1}}">
+                  <a th:if="${currentPage < totalPages}" class="page-link" th:href="@{'/adminportal/managebooks/loanhistory' + (${book_id} != null ? '?bookId=' + ${book_id} + '&amp;' : '?') +  (${query} != null ? 'query=' + ${query} + '&amp;' : '?') + (${searchBy} != null ? 'searchBy=' + ${searchBy} + '&amp;' : '') + (${statusFilter} != null ? 'statusFilter=' + ${statusFilter} + '&amp;' : '') + (${sort} != null ? 'sort=' + ${sort} + '&amp;' : '') + (${order} != null ? 'order=' + ${order} + '&amp;' : '') + 'page=' + ${currentPage + 1}}">
                     <i class="bi bi-arrow-right"></i>
                   </a>
                   <span th:unless="${currentPage < totalPages}" class="page-link disabled">
@@ -460,7 +524,7 @@
                     </span>
                 </li>
                 <li class="page-item">
-                  <a class="page-link" th:href="@{'/adminportal/managebooks/loanhistory' + (${book_id} != null ? '?bookId=' + ${book_id} + '&amp;' : '?') + (${query} != null ? 'query=' + ${query} + '&amp;' : '') + (${searchBy} != null ? 'searchBy=' + ${searchBy} + '&amp;' : '') + (${statusFilter} != null ? 'statusFilter=' + ${statusFilter} + '&amp;' : '') + 'page=' + ${totalPages}}">
+                  <a class="page-link" th:href="@{'/adminportal/managebooks/loanhistory' + (${book_id} != null ? '?bookId=' + ${book_id} + '&amp;' : '?') + (${query} != null ? 'query=' + ${query} + '&amp;' : '?') + (${searchBy} != null ? 'searchBy=' + ${searchBy} + '&amp;' : '') + (${statusFilter} != null ? 'statusFilter=' + ${statusFilter} + '&amp;' : '') + (${sort} != null ? 'sort=' + ${sort} + '&amp;' : '') + (${order} != null ? 'order=' + ${order} + '&amp;' : '') + 'page=' + ${totalPages}}">
                     <i class="bi bi-chevron-double-right"></i>
                   </a>
                 </li>
@@ -470,15 +534,23 @@
               <form method="get" th:action="@{'/adminportal/managebooks/loanhistory'}" id = "pageFilter">
 
                 <span class="text-dark font-weight-bold">
-                    <input type="hidden" name="bookId" th:if="${book_id}" th:value="${book_id}" />
+                  <input type="hidden" name="bookId" th:if="${book_id}" th:value="${book_id}" />
                     <input type="hidden" name="query" th:if="${query}" th:value="${query}" />
-                     <input type="hidden" name="searchBy" th:if="${searchBy}" th:value="${searchBy}" />
-                  <input type="hidden" name="statusFilter" th:if="${statusFilter}" th:value="${statusFilter}" />
-                    Page <input type="number" name="page" class="form-control" style="width: 60px; display: inline-block;" th:value="${currentPage}" /> out of <span th:text="${totalPages}"></span>
+                    <input type="hidden" name="searchBy" th:if="${searchBy}" th:value="${searchBy}" />
+                    <input type="hidden" name="statusFilter" th:if="${statusFilter}" th:value="${statusFilter}" />
+                    <input type="hidden" name="sort" th:if="${sort}" th:value="${sort}" />
+                    <input type="hidden" name="order" th:if="${order}" th:value="${order}" />
+                  Page <input type="number" name="page" class="form-control" style="width: 60px; display: inline-block;" th:value="${currentPage}" /> out of <span th:text="${totalPages}"></span>
                 </span>
               </form>
             </div>
           </div>
 
         </div>
+      </div>
+  </div>
+  </main>
+</div>
+</div>
+</body>
 </html>

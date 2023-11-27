@@ -24,7 +24,8 @@ public interface MemberService {
 
     void deleteMembers(Long id);
 
-    Page<MemberDto> searchMembers(String query, Pageable pageable, String statusFilter, String searchBy);
+    Page<MemberDto> searchMembers(String query, Pageable pageable, String statusFilter, String searchBy,
+                                  String sort, String order);
 
     void updateName(MemberDto memberDto, String email);
     void updateEmail(MemberDto memberDto, String email);
