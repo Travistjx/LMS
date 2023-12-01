@@ -41,11 +41,11 @@ public class FineServiceImpl implements FineService {
         this.loanService = loanService;
     }
 
-    List<FineDto> findAllFines (){
-        List<Fine> fines = fineRepository.findAll();
-        return fines.stream().map((fine) -> convertEntityToDto(fine))
-                .collect(Collectors.toList());
-    }
+//    List<FineDto> findAllFines (){
+//        List<Fine> fines = fineRepository.findAll();
+//        return fines.stream().map((fine) -> convertEntityToDto(fine))
+//                .collect(Collectors.toList());
+//    }
 
     @Scheduled(cron = "0/10 * * * * *") //run every 10 sec
     public void calculateFinesForOverdueLoans() {

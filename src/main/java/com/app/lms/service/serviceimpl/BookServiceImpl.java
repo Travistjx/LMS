@@ -75,10 +75,6 @@ public class BookServiceImpl implements BookService {
         bookRepository.save(book);
     }
 
-    public Author getAuthorByFullName(String firstName, String lastName) {
-        return authorRepository.findByFirstNameAndLastName(firstName, lastName);
-    }
-
     @Override
     public Book findByBook(String title) {
         return bookRepository.findByTitle(title);

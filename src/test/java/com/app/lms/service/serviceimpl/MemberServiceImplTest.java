@@ -241,7 +241,7 @@ class MemberServiceImplTest {
         String roles = "ROLE_MEMBER";
         MemberDto memberDto = new MemberDto();
         memberDto.setFirstName("James");
-        memberService.updateAccounts(memberDto, member.getMember_id(), roles);
+        memberService.updateAccounts(memberDto, (long)1, roles);
 
         ArgumentCaptor<Member> memberArgumentCaptor = ArgumentCaptor.forClass(Member.class);
         verify(memberRepository).save(memberArgumentCaptor.capture());
@@ -319,9 +319,9 @@ class MemberServiceImplTest {
 
         MemberDto memberDto = memberService.convertEntityToDto(member);
 
-        assertThat(memberDto.getEmail()).isEqualTo("georgeng@gmail.com");
-        assertThat(memberDto.getFirstName()).isEqualTo("george");
-        assertThat(memberDto.getLastName()).isEqualTo("ng");
+        assertThat(memberDto.getEmail()).isEqualTo(member.getEmail());
+        assertThat(memberDto.getFirstName()).isEqualTo(member.getFirstName());
+        assertThat(memberDto.getLastName()).isEqualTo(member.getLastName());
         assertThat(memberDto.getPassword()).isNull(); // Password should not be exposed in DTO
         assertThat(memberDto.getRoles().stream().findFirst().get().getName())
                 .isEqualTo(member.getRoles().stream().findFirst().get().getName());  // Compare the name of the first role

@@ -58,10 +58,16 @@ public class LoanServiceImpl implements LoanService {
     public List<LoanDto> searchLoans(Long bookId, Long memberId) {
         List<Loan> loans = loanRepository.findAll();
         List<LoanDto> filteredLoans = loans.stream()
+                .filter(Objects::nonNull)
                 .filter(loan -> {
                     if (bookId != null && memberId != null) {
-                        return loan.getBook().getBook_id().equals(bookId) && loan.getMember().getMember_id().equals(memberId)
-                                && !loan.getStatus().equals(LoanStatus.RETURNED);
+                        Book book = loan.getBook();
+                        Member member = loan.getMember();
+                        return book != null && member != null &&
+                                book.getBook_id() != null && member.getMember_id() != null &&
+                                book.getBook_id().equals(bookId) &&
+                                member.getMember_id().equals(memberId) &&
+                                !loan.getStatus().equals(LoanStatus.RETURNED);
                     }
                     return true;
                 }).map(this::convertEntityToDto)
@@ -80,6 +86,7 @@ public class LoanServiceImpl implements LoanService {
     }
 
     public LoanDto convertEntityToDto(Loan loan) {
+        if (loan == null) return null;
         LoanDto loanDto = new LoanDto();
         loanDto.setLoan_id(loan.getLoan_id());
         loanDto.setLoanDateTime(loan.getLoanDateTime());
@@ -111,7 +118,7 @@ public class LoanServiceImpl implements LoanService {
     public Page<LoanDto> searchLoans(String query, Pageable pageable, Optional<Long> id, IdType idType,
                                      String statusFilter, String searchBy, String sort, String order) {
 
-        Page<Loan> selectedLoans = loanRepository.findAll(pageable);
+        Page<Loan> selectedLoans = null;
 
         LoanStatus status = LoanStatus.ACTIVE;
         if (statusFilter.equals("ALL")){
@@ -309,16 +316,4 @@ public class LoanServiceImpl implements LoanService {
 
         return (long) matchedLoans.size();
     }
-
-
-//    @Override
-//    public List<LoanDto> findByMemberId(Long id){
-//        List <Loan> loanList = loanRepository.findAll();
-//        List<LoanDto> matchedLoans = loanList.stream().filter(loan -> loan.getMember().getMember_id().equals(id))
-//                .map(this::convertEntityToDto).collect(Collectors.toList());
-//
-//        return matchedLoans;
-//    }
-
-
 }
