@@ -18,4 +18,6 @@ public interface PaymentService {
                                     String statusFilter, String searchBy, String sort, String order);
     Page<PaymentDto> findPaginated(int pageNo, int pageSize, Optional<Long> id, IdType idType);
     PaymentDto getPaymentsByUser (Long member_id);
+
+    PaymentDto convertEntityToDto(Payment payment);
 }

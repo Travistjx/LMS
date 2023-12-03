@@ -27,6 +27,7 @@ public class FineServiceImpl implements FineService {
     private final MemberRepository memberRepository;
     private final MemberService memberService;
 
+
     private final LoanService loanService;
 
     // Define the fine rate (e.g., $1 per day)
@@ -41,12 +42,6 @@ public class FineServiceImpl implements FineService {
         this.loanService = loanService;
     }
 
-//    List<FineDto> findAllFines (){
-//        List<Fine> fines = fineRepository.findAll();
-//        return fines.stream().map((fine) -> convertEntityToDto(fine))
-//                .collect(Collectors.toList());
-//    }
-
     @Scheduled(cron = "0/10 * * * * *") //run every 10 sec
     public void calculateFinesForOverdueLoans() {
         LocalDateTime today = LocalDateTime.now();
@@ -60,6 +55,8 @@ public class FineServiceImpl implements FineService {
                 .collect(Collectors.toList());
 
         for (Loan loan : overdueLoans) {
+
+
             // Calculate the number of days overdue
             long daysOverdue = ChronoUnit.DAYS.between(loan.getDueDateTime(), today);
 

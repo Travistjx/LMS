@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
-    private final LoanRepository loanRepository;
+
     private final FineRepository fineRepository;
 
     private final MemberRepository memberRepository;
@@ -33,9 +33,8 @@ public class PaymentServiceImpl implements PaymentService {
 
     private final MemberService memberService;
 
-    public PaymentServiceImpl(LoanRepository loanRepository, FineRepository fineRepository, MemberRepository memberRepository,
+    public PaymentServiceImpl(FineRepository fineRepository, MemberRepository memberRepository,
                               PaymentRepository paymentRepository, FineService fineService, MemberService memberService) {
-        this.loanRepository = loanRepository;
         this.fineRepository = fineRepository;
         this.memberRepository = memberRepository;
         this.paymentRepository = paymentRepository;
