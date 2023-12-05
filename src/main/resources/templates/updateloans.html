@@ -82,16 +82,16 @@
                 <input type="text" class="form-control" id="loanId" th:value="${loan.loan_id}" th:name="loanId" readonly>
             </div>
             <div class="form-group mb-3">
-                <label for="memberId">Member:</label>
+                <label for="memberId">Member Id / Name:</label>
                 <select class="form-control" id="memberId" name="memberId">
-                    <option th:each="member : ${allMembers}" th:value="${member.member_id}" th:text="${member.member_id + ' ' + member.firstName + ' ' + member.lastName}"
+                    <option th:each="member : ${allMembers}" th:value="${member.member_id}" th:text="${member.member_id + ', ' + member.firstName + ' ' + member.lastName}"
                             th:selected="${member.member_id == loan.member.member_id}"></option>
                 </select>
             </div>
             <div class="form-group mb-3">
-                <label for="bookId">Book:</label>
+                <label for="bookId">Book Id / Title:</label>
                 <select class="form-control" id="bookId" name="bookId">
-                    <option th:each="book : ${allBooks}" th:value="${book.book_id}" th:text="${book.book_id + ' ' + book.title}"
+                    <option th:each="book : ${allBooks}" th:value="${book.book_id}" th:text="${book.book_id + ', ' + book.title}"
                             th:selected="${book.book_id == loan.book.book_id}"></option>
                 </select>
             </div>

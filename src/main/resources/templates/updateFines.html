@@ -107,9 +107,9 @@
 <!--                            </div>-->
                             <div class="form-group">
                                 <label for="status">Status:</label>
-                                <select class="form-control" id="status" th:field="*{fineStatus}">
-                                    <option value="PAID" th:text="PAID" th:selected="${fine.fineStatus == 'PAID'}">Paid</option>
-                                    <option value="UNPAID" th:text="UNPAID" th:selected="${fine.fineStatus == 'UNPAID'}">Unpaid</option>
+                                <select class="form-control" id="status" th:field="*{status}">
+                                    <option value="PAID" th:text="PAID" th:selected="${fine.status == 'PAID'}">Paid</option>
+                                    <option value="UNPAID" th:text="UNPAID" th:selected="${fine.status == 'UNPAID'}">Unpaid</option>
                                 </select>
                             </div>
 

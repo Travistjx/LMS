@@ -33,8 +33,12 @@
                                 <td th:text="${loan.loan_id}"></td>
                                 <td th:text="${loan.book != null ? loan.book.title : 'N/A'}"></td>
                                 <td th:text="${loan.member != null ? loan.member.firstName + ' ' + loan.member.lastName : 'N/A'}"></td>
-                                <td th:text="${loan.loanDateTime}"></td>
-                                <td th:text="${loan.dueDateTime}"></td>
+                                <td th:with="loanDateFormatted=${#temporals.format(loan.loanDateTime, 'yyyy-MM-dd, HH:mm:ss')}">
+                                    <span th:text="${loanDateFormatted}"></span>
+                                </td>
+                                <td th:with="dueDateFormatted=${#temporals.format(loan.dueDateTime, 'yyyy-MM-dd, HH:mm:ss')}">
+                                    <span th:text="${dueDateFormatted}"></span>
+                                </td>
                                 <td th:text="${loan.status}"></td>
                                 <td>
                                     <!-- Create a button or link for returning this loan -->

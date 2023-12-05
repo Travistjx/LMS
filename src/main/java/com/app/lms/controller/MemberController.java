@@ -275,7 +275,7 @@ public class MemberController {
         }
 
         memberService.updatePassword(newPassword, username);
-        return "redirect:/accountsettings/accountsettings?success";
+        return "redirect:/accountsettings?success";
     }
 
     @GetMapping("/fines")

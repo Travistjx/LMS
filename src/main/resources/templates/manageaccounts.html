@@ -414,10 +414,22 @@
                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
                             <div class="modal-body">
+                                <strong>Member Id:</strong>
+                                <p th:text="${member.member_id}"></p>
 
-                                <h5 class="card-title" th:text="${member.firstName} + ' ' + ${member.lastName}"></h5>
+                                <strong>First Name:</strong>
+                                <p th:text="${member.firstName}"></p>
+
+                                <strong>Last Name:</strong>
+                                <p th:text="${member.lastName}"></p>
+
                                 <strong>Email:</strong>
-                                <span th:text = "${member.email}"></span>
+                                <p th:text="${member.email}"></p>
+
+                                <strong>Role:</strong>
+                                <p th:each="currentRole, roleStat : ${member.roles}">
+                                    <span th:text="${currentRole.name}"></span>
+                                    <span th:if="${!roleStat.last}">, </span></p>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

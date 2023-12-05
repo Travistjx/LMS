@@ -60,7 +60,7 @@
 </head>
 <body>
 <!-- Include a navigation bar using Thymeleaf fragment replacement -->
-<div th:replace="common/member_navbar :: #navbar"></div>
+<div th:replace="common/admin_navbar :: #navbar"></div>
 <div class="container-fluid">
     <div class="row">
         <div th:replace="common/accountsettings_sidebar :: #navbar"></div>
@@ -75,7 +75,7 @@
 
 <div class="update-container">
     <div class="card-body">
-        <form method="post" role="form" enctype="multipart/form-data" th:action="@{'/accountsettings/updateaddresstwo/save'}" th:object="${member}">
+        <form method="post" role="form" enctype="multipart/form-data" th:action="@{'/adminportal/accountsettings/updateaddresstwo/save'}" th:object="${member}">
             <input type="hidden" name="_method" value="put" />
             <div class="form-group">
                 <label for="addressTwo">Address 2:</label>

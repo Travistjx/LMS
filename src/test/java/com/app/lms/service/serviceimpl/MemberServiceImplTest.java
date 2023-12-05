@@ -69,7 +69,7 @@ class MemberServiceImplTest {
         assertThat(capturedMember.getEmail()).isEqualTo("georgeng@gmail.com");
         assertThat(capturedMember.getFirstName()).isEqualTo("george");
         assertThat(capturedMember.getLastName()).isEqualTo("ng");
-        assertThat(capturedMember.getPassword()).isEqualTo(member.getPassword());
+        assertThat(capturedMember.getPassword()).isEqualTo("456");
     }
 
     @Test

@@ -538,5 +538,133 @@ public class AdminController {
         model.addAttribute("order", order);
         return "paymentLogs";
     }
+
+    @GetMapping("/accountsettings")
+    public String showAccountSettings(Principal principal, Model model){
+        String username = principal.getName();
+        MemberDto member = memberService.findByEmail(username);
+        model.addAttribute("member", member);
+        return "admin/accountSettings/accountSettings";
+    }
+
+    @GetMapping("/accountsettings/updatename")
+    public String showUpdateName (Principal principal, Model model){
+        String username = principal.getName();
+        MemberDto member = memberService.findByEmail(username);
+        model.addAttribute("member", member);
+        return "admin/accountSettings/updateName";
+    }
+
+    @PutMapping("/accountsettings/updatename/save")
+    public String updateName (@ModelAttribute("member") MemberDto memberDto, Principal principal){
+        String username = principal.getName();
+        memberService.updateName(memberDto, username);
+        return "redirect:/adminportal/accountsettings?success";
+    }
+
+    @GetMapping("/accountsettings/updateemail")
+    public String showUpdateEmail (Principal principal, Model model){
+        String username = principal.getName();
+        MemberDto member = memberService.findByEmail(username);
+        model.addAttribute("member", member);
+        return "admin/accountSettings/updateEmail";
+    }
+
+    @PutMapping("/accountsettings/updateemail/save")
+    public String updateEmail (@ModelAttribute("member") MemberDto memberDto, Principal principal){
+        String username = principal.getName();
+        memberService.updateEmail(memberDto, username);
+        return "redirect:/logout";
+    }
+
+    @GetMapping("/accountsettings/updategender")
+    public String showUpdateGender (Principal principal, Model model){
+        String username = principal.getName();
+        MemberDto member = memberService.findByEmail(username);
+        model.addAttribute("member", member);
+        return "admin/accountSettings/updateGender";
+    }
+
+    @PutMapping("/accountsettings/updategender/save")
+    public String updateGender (@ModelAttribute("member") MemberDto memberDto, Principal principal){
+        String username = principal.getName();
+        memberService.updateGender(memberDto, username);
+        return "redirect:/adminportal/accountsettings?success";
+    }
+
+    @GetMapping("/accountsettings/updateaddressone")
+    public String showUpdateAddressOne (Principal principal, Model model){
+        String username = principal.getName();
+        MemberDto member = memberService.findByEmail(username);
+        model.addAttribute("member", member);
+        return "admin/accountSettings/updateAddressOne";
+    }
+
+    @PutMapping("/accountsettings/updateaddressone/save")
+    public String updateAddressOne (@ModelAttribute("member") MemberDto memberDto, Principal principal){
+        String username = principal.getName();
+        memberService.updateAddressOne(memberDto, username);
+        return "redirect:/adminportal/accountsettings?success";
+    }
+
+    @GetMapping("/accountsettings/updateaddresstwo")
+    public String showUpdateAddressTwo (Principal principal, Model model){
+        String username = principal.getName();
+        MemberDto member = memberService.findByEmail(username);
+        model.addAttribute("member", member);
+        return "admin/accountSettings/updateAddressTwo";
+    }
+
+    @PutMapping("/accountsettings/updateaddresstwo/save")
+    public String updateAddressTwo (@ModelAttribute("member") MemberDto memberDto, Principal principal){
+        String username = principal.getName();
+        memberService.updateAddressTwo(memberDto, username);
+        return "redirect:/adminportal/accountsettings?success";
+    }
+
+    @GetMapping("/accountsettings/updatepostalcode")
+    public String showUpdatePostalCode (Principal principal, Model model){
+        String username = principal.getName();
+        MemberDto member = memberService.findByEmail(username);
+        model.addAttribute("member", member);
+        return "admin/accountSettings/updatePostalCode";
+    }
+
+    @PutMapping("/accountsettings/updatepostalcode/save")
+    public String updatePostalCode (@ModelAttribute("member") MemberDto memberDto, Principal principal){
+        String username = principal.getName();
+        memberService.updatePostalCode(memberDto, username);
+        return "redirect:/adminportal/accountsettings?success";
+    }
+
+    @GetMapping("/accountsettings/updatepassword")
+    public String showUpdatePassword (Principal principal, Model model){
+        String username = principal.getName();
+        MemberDto member = memberService.findByEmail(username);
+        model.addAttribute("member", member);
+        return "admin/accountSettings/updatePassword";
+    }
+
+    @PutMapping("/accountsettings/updatepassword/save")
+    public String updatePassword (@ModelAttribute("member") MemberDto memberDto,
+                                  @RequestParam("password") String password,
+                                  @RequestParam("newPassword") String newPassword,
+                                  BindingResult result,
+                                  Principal principal, Model model){
+        String username = principal.getName();
+        boolean checkPassword = memberService.checkPassword(password, username);
+
+        if (!checkPassword) {
+            result.rejectValue("password", null, "Password is incorrect");
+        }
+
+        if (result.hasErrors()) {
+            model.addAttribute("member", memberDto);
+            return "admin/accountSettings/updatePassword";
+        }
+
+        memberService.updatePassword(newPassword, username);
+        return "redirect:/adminportal/accountsettings?success";
+    }
 }
 

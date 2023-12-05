@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
->
+      xmlns="http://www.w3.org/1999/html">
 <head>
   <meta charset="UTF-8">
   <title>Loan History</title>
@@ -470,7 +470,36 @@
           <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
               <div class="modal-body">
-                <h5 class="card-title" th:text="${loan.loan_id}"></h5>
+                <strong>Loan Id:</strong>
+                <p th:text="${loan.loan_id}"></p>
+
+                <strong>Member Id:</strong>
+                <p th:text="${loan.member.member_id}"></p>
+
+                <strong>Name:</strong>
+                <p th:text="${loan.member.firstName + ' ' + loan.member.lastName}"></p>
+
+                <strong>Book Id:</strong>
+                <p th:text="${loan.book.book_id}"></p>
+
+                <strong>Title:</strong>
+                <p th:text="${loan.book.title}"></p>
+
+                <strong>Loan Date/Time:</strong>
+                <p th:with="returnedDateFormatted=${#temporals.format(loan.returnedDateTime, 'yyyy-MM-dd, HH:mm:ss')}">
+                  <span th:text="${returnedDateFormatted}"></span>
+                </p>
+
+                <strong> Due Date/Time:</strong>
+                <p th:with="dueDateFormatted=${#temporals.format(loan.dueDateTime, 'yyyy-MM-dd, HH:mm:ss')}">
+                  <span th:text="${dueDateFormatted}"></span>
+                </p>
+
+                <strong>Returned Date/Time:</strong>
+                <p th:with="returnedDateFormatted=${#temporals.format(loan.returnedDateTime, 'yyyy-MM-dd, HH:mm:ss')}">
+                  <span th:text="${returnedDateFormatted}"></span>
+                </p>
+
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

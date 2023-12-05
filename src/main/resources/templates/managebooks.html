@@ -422,14 +422,27 @@
                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                             <div class="modal-content">
                                 <div class="modal-body">
-                                    <h5 class="card-title" th:text="${book.title}"></h5>
-                                    <p class="card-text text-left">
-                                        <strong>Author:</strong>
-                                        <span th:each="currentAuthor, authorStat : ${book.authors}">
-                                                        <span th:text="${currentAuthor.firstName} + ' ' + ${currentAuthor.lastName}"></span>
-                                                        <span th:if="${!authorStat.last}">, </span>
-                                                    </span>
-                                    </p>
+                                    <div class="text-center">
+                                        <img th:if="${book.image != null}" th:src="'data:image/jpeg;base64,' + ${book.image}" style="width: 300px; height: 450px;margin:20px" alt="Book Image">
+                                    </div>
+
+                                    <strong>Title:</strong>
+                                    <p th:text="${book.title}" ></p>
+
+                                    <strong>Category:</strong>
+                                    <p th:text="${book.category}"></p>
+
+                                    <strong>Description:</strong>
+                                        <p th:text="${book.description}"></p>
+
+                                        <strong>Publication Year:</strong>
+                                        <p th:text="${book.publication_year}"></p>
+
+                                    <strong>Authors:</strong>
+                                        <p th:each="currentAuthor, authorStat : ${book.authors}">
+                                        <span th:text="${currentAuthor.firstName} + ' ' + ${currentAuthor.lastName}"></span>
+                                        <span th:if="${!authorStat.last}">, </span></p>
+
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

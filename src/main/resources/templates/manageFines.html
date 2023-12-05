@@ -445,7 +445,29 @@
                   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                     <div class="modal-content">
                       <div class="modal-body">
-                        <h5 class="card-title" th:text="${fine.fine_id}"></h5>
+                        <strong>Fine Id:</strong>
+                        <p th:text="${fine.fine_id}"></p>
+
+                        <strong>Loan Id:</strong>
+                        <p th:text="${fine.loan.loan_id}"></p>
+
+                        <strong>Book Id:</strong>
+                        <p th:text="${fine.loan.book.book_id}"></p>
+
+                        <strong>Title:</strong>
+                        <p th:text="${fine.loan.book.title}"></p>
+
+                        <strong>Member Id:</strong>
+                        <p th:text="${fine.loan.member.member_id}"></p>
+
+                        <strong>Name</strong>
+                        <p th:text="${fine.loan.member.firstName + ' ' + fine.loan.member.lastName}"></p>
+
+                        <strong>Amount:</strong>
+                        <p th:text="${fine.amount}"></p>
+
+                        <strong>Status:</strong>
+                        <p th:text="${fine.status}"></p>
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
