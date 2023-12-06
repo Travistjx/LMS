@@ -28,6 +28,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         Member member = memberRepository.findByEmail(email);
 
         if (member != null) {
+            // Creating a UserDetails object with user information and authorities.
             return new org.springframework.security.core.userdetails.User(member.getEmail(),
                     member.getPassword(),
                     mapRolesToAuthorities(member.getRoles()));
@@ -37,6 +38,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     private Collection < ? extends GrantedAuthority> mapRolesToAuthorities(Collection <Role> roles) {
+
+        // Mapping roles to GrantedAuthority objects.
         Collection < ? extends GrantedAuthority> mapRoles = roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toList());

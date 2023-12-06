@@ -41,13 +41,14 @@ public class AdminController {
         this.paymentService = paymentService;
     }
 
+    // Provides the current user's information to be used in the navbar.
     @ModelAttribute("currentUser")
     public MemberDto navbar(Principal principal) {
         String username = principal.getName();
         return memberService.findByEmail(username);
     }
 
-    //Landing page
+    // Landing page
     @GetMapping("")
     public String homePage(Model model) {
         List <MemberDto> allMembers = memberService.findAllUsers();
@@ -71,6 +72,8 @@ public class AdminController {
     }
 
     /*--------------BOOKS------------- */
+
+    // Direct to add book page
     @GetMapping("/addbooks")
     public String showAddBooksForm(Model model) {
         BookDto book = new BookDto();
@@ -78,6 +81,7 @@ public class AdminController {
         return "addbooks";
     }
 
+    // Retrieve Update Books page based on Book Id
     @GetMapping("/updatebooks/{id}")
     public String showUpdateBookForm(@PathVariable(value = "id") Long id, Model model) {
         Optional<BookDto> bookOptional = bookService.findById(id);
@@ -95,6 +99,7 @@ public class AdminController {
         return "updatebooks";
     }
 
+    // Save (new) changes for book based on update
     @PutMapping("/updatebooks/{id}/save")
     public String updateBooks(@ModelAttribute("book") BookDto book,
                               @RequestParam("imageFile") MultipartFile file,
@@ -104,30 +109,24 @@ public class AdminController {
         return "redirect:/adminportal/updatebooks/{id}?success";
     }
 
+    // Delete Books
     @DeleteMapping("/managebooks/{id}")
     public String deleteBooks(@PathVariable(value = "id") Long id) {
         bookService.deleteBooks(id);
         return "redirect:/adminportal/managebooks?success";
     }
 
+    // Add/Save the new book
     @PostMapping("/addbooks/save")
     public String saveBooks(@ModelAttribute("book") BookDto book,
                             @RequestParam("imageFile") MultipartFile file,
                             BindingResult result,
                             Model model) {
-        //        Book existing = adminService.findByBook(book.getTitle());
-        //        if (existing != null) {
-        //            result.rejectValue("title", null, "There is already an existing book");
-        //        }
-        //        if (result.hasErrors()) {
-        //            model.addAttribute("book", book);
-        //            return "addbooks";
-        //        }
         bookService.saveBook(book, file);
         return "redirect:/adminportal/addbooks?success";
     }
 
-
+    // Retrieve pages for books. If search filter is detected, searchBooks is used
     @GetMapping("/managebooks")
     public String findPaginatedManageBooks(@RequestParam(name = "page", defaultValue = "1") int pageNo,
                                            @RequestParam(name = "query", required = false) String query,
@@ -161,6 +160,8 @@ public class AdminController {
 
 
     /*--------------ACCOUNTS-------------- */
+
+    // Retrieve create account page
     @GetMapping("/createaccount")
     public String createAccount(Model model) {
         MemberDto member = new MemberDto();
@@ -168,7 +169,8 @@ public class AdminController {
         return "createaccount";
     }
 
-    // handler method to handle create user form submit request
+    // Handler method to handle create account form submit request
+    // Create/Save new account
     @PostMapping("/createaccount/save")
     public String registration(@ModelAttribute("member") MemberDto member,
                                BindingResult result,
@@ -185,6 +187,7 @@ public class AdminController {
         return "redirect:/adminportal/createaccount?success";
     }
 
+    // Retrieve update accounts page based on Account Id
     @GetMapping("/updateaccounts/{id}")
     public String showUpdateAccountForm(@PathVariable(value = "id") Long id, Model model) {
         Optional<MemberDto> memberOptional = memberService.findById(id);
@@ -202,6 +205,7 @@ public class AdminController {
         return "updateaccounts";
     }
 
+    // Update/Save changes to account
     @PutMapping("/updateaccounts/{id}/save")
     public String updateAccounts(@ModelAttribute("member") MemberDto member,
                                  @RequestParam("currentRoles") String roles,
@@ -210,16 +214,14 @@ public class AdminController {
         return "redirect:/adminportal/updateaccounts/{id}?success";
     }
 
-
-
+    // Delete Account
     @DeleteMapping("/manageaccounts/{id}")
     public String deleteAccounts(@PathVariable(value = "id") Long id) {
         memberService.deleteMembers(id);
         return "redirect:/adminportal/manageaccounts?success";
     }
 
-
-
+    // Retrieve pages for accounts. If search filter is detected, searchMembers is used
     @GetMapping("/manageaccounts")
     public String findPaginatedManageAccounts(@RequestParam(name = "page", defaultValue = "1") int pageNo,
                                               @RequestParam(name = "query", required = false) String query,
@@ -253,6 +255,8 @@ public class AdminController {
 
 
     /*--------------LOANS------------- */
+
+    // Retrieve issue books page
     @GetMapping("/issuebooks")
     public String showIssueBooksForm(Model model) {
         List<BookDto> allBooks = bookService.findAllBooks().stream().filter(bookDto ->
@@ -264,6 +268,7 @@ public class AdminController {
         return "issuebooks";
     }
 
+    // Issue the books and save the loan in the database
     @PostMapping("/issuebooks/save")
     public String issueBook(@ModelAttribute("loan") LoanDto loan, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
@@ -275,6 +280,7 @@ public class AdminController {
         return "redirect:/adminportal/issuebooks?success"; // Redirect to the form with a success message
     }
 
+    // Retrieve the return books page
     @GetMapping("/returnbooks")
     public String showReturnBooksForm(Model model) {
         List<BookDto> allBooks = bookService.findAllBooks();
@@ -285,6 +291,7 @@ public class AdminController {
         return "returnbooks";
     }
 
+    // Retrieve any existing loan based on search (Book Id and Member Id)
     @GetMapping("/returnbooks/search")
     public String searchLoans(@RequestParam(name = "searchBookId", required = false) Long bookId,
                               @RequestParam(name = "searchMemberId", required = false) Long memberId,
@@ -298,6 +305,7 @@ public class AdminController {
         return "returnSearchResults";
     }
 
+    // return the books and update the loan status
     @PutMapping("/returnbooks/return/{id}")
     public String returnBooks(@PathVariable(value = "id") Long id) {
         // Call the service method to search for loans based on bookId and memberId
@@ -305,6 +313,7 @@ public class AdminController {
         return "redirect:/adminportal/returnbooks?success";
     }
 
+    // Retrieve pages for loans. If search filter is detected, searchLoans is used
     @GetMapping("/manageloans")
     public String manageLoans(@RequestParam(name = "page", defaultValue = "1") int pageNo,
                                               @RequestParam(name = "query", required = false) String query,
@@ -337,12 +346,14 @@ public class AdminController {
         return "manageloans";
     }
 
+    // Delete loans
     @DeleteMapping("/manageloans/{id}")
     public String deleteLoans(@PathVariable(value = "id") Long id) {
         loanService.deleteLoans(id);
         return "redirect:/adminportal/manageloans?success";
     }
 
+    // Direct to update loans page based on Loan Id
     @GetMapping("/updateloans")
     public String showUpdateLoansForm(@RequestParam(name = "loanId") Long id,
                                       Model model) {
@@ -364,6 +375,7 @@ public class AdminController {
         return "updateloans";
     }
 
+    // Update/Save the (new) changes to the loan
     @PutMapping("/updateloans/{id}/save")
     public String updateLoans(@ModelAttribute("loan") LoanDto loan,
                               @PathVariable(value = "id") Long id,
@@ -373,6 +385,8 @@ public class AdminController {
         return "redirect:/adminportal/updateloans?loanId={id}&success";
     }
 
+    // Retrieve the loan history based on Member Id.
+    // If search filter is detected, searchLoans is used
     @GetMapping("/manageaccounts/loanhistory")
     public String showAccountLoanHistory(@RequestParam(name = "memberId") Long id,
                                 @RequestParam(name = "page", defaultValue = "1") int pageNo,
@@ -407,6 +421,8 @@ public class AdminController {
         return "accountloanhistory";
     }
 
+    // Retrieve the loan history based on Book Id
+    // If search filter is detected, searchLoans is used
     @GetMapping("/managebooks/loanhistory")
     public String showBookLoanHistory(@RequestParam(name = "bookId") Long id,
                                          @RequestParam(name = "page", defaultValue = "1") int pageNo,
@@ -444,6 +460,9 @@ public class AdminController {
 
 
     /*--------------FINES----------------*/
+
+    // Retrieve the pages for fines based on Fine Id
+    // If search filter is detected, searchFines is used
     @GetMapping("/managefines")
     public String manageFines(@RequestParam(name = "page", defaultValue = "1") int pageNo,
                               @RequestParam(name = "query", required = false) String query,
@@ -476,6 +495,7 @@ public class AdminController {
         return "manageFines";
     }
 
+    // Retrieve the update fines page
     @GetMapping("/updatefines")
     public String showUpdateFinesForm(@RequestParam(name = "fineId") Long id,
                                       Model model) {
@@ -495,6 +515,7 @@ public class AdminController {
         return "updatefines";
     }
 
+    // Update/Save tphe changes made to any fine
     @PutMapping("/updatefines/{id}/save")
     public String updateLoans(@ModelAttribute("fine") FineDto fine,
                               @PathVariable(value = "id") Long id) {
@@ -502,12 +523,15 @@ public class AdminController {
         return "redirect:/adminportal/updatefines?fineId={id}&success";
     }
 
+    // Delete fine
     @DeleteMapping("/managefines/{id}")
     public String deleteFines(@PathVariable(value = "id") Long id) {
         fineService.deleteFines(id);
         return "redirect:/adminportal/managefines?success";
     }
 
+    // Retrieve the payment logs based on payment Id
+    // If search filter is detected, searchPayments is used
     @GetMapping("/paymentlogs")
     public String showPaymentLogs(@RequestParam(name = "page", defaultValue = "1") int pageNo,
                                      @RequestParam(name = "query", required = false) String query,
@@ -539,6 +563,7 @@ public class AdminController {
         return "paymentLogs";
     }
 
+    // Retrieve Account Settings page
     @GetMapping("/accountsettings")
     public String showAccountSettings(Principal principal, Model model){
         String username = principal.getName();
@@ -547,6 +572,7 @@ public class AdminController {
         return "admin/accountSettings/accountSettings";
     }
 
+    // Retrieve the update name page
     @GetMapping("/accountsettings/updatename")
     public String showUpdateName (Principal principal, Model model){
         String username = principal.getName();
@@ -555,6 +581,7 @@ public class AdminController {
         return "admin/accountSettings/updateName";
     }
 
+    // Update/Save any changes made to name
     @PutMapping("/accountsettings/updatename/save")
     public String updateName (@ModelAttribute("member") MemberDto memberDto, Principal principal){
         String username = principal.getName();
@@ -562,6 +589,7 @@ public class AdminController {
         return "redirect:/adminportal/accountsettings?success";
     }
 
+    // Retrieve the update email page
     @GetMapping("/accountsettings/updateemail")
     public String showUpdateEmail (Principal principal, Model model){
         String username = principal.getName();
@@ -570,6 +598,7 @@ public class AdminController {
         return "admin/accountSettings/updateEmail";
     }
 
+    // Update/Save any changes to email
     @PutMapping("/accountsettings/updateemail/save")
     public String updateEmail (@ModelAttribute("member") MemberDto memberDto, Principal principal){
         String username = principal.getName();
@@ -577,6 +606,7 @@ public class AdminController {
         return "redirect:/logout";
     }
 
+    // Retrieve the update gender page
     @GetMapping("/accountsettings/updategender")
     public String showUpdateGender (Principal principal, Model model){
         String username = principal.getName();
@@ -585,6 +615,7 @@ public class AdminController {
         return "admin/accountSettings/updateGender";
     }
 
+    // Update/Save any changes to gender
     @PutMapping("/accountsettings/updategender/save")
     public String updateGender (@ModelAttribute("member") MemberDto memberDto, Principal principal){
         String username = principal.getName();
@@ -592,6 +623,7 @@ public class AdminController {
         return "redirect:/adminportal/accountsettings?success";
     }
 
+    // Retrieve the update address one page
     @GetMapping("/accountsettings/updateaddressone")
     public String showUpdateAddressOne (Principal principal, Model model){
         String username = principal.getName();
@@ -600,6 +632,7 @@ public class AdminController {
         return "admin/accountSettings/updateAddressOne";
     }
 
+    // Update/Save any changes made to address one
     @PutMapping("/accountsettings/updateaddressone/save")
     public String updateAddressOne (@ModelAttribute("member") MemberDto memberDto, Principal principal){
         String username = principal.getName();
@@ -607,6 +640,7 @@ public class AdminController {
         return "redirect:/adminportal/accountsettings?success";
     }
 
+    // Retrieve the update address two page
     @GetMapping("/accountsettings/updateaddresstwo")
     public String showUpdateAddressTwo (Principal principal, Model model){
         String username = principal.getName();
@@ -615,6 +649,7 @@ public class AdminController {
         return "admin/accountSettings/updateAddressTwo";
     }
 
+    // Update/Save any changes made to address two
     @PutMapping("/accountsettings/updateaddresstwo/save")
     public String updateAddressTwo (@ModelAttribute("member") MemberDto memberDto, Principal principal){
         String username = principal.getName();
@@ -622,6 +657,7 @@ public class AdminController {
         return "redirect:/adminportal/accountsettings?success";
     }
 
+    // Retrieve the update postal code page
     @GetMapping("/accountsettings/updatepostalcode")
     public String showUpdatePostalCode (Principal principal, Model model){
         String username = principal.getName();
@@ -630,6 +666,7 @@ public class AdminController {
         return "admin/accountSettings/updatePostalCode";
     }
 
+    // Update/Save any changes made to postal code
     @PutMapping("/accountsettings/updatepostalcode/save")
     public String updatePostalCode (@ModelAttribute("member") MemberDto memberDto, Principal principal){
         String username = principal.getName();
@@ -637,6 +674,7 @@ public class AdminController {
         return "redirect:/adminportal/accountsettings?success";
     }
 
+    // Retrieve the update password page
     @GetMapping("/accountsettings/updatepassword")
     public String showUpdatePassword (Principal principal, Model model){
         String username = principal.getName();
@@ -645,6 +683,7 @@ public class AdminController {
         return "admin/accountSettings/updatePassword";
     }
 
+    // Update/Save changes made to password
     @PutMapping("/accountsettings/updatepassword/save")
     public String updatePassword (@ModelAttribute("member") MemberDto memberDto,
                                   @RequestParam("password") String password,

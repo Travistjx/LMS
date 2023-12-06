@@ -10,6 +10,7 @@ import com.app.lms.service.MemberService;
 import com.app.lms.web.FineDto;
 import com.app.lms.web.LoanDto;
 import org.springframework.data.domain.*;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@EnableScheduling
 @Service
 public class FineServiceImpl implements FineService {
     private final LoanRepository loanRepository;
@@ -42,6 +44,8 @@ public class FineServiceImpl implements FineService {
         this.loanService = loanService;
     }
 
+    // Calculate Fines based on overdue loans
+    // Calculated automatically every 10 seconds
     @Scheduled(cron = "0/10 * * * * *") //run every 10 sec
     public void calculateFinesForOverdueLoans() {
         LocalDateTime today = LocalDateTime.now();
@@ -93,6 +97,7 @@ public class FineServiceImpl implements FineService {
         }
     }
 
+    // Convert Fine entity to that of FineDto
     @Override
     public FineDto convertEntityToDto(Fine fine) {
         FineDto fineDto = new FineDto();
@@ -117,6 +122,7 @@ public class FineServiceImpl implements FineService {
         return fineDto;
     }
 
+    // Retrieve pages of fines based on search filters
     @Override
     public Page<FineDto> searchFines(String query, Pageable pageable, Optional<Long> id, IdType idType,
                                      String statusFilter, String searchBy, String sort, String order) {
@@ -198,6 +204,7 @@ public class FineServiceImpl implements FineService {
     }
 
 
+    // Retrieve pages of all fines
     @Override
     public Page<FineDto> findPaginated(int pageNo, int pageSize, Optional<Long> id, IdType idType) {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
@@ -218,12 +225,14 @@ public class FineServiceImpl implements FineService {
         return new PageImpl<>(matchedFines, pageable, selectedFines.getTotalElements());
     }
 
+    // Find a fine based on Fine Id
     @Override
     public Optional<FineDto> findById(Long id){
         Optional<Fine>fine = fineRepository.findById(id);
         return fine.map(this::convertEntityToDto);
     }
 
+    // Update existing Fine
     @Override
     public void updateFines(FineDto fine, Long fineId) {
         Optional<Fine> selectedFine = fineRepository.findById(fineId);
@@ -238,6 +247,7 @@ public class FineServiceImpl implements FineService {
 
     }
 
+    // Delete Fine
     @Override
     public void deleteFines(Long id){
             Fine fineToDelete = fineRepository.findById(id).orElse(null);
@@ -248,6 +258,7 @@ public class FineServiceImpl implements FineService {
         }
     }
 
+    // Calculate total fine owed for each person
     @Override
     public Double calculateTotalFines(Long id) {
         List<Fine> fineList = fineRepository.findAll();
@@ -264,6 +275,7 @@ public class FineServiceImpl implements FineService {
         return sum;
     }
 
+    // Find fine based on Member Id (Find fines relating to any one specific member)
     @Override
     public List<FineDto> findFinesByMemberId (Long memberId){
         List<Fine> fines = fineRepository.findAll();

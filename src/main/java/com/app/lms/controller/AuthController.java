@@ -25,11 +25,13 @@ public class AuthController {
         this.memberService = memberService;
     }
 
+    // Default index page (Landing page for all users)
     @GetMapping("/")
     public String index(){
         return "index";
     }
 
+    // Redirect users based on their roles after successful login
     @RequestMapping("/success")
     public void loginPageRedirect(HttpServletRequest request, HttpServletResponse response, Authentication authResult) throws IOException {
 
@@ -43,12 +45,11 @@ public class AuthController {
         }
     }
 
+    // display login form
     @GetMapping("/login")
     public String loginForm() {
         return "login";
     }
-
-
 
 
     // handler method to handle user registration request

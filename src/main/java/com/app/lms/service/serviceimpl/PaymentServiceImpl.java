@@ -42,6 +42,7 @@ public class PaymentServiceImpl implements PaymentService {
         this.memberService = memberService;
     }
 
+    // Make payment
     @Override
     public void makePayment (Collection<FineDto> fineDtos, Double fineAmount, String paymentMethod, String email){
         Payment payment = new Payment();
@@ -49,7 +50,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .map(fineDto -> {
                     Fine fine = fineRepository.findById(fineDto.getFine_id())
                              .orElseThrow(() -> new EntityNotFoundException("Fine not found with ID: " + fineDto.getFine_id()));
-                    fine.setStatus(FineStatus.PAID);
+                    fine.setStatus(FineStatus.PAID); //Update Fine status
 
                     return fine;
                 })
@@ -64,6 +65,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         Payment latestPayment = paymentRepository.findFirstByOrderByPaymentDateTimeDesc();
         String formattedInvoiceNumber = "";
+
         if (latestPayment != null) {
             int invoiceNumber = Integer.parseInt(latestPayment.getInvoiceNumber().substring(4));
             formattedInvoiceNumber = String.format("INV-%05d", invoiceNumber + 1);
@@ -77,6 +79,7 @@ public class PaymentServiceImpl implements PaymentService {
         paymentRepository.save(payment);
     }
 
+    // Get the newest payment information based on Member Id
     @Override
     public PaymentDto getPaymentsByUser (Long member_id){
         List <Payment> paymentList = paymentRepository.findAll();
@@ -94,6 +97,7 @@ public class PaymentServiceImpl implements PaymentService {
         }
     }
 
+    // Retrieve pages of payment logs based on search filter
     @Override
     public Page<PaymentDto> searchPayments(String query, Pageable pageable, Optional<Long> id, IdType idType,
                                            String statusFilter, String searchBy, String sort, String order) {
@@ -184,7 +188,7 @@ public class PaymentServiceImpl implements PaymentService {
         return new PageImpl<>(selectedPaymentsDto, pageable, selectedPayment.getTotalElements());
     }
 
-
+    // Retrieves pages of all payments made
     @Override
     public Page<PaymentDto> findPaginated(int pageNo, int pageSize, Optional<Long> id, IdType idType) {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
@@ -206,6 +210,7 @@ public class PaymentServiceImpl implements PaymentService {
         return new PageImpl<>(selectedPaymentsDto, pageable, paymentPage.getTotalElements());
     }
 
+    // Convert payment entity to paymentDto
     public PaymentDto convertEntityToDto(Payment payment) {
         PaymentDto paymentDto = new PaymentDto();
         paymentDto.setFines(payment.getFines().stream().map(fineService::convertEntityToDto).collect(Collectors.toList()));

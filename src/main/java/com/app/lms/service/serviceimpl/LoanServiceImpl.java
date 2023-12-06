@@ -37,7 +37,7 @@ public class LoanServiceImpl implements LoanService {
         this.bookService = bookService;
     }
 
-
+    // Issue Books and register the loan into database, and update the status of the book
     @Override
     public void issueBooks(LoanDto loanDto){
         Loan loan = new Loan();
@@ -54,6 +54,7 @@ public class LoanServiceImpl implements LoanService {
         loanRepository.save(loan);
     }
 
+    // Retrieve pages of loans based on search filters
     @Override
     public List<LoanDto> searchLoans(Long bookId, Long memberId) {
         List<Loan> loans = loanRepository.findAll();
@@ -76,6 +77,7 @@ public class LoanServiceImpl implements LoanService {
         return filteredLoans;
     }
 
+    // Return books on loan, and update the status of the loan and book
     @Override
     public void returnBooks(Long id){
         Loan loan = loanRepository.findById(id).get();
@@ -85,6 +87,7 @@ public class LoanServiceImpl implements LoanService {
         loanRepository.save(loan);
     }
 
+    // Convert Loan entity to LoanDto
     public LoanDto convertEntityToDto(Loan loan) {
         if (loan == null) return null;
         LoanDto loanDto = new LoanDto();
@@ -114,6 +117,7 @@ public class LoanServiceImpl implements LoanService {
         return loanDto;
     }
 
+    // Retrieve pages of loans based on search filters
     @Override
     public Page<LoanDto> searchLoans(String query, Pageable pageable, Optional<Long> id, IdType idType,
                                      String statusFilter, String searchBy, String sort, String order) {
@@ -213,6 +217,7 @@ public class LoanServiceImpl implements LoanService {
     }
 
 
+    // Retrieve pages of all loans
     @Override
     public Page<LoanDto> findPaginated(int pageNo, int pageSize, Optional<Long> id, IdType idType) {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
@@ -238,6 +243,7 @@ public class LoanServiceImpl implements LoanService {
         return new PageImpl<>(selectedLoansDto, pageable, loanPage.getTotalElements());
     }
 
+    // Delete loan based on Loan Id
     @Override
     public void deleteLoans(Long id){
         Loan loanToDelete = loanRepository.findById(id).orElse(null);
@@ -248,12 +254,14 @@ public class LoanServiceImpl implements LoanService {
         }
     }
 
+    // Find any loan by Loan Id
     @Override
     public Optional<LoanDto> findById(Long id){
         Optional<Loan>loan = loanRepository.findById(id);
         return loan.map(this::convertEntityToDto);
     }
 
+    // Get the list of all loans
     @Override
     public List<LoanDto> findAllLoans() {
         List<Loan> loans = loanRepository.findAll();
@@ -261,6 +269,7 @@ public class LoanServiceImpl implements LoanService {
                 .collect(Collectors.toList());
     }
 
+    // Update existing loan
     @Override
     public void updateLoans(LoanDto loan, Long loanId, Long memberId, Long bookId) {
         Optional<Loan> selectedLoan = loanRepository.findById(loanId);
@@ -282,18 +291,21 @@ public class LoanServiceImpl implements LoanService {
 
     }
 
+    // Count of all active loans
     @Override
     public Long findAllActiveLoansCount (){
         List<Loan> activeLoans = loanRepository.findAllByStatus(LoanStatus.ACTIVE);
         return (long) activeLoans.size();
     }
 
+    // Count of all overdue loans
     @Override
     public Long findAllOverdueLoansCount (){
         List<Loan> activeLoans = loanRepository.findAllByStatus(LoanStatus.OVERDUE);
         return (long) activeLoans.size();
     }
 
+    // Count of all active loans for a specific member (Member Id)
     @Override
     public Long findAllActiveLoansByIdCount (MemberDto memberDto){
         Member member = memberRepository.findByEmail(memberDto.getEmail());
@@ -301,6 +313,7 @@ public class LoanServiceImpl implements LoanService {
         return (long) activeLoans.size();
     }
 
+    // Count of all overdue loans for a specific member (Member Id)
     @Override
     public Long findAllOverdueLoansByIdCount(MemberDto memberDto) {
         Member member = memberRepository.findByEmail(memberDto.getEmail());
@@ -308,6 +321,7 @@ public class LoanServiceImpl implements LoanService {
         return (long) overdueLoansById.size();
     }
 
+    // Count of all loans for a specific member (Member Id)
     @Override
     public Long findLoansByMemberCount (MemberDto memberDto){
         List <Loan> loanList = loanRepository.findAll();

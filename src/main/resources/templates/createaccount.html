@@ -13,100 +13,102 @@
 
     <style>
         .nav-link:hover {
-        background-color: #2e2e2e; /* Background color when hovered over */
-        color: white; /* Text color when hovered over (optional) */
-        /* Other styles like padding, border-radius, etc. */
+            background-color: #2e2e2e;
+            color: white;
         }
 
-    .nav-item a {
-        color: white; /* Text color for the first nav-link */
+        .nav-item a {
+            color: white; /* Text color for the first nav-link */
+        }
 
-    }
-
-    .nav-item #fourth-link {
-        background-color: #383838;
-    }
+        .nav-item #fourth-link {
+            background-color: #383838;
+        }
     </style>
 </head>
 <body>
-<div th:replace="common/admin_navbar :: #navbar"></div>
-<div class="container-fluid">
-    <div class="row">
-        <div th:replace="common/admin_sidebar :: #navbar"></div>
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-<div class="container">
-    <div class="row col-md-8 offset-md-2" style="margin-top: 50px;">
-        <div>
-            <div th:if="${param.success}">
-                <div class="alert alert-info">You've successfully created an account!</div>
+    <!-- Include navigation bar -->
+    <div th:replace="common/admin_navbar :: #navbar"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <div th:replace="common/admin_sidebar :: #navbar"></div>
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="container">
+                <div class="row col-md-8 offset-md-2" style="margin-top: 50px;">
+                    <div>
+                        <div th:if="${param.success}">
+                            <div class="alert alert-info">You've successfully created an account!</div>
+                        </div>
+
+                            <h2 class="text-center">Create Account</h2>
+
+                        <div class="card-body">
+                            <form method="post" role="form" th:action="@{/adminportal/createaccount/save}" th:object="${member}">
+
+                                <div class="form-group mb-3">
+                                    <label class="form-label">First Name</label>
+                                    <input class="form-control"
+                                           id="firstName"
+                                           name="firstName"
+                                           placeholder="Enter first name"
+                                           th:field="*{firstName}"
+                                           type="text"
+                                    />
+                                    <p th:errors="*{firstName}" class="text-danger"
+                                       th:if="${#fields.hasErrors('firstName')}">
+                                    </p>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Last Name</label>
+                                    <input class="form-control"
+                                           id="lastName"
+                                           name="lastName"
+                                           placeholder="Enter last name"
+                                           th:field="*{lastName}"
+                                           type="text"
+                                    />
+                                    <p th:errors="*{lastName}" class="text-danger"
+                                       th:if="${#fields.hasErrors('lastName')}">
+                                    </p>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Email</label>
+                                    <input class="form-control"
+                                           id="email"
+                                           name="email"
+                                           placeholder="Enter email address"
+                                           th:field="*{email}"
+                                           type="email"
+                                    />
+                                    <p th:errors="*{email}" class="text-danger"
+                                       th:if="${#fields.hasErrors('email')}">
+                                    </p>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Password</label>
+                                    <input class="form-control"
+                                           id="password"
+                                           name="password"
+                                           placeholder="Enter password"
+                                           th:field="*{password}"
+                                           type="password"
+                                    />
+                                    <p th:errors="*{password}" class="text-danger"
+                                       th:if="${#fields.hasErrors('password')}">
+                                    </p>
+                                </div>
+
+                                <div class="form-group mb-3" style = "text-align:center;">
+                                    <button class="btn btn-primary" type="submit">Create Account</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-                <h2 class="text-center">Create Account</h2>
-
-            <div class="card-body">
-                <form method="post" role="form" th:action="@{/adminportal/createaccount/save}" th:object="${member}">
-
-                    <div class="form-group mb-3">
-                        <label class="form-label">First Name</label>
-                        <input class="form-control"
-                               id="firstName"
-                               name="firstName"
-                               placeholder="Enter first name"
-                               th:field="*{firstName}"
-                               type="text"
-                        />
-                        <p th:errors="*{firstName}" class="text-danger"
-                           th:if="${#fields.hasErrors('firstName')}">
-                        </p>
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label class="form-label">Last Name</label>
-                        <input class="form-control"
-                               id="lastName"
-                               name="lastName"
-                               placeholder="Enter last name"
-                               th:field="*{lastName}"
-                               type="text"
-                        />
-                        <p th:errors="*{lastName}" class="text-danger"
-                           th:if="${#fields.hasErrors('lastName')}">
-                        </p>
-                    </div>
-                    <div class="form-group mb-3">
-                        <label class="form-label">Email</label>
-                        <input class="form-control"
-                               id="email"
-                               name="email"
-                               placeholder="Enter email address"
-                               th:field="*{email}"
-                               type="email"
-                        />
-                        <p th:errors="*{email}" class="text-danger"
-                           th:if="${#fields.hasErrors('email')}">
-                        </p>
-                    </div>
-                    <div class="form-group mb-3">
-                        <label class="form-label">Password</label>
-                        <input class="form-control"
-                               id="password"
-                               name="password"
-                               placeholder="Enter password"
-                               th:field="*{password}"
-                               type="password"
-                        />
-                        <p th:errors="*{password}" class="text-danger"
-                           th:if="${#fields.hasErrors('password')}">
-                        </p>
-                    </div>
-
-                    <div class="form-group mb-3" style = "text-align:center;">
-                        <button class="btn btn-primary" type="submit">Create Account</button>
-                    </div>
-                </form>
-            </div>
+            </main>
         </div>
     </div>
-</div>
 </body>
 </html>

@@ -11,217 +11,211 @@
           crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     <style>
-    .nav-link:hover {
-        background-color: #2e2e2e; /* Background color when hovered over */
-        color: white; /* Text color when hovered over (optional) */
-        /* Other styles like padding, border-radius, etc. */
+        .nav-link:hover {
+            background-color: #2e2e2e;
+            color: white;
         }
 
-    .nav-item a {
-        color: white; /* Text color for the first nav-link */
+        .nav-item a {
+            color: white;
+        }
 
-    }
+        .nav-item #first-link {
+            background-color: #383838;
+        }
 
-    .nav-item #first-link {
-        background-color: #383838;
-    }
-
-
-
-    .work-area {
-         display: flex;
-        flex-direction: column; /* Stack child elements vertically */
-         align-items: center;
-
-         justify-content: flex-start; /* Start content from the top */
+        .work-area {
+             display: flex;
+             flex-direction: column; /* Stack child elements vertically */
+             align-items: center;
+             justify-content: flex-start; /* Start content from the top */
              overflow: hidden;
-    }
+        }
 
-    .top {
+        .top {
 
-        width: 1060px;
-        background-color: white;
-        border: none;
-        margin: 0 auto;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 40px;
-        height: 15vh;
+            width: 1060px;
+            background-color: white;
+            border: none;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px;
+            height: 15vh;
 
-    }
+        }
 
-    .middle-row {
-        display: flex; /* Use flex layout */
-        justify-content: center; /* Center horizontally */
-        align-items: center; /* Center vertically */
+        .middle-row {
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+        }
 
+        .small-box {
+            max-width: 240px;
+            max-height: 100px;
+            background-color: white;
+            border: none;
+            margin: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+        }
 
-    }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-    .small-box {
-         max-width: 240px; /* Set a maximum width for the small-box */
-         max-height: 100px; /* Set a maximum height for the small-box */
-        background-color: white;
-        border: none;
-        margin: 10px; /* Add some margin between the boxes */
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        display: flex;
-        justify-content: space-between;
-    }
+        .box {
+            width: 500px;
+            height: 345px;
+            background-color: white;
+            border: none;
+            margin: 20px; /* Add some margin between the boxes */
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 
-    .container {
-        display: flex; /* Use flex layout */
-        justify-content: center; /* Center horizontally */
-        align-items: center; /* Center vertically */
+        }
 
-    }
+         table {
+            width: 100%;
+            border-collapse: collapse;
+         }
 
-    .box {
-        width: 500px;
-        height: 345px;
-        background-color: white;
-        border: none;
-        margin: 20px; /* Add some margin between the boxes */
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+         tr:not(:last-child) {
+                border-bottom: 1px solid #ddd;
+         }
 
-    }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
 
-     table {
-        width: 100%; /* Make the table occupy the full width of its container */
-        border-collapse: collapse; /* Remove spacing between table cells */
-     }
-
-     tr:not(:last-child) {
-            border-bottom: 1px solid #ddd; /* Adjust the border style and color as needed */
-     }
-
-    th, td {
-        padding: 10px; /* Add padding to table cells */
-        text-align: center; /* Center-align text in cells */
-    }
-
-    th {
-        background-color: #f0f0f0;
-    }
-
-
+        th {
+            background-color: #f0f0f0;
+        }
     </style>
 </head>
-<body> <div th:replace="common/admin_navbar :: #navbar"></div>
-<div class="container-fluid">
-    <div class="row">
+<body>
+    <!-- Include navigation bar -->
+    <div th:replace="common/admin_navbar :: #navbar"></div>
+    <div class="container-fluid">
+        <div class="row">
             <div th:replace="common/admin_sidebar :: #navbar"></div>
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-<div class = "work-area">
-    <div class = "top">
-        <h2 style = >Hello <span style = "color: blue">Admin</span>, welcome to
-            <span style = "color: black">Dashboard</span></h2>
-    </div>
-    <div class = "middle-row">
-        <div class = "small-box">
-<!--            <img th:src = "@{/images/book.svg" alt = "no image found">-->
-            <img th:src = "@{/images/book.svg}" alt = "no image found" style = "width: 70px; margin: 15px;">
-            <p style="margin: 15px; text-align: center;color:grey">Total Books <br/>
-                <span style="display: block; font-size: 24px; color:black;" th:text="${totalBooks}">
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class = "work-area">
+                <div class = "top">
+                    <h2 style = >Hello <span style = "color: blue">Admin</span>, welcome to
+                        <span style = "color: black">Dashboard</span></h2>
+                </div>
+                <div class = "middle-row">
+                    <div class = "small-box">
+                        <img th:src = "@{/images/book.svg}" alt = "no image found" style = "width: 70px; margin: 15px;">
+                        <p style="margin: 15px; text-align: center;color:grey">Total Books <br/>
+                            <span style="display: block; font-size: 24px; color:black;" th:text="${totalBooks}">
 
-                </span>
-            </p>
-        </div>
-        <div class = "small-box">
-            <img th:src = "@{/images/user.svg}" alt = "no image found" style = "width: 70px; margin: 15px;">
-            <p style="margin: 15px; text-align: center;color:grey">Total Users<br/>
-                <span style="display: block; font-size: 24px; color:black;" th:text="${totalMembers}">
+                            </span>
+                        </p>
+                    </div>
+                    <div class = "small-box">
+                        <img th:src = "@{/images/user.svg}" alt = "no image found" style = "width: 70px; margin: 15px;">
+                        <p style="margin: 15px; text-align: center;color:grey">Total Users<br/>
+                            <span style="display: block; font-size: 24px; color:black;" th:text="${totalMembers}">
 
-                </span>
-            </p>
-        </div>
-        <div class = "small-box">
-            <img th:src = "@{/images/activeloan.svg}" alt = "no image found" style = "width: 70px; margin: 15px;">
-            <p style="margin: 15px; text-align: center;color:grey">Active Loans<br/>
-                <span style="display: block; font-size: 24px; color:black;" th:text="${activeLoans}">
+                            </span>
+                        </p>
+                    </div>
+                    <div class = "small-box">
+                        <img th:src = "@{/images/activeloan.svg}" alt = "no image found" style = "width: 70px; margin: 15px;">
+                        <p style="margin: 15px; text-align: center;color:grey">Active Loans<br/>
+                            <span style="display: block; font-size: 24px; color:black;" th:text="${activeLoans}">
 
-                </span>
-            </p>
-        </div>
-        <div class = "small-box">
-            <img th:src = "@{/images/overdueloan.svg}" alt = "no image found" style = "width: 70px; margin: 15px;">
-            <p style="margin: 15px; text-align: center;color:grey">Overdue Loans<br/>
-                <span style="display: block; font-size: 24px; color:black;" th:text="${overdueLoans}">
+                            </span>
+                        </p>
+                    </div>
+                    <div class = "small-box">
+                        <img th:src = "@{/images/overdueloan.svg}" alt = "no image found" style = "width: 70px; margin: 15px;">
+                        <p style="margin: 15px; text-align: center;color:grey">Overdue Loans<br/>
+                            <span style="display: block; font-size: 24px; color:black;" th:text="${overdueLoans}">
 
-                </span>
-            </p>
-        </div>
-    </div>
-    <div class = "container">
-        <div class = "box">
-            <div style="display: flex; align-items: center;  justify-content: space-between;">
-                <h5 style="margin: 15px;">User List</h5>
-                <a class = "btn btn-secondary" style="margin: 15px;" th:href = "@{/adminportal/manageaccounts}">
-                    View More
-                </a>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                <div class = "container">
+                    <div class = "box">
+                        <div style="display: flex; align-items: center;  justify-content: space-between;">
+                            <h5 style="margin: 15px;">User List</h5>
+                            <a class = "btn btn-secondary" style="margin: 15px;" th:href = "@{/adminportal/manageaccounts}">
+                                View More
+                            </a>
+                        </div>
+                        <table style = "width: 100%;">
+                            <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Member</th>
+                                <th>Book Issued</th>
+                                <th>Options</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each = "member: ${members}" style = "text-align: center;">
+                                    <td th:text = "${member.member_id}"></td>
+                                    <td>
+                                        <span th:text="${#strings.length(member.firstName + ' ' + member.lastName) > 15 ? #strings.substring(member.firstName + ' ' + member.lastName, 0, 15) + '...' : (member.firstName + ' ' + member.lastName)}"></span>
+                                    </td>
+
+                                    <td>3</td>
+                                    <td>
+                                        <a class="btn btn-primary" th:href="@{'/adminportal/updateaccounts/' + ${member.member_id}}">Update</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class = "box">
+                        <div style="display: flex; align-items: center;  justify-content: space-between;">
+                            <h5 style="margin: 15px;">Book List</h5>
+                            <a class = "btn btn-secondary" style="margin: 15px;" th:href = "@{/adminportal/managebooks}">
+                                View More
+                            </a>
+                        </div>
+                        <table style = "width: 100%;">
+                            <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>Options</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each = "book: ${books}" style = "text-align: center;">
+                                <td th:text = "${book.book_id}"></td>
+                                <td>
+                                    <span th:text="${#strings.length(book.title) > 15 ? #strings.substring(book.title, 0, 15) + '...' : (book.title)}"></span>
+                                </td>
+
+                                <td>
+                                    <span th:each="currentAuthor, authorStat : ${book.authors}">
+                                        <span th:text="${currentAuthor.firstName} + ' ' + ${currentAuthor.lastName}"></span>
+                                        <span th:if="${!authorStat.last}">, </span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <a class="btn btn-primary" th:href="@{'/adminportal/updatebooks/' + ${book.book_id}}">Update</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-            <table style = "width: 100%;">
-                <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Member</th>
-                    <th>Book Issued</th>
-                    <th>Options</th>
-                </tr>
-                </thead>
-                <tbody>
-                    <tr th:each = "member: ${members}" style = "text-align: center;">
-                        <td th:text = "${member.member_id}"></td>
-                        <td>
-                            <span th:text="${#strings.length(member.firstName + ' ' + member.lastName) > 15 ? #strings.substring(member.firstName + ' ' + member.lastName, 0, 15) + '...' : (member.firstName + ' ' + member.lastName)}"></span>
-                        </td>
-
-                        <td>3</td>
-                        <td>
-                            <a class="btn btn-primary" th:href="@{'/adminportal/updateaccounts/' + ${member.member_id}}">Update</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class = "box">
-            <div style="display: flex; align-items: center;  justify-content: space-between;">
-                <h5 style="margin: 15px;">Book List</h5>
-                <a class = "btn btn-secondary" style="margin: 15px;" th:href = "@{/adminportal/managebooks}">
-                    View More
-                </a>
-            </div>
-            <table style = "width: 100%;">
-                <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Title</th>
-                    <th>Author</th>
-                    <th>Options</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each = "book: ${books}" style = "text-align: center;">
-                    <td th:text = "${book.book_id}"></td>
-                    <td>
-                        <span th:text="${#strings.length(book.title) > 15 ? #strings.substring(book.title, 0, 15) + '...' : (book.title)}"></span>
-                    </td>
-
-                    <td>
-                        <span th:each="currentAuthor, authorStat : ${book.authors}">
-                            <span th:text="${currentAuthor.firstName} + ' ' + ${currentAuthor.lastName}"></span>
-                            <span th:if="${!authorStat.last}">, </span>
-                        </span>
-                    </td>
-                    <td>
-                        <a class="btn btn-primary" th:href="@{'/adminportal/updatebooks/' + ${book.book_id}}">Update</a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+            </main>
         </div>
     </div>
-</div>
 </body>
 </html>

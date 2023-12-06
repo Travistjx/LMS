@@ -21,7 +21,6 @@ public class Book {
     @Enumerated(EnumType.STRING)
     private BookStatus status;
 
-
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "book_authors",

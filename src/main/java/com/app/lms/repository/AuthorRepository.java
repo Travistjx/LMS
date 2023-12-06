@@ -11,7 +11,4 @@ import org.springframework.data.repository.query.Param;
 
 public interface AuthorRepository extends JpaRepository<Author, Long> {
     Author findByFirstNameAndLastName(String firstName, String lastName);
-
-
-
 }

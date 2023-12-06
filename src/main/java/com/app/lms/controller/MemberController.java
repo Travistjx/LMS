@@ -40,16 +40,21 @@ public class MemberController {
         this.paymentService = paymentService;
     }
 
+    // Provides the current user's information to be used in the navbar.
     @ModelAttribute("currentUser")
     public MemberDto navbar(Principal principal) {
         String username = principal.getName();
         return memberService.findByEmail(username);
     }
 
+    // Home page
     @GetMapping("/home")
     public String start(Model model, Principal principal) {
+
         String username = principal.getName();
         MemberDto member = memberService.findByEmail(username);
+
+        // Finding the count of active, overdue, all loans, and for fine
         Long allActiveLoansCount = loanService.findAllActiveLoansByIdCount(member);
         Long allOverdueLoansCount = loanService.findAllOverdueLoansByIdCount(member);
         Long allLoansCount = loanService.findLoansByMemberCount(member);
@@ -84,6 +89,7 @@ public class MemberController {
         return "home";
     }
 
+    // Retrieve the account setting page
     @GetMapping("/accountsettings")
     public String showAccountSettings(Principal principal, Model model){
         String username = principal.getName();
@@ -92,6 +98,7 @@ public class MemberController {
         return "member/accountSettings/accountSettings";
     }
 
+    // Retrieve pages for all books. If search filter is detected, searchBooks is used
     @GetMapping("/allbooks")
     public String findPaginatedAllBooks(@RequestParam(name = "page", defaultValue = "1") int pageNo,
                                         @RequestParam(name = "query", required = false) String query,
@@ -123,6 +130,7 @@ public class MemberController {
         return "books";
     }
 
+    // Retrieve pages for loan history. If search filter is detected, searchLoans is used
     @GetMapping("/loanhistory")
     public String showLoanHistory(Principal principal,
                                   @RequestParam(name = "page", defaultValue = "1") int pageNo,
@@ -138,6 +146,7 @@ public class MemberController {
         int pageSize = 5;
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
         Page<LoanDto> page;
+
         if ((query != null && !query.isEmpty()) || statusFilter != null){
             page = loanService.searchLoans(query, pageable, Optional.of(member.getMember_id()), IdType.MEMBER_ID, statusFilter, searchBy, sort, order);
         } else {
@@ -158,6 +167,7 @@ public class MemberController {
         return "loanhistory";
     }
 
+    // Retrieve the update name page
     @GetMapping("/accountsettings/updatename")
     public String showUpdateName (Principal principal, Model model){
         String username = principal.getName();
@@ -166,6 +176,7 @@ public class MemberController {
         return "member/accountSettings/updateName";
     }
 
+    // Update/Save any changes made to name
     @PutMapping("/accountsettings/updatename/save")
     public String updateName (@ModelAttribute("member") MemberDto memberDto, Principal principal){
         String username = principal.getName();
@@ -173,6 +184,7 @@ public class MemberController {
         return "redirect:/accountsettings?success";
     }
 
+    // Retrieve the update email page
     @GetMapping("/accountsettings/updateemail")
     public String showUpdateEmail (Principal principal, Model model){
         String username = principal.getName();
@@ -181,6 +193,7 @@ public class MemberController {
         return "member/accountSettings/updateEmail";
     }
 
+    // Update/Save any changes made to email
     @PutMapping("/accountsettings/updateemail/save")
     public String updateEmail (@ModelAttribute("member") MemberDto memberDto, Principal principal){
         String username = principal.getName();
@@ -188,6 +201,7 @@ public class MemberController {
         return "redirect:/logout";
     }
 
+    // Retrieve the update gender page
     @GetMapping("/accountsettings/updategender")
     public String showUpdateGender (Principal principal, Model model){
         String username = principal.getName();
@@ -196,6 +210,7 @@ public class MemberController {
         return "member/accountSettings/updateGender";
     }
 
+    // Update/Save any changes made to gender
     @PutMapping("/accountsettings/updategender/save")
     public String updateGender (@ModelAttribute("member") MemberDto memberDto, Principal principal){
         String username = principal.getName();
@@ -203,6 +218,7 @@ public class MemberController {
         return "redirect:/accountsettings?success";
     }
 
+    // Retrieve the update address 1 page
     @GetMapping("/accountsettings/updateaddressone")
     public String showUpdateAddressOne (Principal principal, Model model){
         String username = principal.getName();
@@ -211,6 +227,7 @@ public class MemberController {
         return "member/accountSettings/updateAddressOne";
     }
 
+    // Update/Save any changes made to address 1
     @PutMapping("/accountsettings/updateaddressone/save")
     public String updateAddressOne (@ModelAttribute("member") MemberDto memberDto, Principal principal){
         String username = principal.getName();
@@ -218,6 +235,7 @@ public class MemberController {
         return "redirect:/accountsettings?success";
     }
 
+    // Retrieve the update address 2 page
     @GetMapping("/accountsettings/updateaddresstwo")
     public String showUpdateAddressTwo (Principal principal, Model model){
         String username = principal.getName();
@@ -226,6 +244,7 @@ public class MemberController {
         return "member/accountSettings/updateAddressTwo";
     }
 
+    // Update/Save any changes made to address 2
     @PutMapping("/accountsettings/updateaddresstwo/save")
     public String updateAddressTwo (@ModelAttribute("member") MemberDto memberDto, Principal principal){
         String username = principal.getName();
@@ -233,6 +252,7 @@ public class MemberController {
         return "redirect:/accountsettings?success";
     }
 
+    // Retrieve the update postal code page
     @GetMapping("/accountsettings/updatepostalcode")
     public String showUpdatePostalCode (Principal principal, Model model){
         String username = principal.getName();
@@ -241,6 +261,7 @@ public class MemberController {
         return "member/accountSettings/updatePostalCode";
     }
 
+    // Update/Save any changes made to postal code
     @PutMapping("/accountsettings/updatepostalcode/save")
     public String updatePostalCode (@ModelAttribute("member") MemberDto memberDto, Principal principal){
         String username = principal.getName();
@@ -248,6 +269,7 @@ public class MemberController {
         return "redirect:/accountsettings?success";
     }
 
+    // Retrieve the update password page
     @GetMapping("/accountsettings/updatepassword")
     public String showUpdatePassword (Principal principal, Model model){
         String username = principal.getName();
@@ -256,6 +278,7 @@ public class MemberController {
         return "member/accountSettings/updatePassword";
     }
 
+    // Update/Save any changes made to password
     @PutMapping("/accountsettings/updatepassword/save")
     public String updatePassword (@ModelAttribute("member") MemberDto memberDto,
                                   @RequestParam("password") String password,
@@ -278,6 +301,7 @@ public class MemberController {
         return "redirect:/accountsettings?success";
     }
 
+    // Retrieve pages for fines. If search filter is detected, searchFines is used
     @GetMapping("/fines")
     public String showFines(@RequestParam(name = "page", defaultValue = "1") int pageNo,
                               @RequestParam(name = "query", required = false) String query,
@@ -315,6 +339,7 @@ public class MemberController {
         return "fines";
     }
 
+    // Retrieve payment page
     @GetMapping("/payment")
     public String showPayment (Principal principal, Model model){
         String username = principal.getName();
@@ -327,6 +352,7 @@ public class MemberController {
         return "payment";
     }
 
+    // Retrieve payment checkout page
     @PostMapping("/payment/checkout")
     public String confirmPayment (Principal principal, Model model,
                            @RequestParam(value = "fine_ids", required = true) String fine_ids){
@@ -348,6 +374,7 @@ public class MemberController {
         return "makePayment";
     }
 
+    // For user to make payment, before directing to a results page
     @PostMapping("/payment/checkout/pay")
     public String paymentType (Principal principal, Model model,
                                @RequestParam(value = "confirmedFines", required = true) String fine_ids,
@@ -378,15 +405,7 @@ public class MemberController {
         }
     }
 
-//    @GetMapping("/test")
-//    public String test(Principal principal, Model model){
-//        String username = principal.getName();
-//        MemberDto member = memberService.findByEmail(username);
-//        PaymentDto paymentDto = paymentService.getPaymentsByUser(member.getMember_id());
-//        model.addAttribute("payment", paymentDto);
-//        return "paymentSuccess";
-//    }
-
+    // Retrieve pages for payment history. If search filter is detected, searchPayments is used
     @GetMapping("/paymenthistory")
     public String showPaymentHistory(Principal principal,
                                   @RequestParam(name = "page", defaultValue = "1") int pageNo,

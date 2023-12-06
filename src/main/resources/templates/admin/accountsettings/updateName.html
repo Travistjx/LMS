@@ -59,40 +59,44 @@
     </style>
 </head>
 <body>
-<!-- Include a navigation bar using Thymeleaf fragment replacement -->
-<div th:replace="common/admin_navbar :: #navbar"></div>
-<div class="container-fluid">
-    <div class="row">
-        <div th:replace="common/accountsettings_sidebar :: #navbar"></div>
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <div class="container">
-<div th:if="${param.success}">
-    <div class="alert alert-info">Name has been successfully updated!</div>
-</div>
-                <div style="margin-top: 50px;">
-    <h2 class="text-center">Update Name</h2>
-
-<div class="update-container">
-    <div class="card-body">
-        <form method="post" role="form" enctype="multipart/form-data" th:action="@{'/adminportal/accountsettings/updatename/save'}" th:object="${member}">
-        <input type="hidden" name="_method" value="put" />
-        <div class="form-group">
-            <label for="firstName">First Name:</label>
-            <div class="input-group">
-                <input type="text" class="form-control" id="firstName" th:value="${member.firstName}" th:name="firstName" >
-            </div>
+    <!-- Include a navigation bar -->
+    <div th:replace="common/admin_navbar :: #navbar"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <div th:replace="common/accountsettings_sidebar :: #navbar"></div>
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="container">
+                    <div th:if="${param.success}">
+                        <div class="alert alert-info">Name has been successfully updated!</div>
+                    </div>
+                    <div style="margin-top: 50px;">
+                        <h2 class="text-center">Update Name</h2>
+                        <div class="update-container">
+                            <div class="card-body">
+                                <!-- Form for updating name -->
+                                <form method="post" role="form" enctype="multipart/form-data" th:action="@{'/adminportal/accountsettings/updatename/save'}" th:object="${member}">
+                                    <input type="hidden" name="_method" value="put" />
+                                    <div class="form-group">
+                                        <label for="firstName">First Name:</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="firstName" th:value="${member.firstName}" th:name="firstName" >
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="lastName">Last Name:</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="lastName" th:value="${member.lastName}" th:name="lastName" >
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-primary" type="submit">Save Changes</button>
+                                    <a class="btn btn-primary" href="javascript:history.back()">Back</a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
         </div>
-        <div class="form-group">
-            <label for="lastName">Last Name:</label>
-            <div class="input-group">
-                <input type="text" class="form-control" id="lastName" th:value="${member.lastName}" th:name="lastName" >
-            </div>
-        </div>
-        <button class="btn btn-primary" type="submit">Save Changes</button>
-        <a class="btn btn-primary" href="javascript:history.back()">Back</a>
     </div>
-
-</div>
-
 </body>
 </html>

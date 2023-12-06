@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
     Payment findFirstByOrderByPaymentDateTimeDesc();
+
     Page<Payment> findAllByMember(Member member, Pageable pageable);
 
     @Query("SELECT l FROM Payment l " +

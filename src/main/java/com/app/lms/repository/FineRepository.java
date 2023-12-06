@@ -70,6 +70,8 @@ public interface FineRepository extends JpaRepository<Fine, Long> {
                                               @Param("searchBy") String searchBy,
                                                       @Param("member_id") Long member_id,
                                               Pageable pageable);
+
+    //Find all by the member attribute, that's part of the loan attribute in Loan (Fine.loan.member)
     Page<Fine> findAllByLoan_Member(Member member, Pageable pageable);
 
 }

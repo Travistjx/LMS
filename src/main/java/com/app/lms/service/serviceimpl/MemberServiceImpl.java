@@ -32,6 +32,7 @@ public class MemberServiceImpl implements MemberService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // Save/Create account
     @Override
     public void saveUser(MemberDto memberDto) {
         Member member = new Member();
@@ -58,6 +59,7 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
     }
 
+    // Find Member by Email
     @Override
     public MemberDto findByEmail(String email) {
         Member member = memberRepository.findByEmail(email);
@@ -69,6 +71,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
 
+    // FInd all list of users/accounts
     @Override
     public List<MemberDto> findAllUsers() {
         List<Member> members = memberRepository.findAll();
@@ -76,12 +79,14 @@ public class MemberServiceImpl implements MemberService {
                 .collect(Collectors.toList());
     }
 
+    // Find member by Member Id
     @Override
     public Optional<MemberDto> findById(Long id){
         Optional<Member>member = memberRepository.findById(id);
         return member.map(this::convertEntityToDto);
     }
 
+    // Update name of existing user/account
     @Override
     public void updateName(MemberDto memberDto, String email){
         Member member = memberRepository.findByEmail(email);
@@ -96,6 +101,7 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
+    // Update email of existing user/account
     @Override
     public void updateEmail(MemberDto memberDto, String email){
         Member member = memberRepository.findByEmail(email);
@@ -103,6 +109,7 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
     }
 
+    // Update gender of existing user/account
     @Override
     public void updateGender(MemberDto memberDto, String email){
         Member member = memberRepository.findByEmail(email);
@@ -110,6 +117,7 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
     }
 
+    // Update address 1 of existing user/account
     @Override
     public void updateAddressOne(MemberDto memberDto, String email){
         Member member = memberRepository.findByEmail(email);
@@ -117,6 +125,7 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
     }
 
+    // Update address 2 of existing user/account
     @Override
     public void updateAddressTwo(MemberDto memberDto, String email){
         Member member = memberRepository.findByEmail(email);
@@ -124,6 +133,7 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
     }
 
+    // Update postal code of existing user/account
     @Override
     public void updatePostalCode(MemberDto memberDto, String email){
         Member member = memberRepository.findByEmail(email);
@@ -131,6 +141,7 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
     }
 
+    // Update password of existing user/account
     @Override
     public void updatePassword(String newPassword, String email){
         Member member = memberRepository.findByEmail(email);
@@ -138,6 +149,7 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
     }
 
+    // Check if password entered matches database
     @Override
     public boolean checkPassword(String password, String email){
         Member member = memberRepository.findByEmail(email);
@@ -145,6 +157,7 @@ public class MemberServiceImpl implements MemberService {
         return passwordEncoder.matches(password, hashedPassword);
     }
 
+    // Update existing account
     @Override
     public void updateAccounts(MemberDto member, Long memberId, String roles) {
         Optional<Member> selectedMember= memberRepository.findById(memberId);
@@ -183,6 +196,7 @@ public class MemberServiceImpl implements MemberService {
 
     }
 
+    // Delete member/account based on Member Id
     public void deleteMembers (Long id){
         Member memberToDelete = memberRepository.findById(id).orElse(null);
 
@@ -195,6 +209,7 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
+    // Retrieves pages for members based on search filter
     @Override
     public Page<MemberDto> searchMembers(String query, Pageable pageable, String statusFilter, String searchBy,
                                          String sort, String order) {
@@ -243,6 +258,7 @@ public class MemberServiceImpl implements MemberService {
         return new PageImpl<>(memberDtoList, pageable, memberPage.getTotalElements());
     }
 
+    // Retrieve pages of all members
     @Override
     public Page<MemberDto> findPaginated(int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
@@ -255,6 +271,7 @@ public class MemberServiceImpl implements MemberService {
         return new PageImpl<>(memberDtoList, pageable, memberPage.getTotalElements());
     }
 
+    // Convert Member entity to MemberDto
     @Override
     public MemberDto convertEntityToDto(Member member){
         MemberDto memberDto = new MemberDto();

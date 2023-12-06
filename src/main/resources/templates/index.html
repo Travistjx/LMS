@@ -26,115 +26,92 @@
         }
 
         .right {
-            flex: 2; /* Occupy more space for the right div (adjust as needed) */
-            text-align: center; /* Align content to the center within the right div */
+            flex: 2;
+            text-align: center;
         }
 
-        <style>
+        .nav-link {
+             color: white !important;
 
-    .nav-link {
-         color: white !important;
+        }
 
-    }
+        .nav-link:hover {
+             text-decoration: underline;
+         }
 
-    .nav-link:hover {
-         text-decoration: underline; /* Add an underline when hovering over the link */
-     }
+       .custom-btn {
+           background-color: #275db3;
+           transition: color 0.3s, background-color 0.3s;
+           outline-color: none;
+           border-radius: 30px;
 
-   .custom-btn {
-       background-color: #275db3;
-       transition: color 0.3s, background-color 0.3s; /* Smooth transition effect */
-       outline-color: none;
-       border-radius: 30px;
-
-       /* Additional styling when the button is hovered over */
-       &:hover {
-           background-color: lightblue; /* Change background color to light blue on hover */
+           /* Additional styling when the button is hovered over */
+           &:hover {
+               background-color: lightblue;
+           }
        }
-   }
 
+        /* Media query for small screens (collapsed navbar) */
+        @media (max-width: 991.98px) {
+            .navbar-nav .nav-link {
+                color: white !important; /* Change link color to black for collapsed navbar */
+                border-radius: none;
 
-    /* Media query for small screens (collapsed navbar) */
-    @media (max-width: 991.98px) {
-        .navbar-nav .nav-link {
-            color: white !important; /* Change link color to black for collapsed navbar */
-            border-radius: none;
+            }
 
+             .custom-btn, .custom-btn-2 {
+                background-color: transparent;
+                border: none !important;
+
+                padding: 0 !important;
+                border-radius: 0 !important;
+            }
+
+             .custom-btn:hover, .custom-btn-2:hover{
+                background-color: transparent;
+                border: none !important;
+                text-decoration: underline;
+                padding: 0 !important;
+                border-radius: 0 !important;
+            }
         }
-
-         .custom-btn, .custom-btn-2 {
-            background-color: transparent;
-            border: none !important;
-
-            padding: 0 !important;
-            border-radius: 0 !important;
-        }
-
-         .custom-btn:hover, .custom-btn-2:hover{
-            background-color: transparent;
-            border: none !important;
-            text-decoration: underline;
-            padding: 0 !important;
-            border-radius: 0 !important;
-        }
-    }
     </style>
 </head>
 <body style = "background-color: aliceblue;">
-
-
-<nav class="navbar navbar-expand-lg navbar-dark" id="navbar" style="background-color: #272727;">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#" style="font-size: 24px; padding-left: 20px;"><b>LMS</b></a >
-        <!-- Add the navbar-toggler button -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav md-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/features" style = "font-size: 18px; ">FEATURES</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/aboutus" style = "font-size: 18px; ">ABOUT US</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <button class="btn btn-outline-dark custom-btn-2">
-                        <a id="login-link" class="nav-link" href="/login" style = "font-size: 18px; background-color: transparent;
-            border: none !important;
-            color: white;
-            border-radius: 0 !important;">LOG IN</a>
-                    </button>
-                </li>
-                <li class="nav-item" style = "right:0;">
-                    <button class="btn btn-outline-dark custom-btn">
-                        <a id="signup-link" class="nav-link" href="/register" style = "font-size: 18px; text-decoration:none; color: white;">SIGN UP</a>
-                    </button>
-                </li>
-            </ul>
+    <nav class="navbar navbar-expand-lg navbar-dark" id="navbar" style="background-color: #272727;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#" style="font-size: 24px; padding-left: 20px;"><b>LMS</b></a >
+            <!-- Add the navbar-toggler button -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <button class="btn btn-outline-dark custom-btn-2">
+                            <a id="login-link" class="nav-link" href="/login" style = "font-size: 18px; background-color: transparent;
+                border: none !important;
+                color: white;
+                border-radius: 0 !important;">LOG IN</a>
+                        </button>
+                    </li>
+                    <li class="nav-item" style = "right:0;">
+                        <button class="btn btn-outline-dark custom-btn">
+                            <a id="signup-link" class="nav-link" href="/register" style = "font-size: 18px; text-decoration:none; color: white;">SIGN UP</a>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="top-display">
+        <div class="left">
+            <img th:src="@{/images/lms.svg}" style="width: 400px;" alt="no image found">
+        </div>
+        <div class="right">
+            <div style="text-align: center; font-size: 30px;">Welcome to LMS!</div>
+            <div style="text-align: center; font-size: 20px;">This is the library management system for XXX Library.</div>
         </div>
     </div>
-</nav>
-<div class="top-display">
-    <div class="left">
-        <img th:src="@{/images/lms.svg}" style="width: 400px;" alt="no image found">
-    </div>
-    <div class="right">
-        <div style="text-align: center; font-size: 30px;">Welcome to LMS!</div>
-        <div style="text-align: center; font-size: 20px;">This is the library management system for XXX Library.</div>
-    </div>
-</div>
-
-<!--<div class="container">-->
-<!--    <div class="row">-->
-<!--        <h1 class="text-center"> Welcome to Library Management System (Home)</h1>-->
-<!--    </div>-->
-<!--</div>-->
-<!--<div class = "bottomInfo" style = "background-color: black; position: fixed; width:100%; bottom: 0;">-->
-<!--    <p>Contact: Your Contact Information</p>-->
-<!--    <p>Email: your.email@example.com</p>-->
-<!--</div>-->
 </body>
 </html>

@@ -29,6 +29,7 @@ public class BookServiceImpl implements BookService {
 
     }
 
+    // Convert BookDto to Book, then save book into database
     @Override
     public void saveBook(BookDto bookDto, MultipartFile file) {
         Book book = new Book();
@@ -37,7 +38,7 @@ public class BookServiceImpl implements BookService {
         book.setPublication_year(bookDto.getPublication_year()); // Use correct property name
         book.setCategory(bookDto.getCategory());
 
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
 
         if(fileName.contains(".."))
         {
@@ -75,11 +76,13 @@ public class BookServiceImpl implements BookService {
         bookRepository.save(book);
     }
 
+    // Find book based on title
     @Override
     public Book findByBook(String title) {
         return bookRepository.findByTitle(title);
     }
 
+    // Retrieve list of all books
     @Override
     public List<BookDto> findAllBooks() {
         List<Book> books = bookRepository.findAll();
@@ -87,10 +90,11 @@ public class BookServiceImpl implements BookService {
                 .collect(Collectors.toList());
     }
 
+    // Retrieve pages of all books
     @Override
     public Page<BookDto> findPaginated(int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
-        Page<Book> bookPage = this.bookRepository.findAll(pageable);
+        Page<Book> bookPage = this.bookRepository.findAll(pageable); //find pages of Book entity
 
         List<BookDto> bookDtoList = bookPage.getContent().stream()
                 .map(this::convertEntityToDto)
@@ -99,6 +103,7 @@ public class BookServiceImpl implements BookService {
         return new PageImpl<>(bookDtoList, pageable, bookPage.getTotalElements());
     }
 
+    // Find book based on Book Id
     @Override
     public Optional<BookDto> findById(long id) {
         Optional<Book> bookOptional = bookRepository.findById(id);
@@ -106,6 +111,7 @@ public class BookServiceImpl implements BookService {
     }
 
 
+    // Update existing book
     @Override
     public void updateBooks(BookDto book, Long bookId, MultipartFile file, String authors) {
         Optional<Book> selectedBook = bookRepository.findById(bookId);
@@ -150,6 +156,7 @@ public class BookServiceImpl implements BookService {
 
     }
 
+    // Delete book
     public void deleteBooks (Long id){
         Book bookToDelete = bookRepository.findById(id).orElse(null);
 
@@ -162,6 +169,7 @@ public class BookServiceImpl implements BookService {
         }
     }
 
+    // Search and retrieve pages of book based on search filters
     public Page<BookDto> searchBooks(String query, Pageable pageable, String searchBy, String statusFilter
                                      , String sort, String order) {
 
@@ -214,6 +222,7 @@ public class BookServiceImpl implements BookService {
         return new PageImpl<>(matchedBooks, pageable, searchedBooks.getTotalElements());
     }
 
+    // Convert Book entity to that of BookDto
     public BookDto convertEntityToDto(Book book){
         BookDto bookDto = new BookDto();
         bookDto.setCategory(book.getCategory());

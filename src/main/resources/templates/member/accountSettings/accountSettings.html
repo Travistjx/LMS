@@ -47,145 +47,136 @@
         }
 
         .nav-link:hover {
-            background-color: #2e2e2e; /* Background color when hovered over */
-            color: white; /* Text color when hovered over (optional) */
-            /* Other styles like padding, border-radius, etc. */
+            background-color: #2e2e2e;
+            color: white;
             }
 
         .nav-item a {
-            color: white; /* Text color for the first nav-link */
-
+            color: white;
         }
-
-
     </style>
 </head>
 <body>
-<div th:replace="common/member_navbar :: #navbar"></div>
-<div class="container-fluid">
-    <div class="row">
-        <div th:replace="common/accountsettings_sidebar :: #navbar"></div>
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <div class="container">
+    <!-- Include a navigation bar -->
+    <div th:replace="common/member_navbar :: #navbar"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <div th:replace="common/accountsettings_sidebar :: #navbar"></div>
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="container">
+                    <div th:if="${param.success}">
+                        <div class="alert alert-info">Account has been successfully updated!</div>
+                    </div>
+                    <div style="margin-top: 50px;">
+                        <h1 class="text-center">Account Settings</h1>
+                        <div class="update-container">
+                            <div class="card-body">
+                                <h2 id = "profilePart">Profile</h2>
+                                <input type="hidden" name="_method" value="put" />
+                                <div class="form-group">
+                                    <label for="name">Name:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="name" th:value="${member.firstName + ' ' + member.lastName}" th:name="name" readonly>
+                                        <span class="input-group-text">
+                                            <a href="/accountsettings/updatename">
+                                                <span class="bi bi-arrow-right"></span>
+                                            </a>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="email" th:value="${member.email}" th:name="email" readonly>
+                                        <span class="input-group-text">
+                                            <a href="/accountsettings/updateemail">
+                                                <span class="bi bi-arrow-right"></span>
+                                            </a>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="gender">Gender:</label>
 
-
-<div th:if="${param.success}">
-    <div class="alert alert-info">Account has been successfully updated!</div>
-</div>
-                <div style="margin-top: 50px;">
-    <h1 class="text-center">Account Settings</h1>
-
-<div class="update-container">
-    <div class="card-body">
-        <h2 id = "profilePart">Profile</h2>
-            <input type="hidden" name="_method" value="put" />
-        <div class="form-group">
-            <label for="name">Name:</label>
-            <div class="input-group">
-                <input type="text" class="form-control" id="name" th:value="${member.firstName + ' ' + member.lastName}" th:name="name" readonly>
-                <span class="input-group-text">
-                    <a href="/accountsettings/updatename">
-                        <span class="bi bi-arrow-right"></span>
-                    </a>
-                </span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="email">Email:</label>
-            <div class="input-group">
-                <input type="text" class="form-control" id="email" th:value="${member.email}" th:name="email" readonly>
-                <span class="input-group-text">
-                    <a href="/accountsettings/updateemail">
-                        <span class="bi bi-arrow-right"></span>
-                    </a>
-                </span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="gender">Gender:</label>
-
-            <div class="input-group">
-                <input type="text" class="form-control" id="gender" th:value="${member.gender}" th:name="gender" readonly>
-                <span class="input-group-text">
-                    <a href="/accountsettings/updategender">
-                        <span class="bi bi-arrow-right"></span>
-                    </a>
-                </span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="libraryCard">Library Card:</label>
-            <div class="input-group">
-                <input type="text" class="form-control" id="libraryCard" th:value="${member.libraryCard}" th:name="libraryCard" readonly>
-            </div>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="gender" th:value="${member.gender}" th:name="gender" readonly>
+                                        <span class="input-group-text">
+                                            <a href="/accountsettings/updategender">
+                                                <span class="bi bi-arrow-right"></span>
+                                            </a>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="libraryCard">Library Card:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="libraryCard" th:value="${member.libraryCard}" th:name="libraryCard" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="update-container">
+                            <div class="card-body">
+                                <h2 id = "addressPart">Address</h2>
+                                <input type="hidden" name="_method" value="put" />
+                                <div class="form-group">
+                                    <label for="addressOne">Address Line 1:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="addressOne" th:value="${member.addressOne}" th:name="addressOne" readonly>
+                                        <span class="input-group-text">
+                                            <a href="/accountsettings/updateaddressone">
+                                                <span class="bi bi-arrow-right"></span>
+                                            </a>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="addressTwo">Address Line 2:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="addressTwo" th:value="${member.addressTwo}"
+                                           th:name="addressTwo" readonly>
+                                        <span class="input-group-text">
+                                            <a href="/accountsettings/updateaddresstwo">
+                                                <span class="bi bi-arrow-right"></span>
+                                            </a>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="postalCode">Postal Code:</label>
+                                    <div class="input-group">
+                                     <input type="text" class="form-control" id="postalCode" th:value="${member.postalCode}"
+                                           th:name="postalCode" readonly>
+                                        <span class="input-group-text">
+                                            <a href="/accountsettings/updatepostalcode">
+                                                <span class="bi bi-arrow-right"></span>
+                                            </a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="update-container">
+                            <div class="card-body">
+                                <h2 id = "passwordPart">Password</h2>
+                                <div class="form-group">
+                                    <label for="password">Password:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="password" value="**********"
+                                           name="password" readonly>
+                                        <span class="input-group-text">
+                                            <a href="/accountsettings/updatepassword">
+                                                <span class="bi bi-arrow-right"></span>
+                                            </a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
         </div>
     </div>
-
-
-</div>
-<div class="update-container">
-    <div class="card-body">
-        <h2 id = "addressPart">Address</h2>
-        <input type="hidden" name="_method" value="put" />
-        <div class="form-group">
-            <label for="addressOne">Address Line 1:</label>
-            <div class="input-group">
-                <input type="text" class="form-control" id="addressOne" th:value="${member.addressOne}" th:name="addressOne" readonly>
-                <span class="input-group-text">
-                    <a href="/accountsettings/updateaddressone">
-                        <span class="bi bi-arrow-right"></span>
-                    </a>
-                </span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="addressTwo">Address Line 2:</label>
-            <div class="input-group">
-                <input type="text" class="form-control" id="addressTwo" th:value="${member.addressTwo}"
-                   th:name="addressTwo" readonly>
-                <span class="input-group-text">
-                    <a href="/accountsettings/updateaddresstwo">
-                        <span class="bi bi-arrow-right"></span>
-                    </a>
-                </span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="postalCode">Postal Code:</label>
-            <div class="input-group">
-             <input type="text" class="form-control" id="postalCode" th:value="${member.postalCode}"
-                   th:name="postalCode" readonly>
-                <span class="input-group-text">
-                    <a href="/accountsettings/updatepostalcode">
-                        <span class="bi bi-arrow-right"></span>
-                    </a>
-                </span>
-            </div>
-        </div>
-    </div>
-
-
-</div>
-<div class="update-container">
-    <div class="card-body">
-        <h2 id = "passwordPart">Password</h2>
-        <div class="form-group">
-
-            <label for="password">Password:</label>
-            <div class="input-group">
-                <input type="text" class="form-control" id="password" value="**********"
-                   name="password" readonly>
-                <span class="input-group-text">
-                    <a href="/accountsettings/updatepassword">
-                        <span class="bi bi-arrow-right"></span>
-                    </a>
-                </span>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
 </body>
 </html>

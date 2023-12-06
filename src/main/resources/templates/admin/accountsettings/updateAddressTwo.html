@@ -47,47 +47,49 @@
         }
 
         .nav-link:hover {
-            background-color: #2e2e2e; /* Background color when hovered over */
-            color: white; /* Text color when hovered over (optional) */
-            /* Other styles like padding, border-radius, etc. */
+            background-color: #2e2e2e;
+            color: white;
             }
 
         .nav-item a {
-            color: white; /* Text color for the first nav-link */
+            color: white;
 
         }
     </style>
 </head>
 <body>
-<!-- Include a navigation bar using Thymeleaf fragment replacement -->
-<div th:replace="common/admin_navbar :: #navbar"></div>
-<div class="container-fluid">
-    <div class="row">
-        <div th:replace="common/accountsettings_sidebar :: #navbar"></div>
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <div class="container">
-<div th:if="${param.success}">
-    <div class="alert alert-info">Address has been successfully updated!</div>
-</div>
-                <div style="margin-top: 50px;">
-    <h2 class="text-center">Update Address 2</h2>
-
-
-<div class="update-container">
-    <div class="card-body">
-        <form method="post" role="form" enctype="multipart/form-data" th:action="@{'/adminportal/accountsettings/updateaddresstwo/save'}" th:object="${member}">
-            <input type="hidden" name="_method" value="put" />
-            <div class="form-group">
-                <label for="addressTwo">Address 2:</label>
-                <div class="input-group">
-                    <input type="text" class="form-control" id="addressTwo" th:value="${member.addressTwo}" th:name="addressTwo" >
+    <!-- Include a navigation bar -->
+    <div th:replace="common/admin_navbar :: #navbar"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <div th:replace="common/accountsettings_sidebar :: #navbar"></div>
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="container">
+                    <div th:if="${param.success}">
+                        <div class="alert alert-info">Address has been successfully updated!</div>
+                    </div>
+                    <div style="margin-top: 50px;">
+                        <h2 class="text-center">Update Address 2</h2>
+                        <div class="update-container">
+                            <div class="card-body">
+                                <!-- Form for updating address 2 -->
+                                <form method="post" role="form" enctype="multipart/form-data" th:action="@{'/adminportal/accountsettings/updateaddresstwo/save'}" th:object="${member}">
+                                    <input type="hidden" name="_method" value="put" />
+                                    <div class="form-group">
+                                        <label for="addressTwo">Address 2:</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="addressTwo" th:value="${member.addressTwo}" th:name="addressTwo" >
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-primary" type="submit">Save Changes</button>
+                                    <a class="btn btn-primary" href="javascript:history.back()">Back</a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <button class="btn btn-primary" type="submit">Save Changes</button>
-            <a class="btn btn-primary" href="javascript:history.back()">Back</a>
+            </main>
+        </div>
     </div>
-
-</div>
-
 </body>
 </html>
