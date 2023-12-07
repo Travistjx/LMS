@@ -14,7 +14,7 @@ This project is currently in development.
 
 
 # REFLECTION
-This project took me around 4 months to complete. I wanted to build a library management system that fulfills the basic needs, which is for administrators to manage the book inventory accounts, the ongoing loans, fines and payments, and for regular library patrons to be able to browse books, manage loans, fines and payment. The main goal was to use this project to learn Spring Boot using the Controller-Service-Repository structure. 
+This project took me around 4 months to complete. I wanted to build a library management system that fulfills the basic needs, which is for administrators to manage the book inventory, user accounts, the ongoing loans, fines and payments, and for regular library patrons to be able to browse books, manage loans, fines and payment. The main goal was to use this project to learn Spring Boot using the Controller-Service-Repository structure. 
 
 Honestly, the project took me longer than I expected, and mainly due to real life commitments. It was also more tedious than I thought, as there were a lot of functions involved and I had to learn from scratch. I also believed I should have made the project more compact and focus mainly on some functions, like for instance, just managing the books itself instead of trying to complete a total library management system. But once I was halfway through, I decided to do the whole package.
 
