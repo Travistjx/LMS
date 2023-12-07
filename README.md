@@ -12,7 +12,7 @@ The Library Management System (LMS) is a web application designed to efficiently
 This project is currently in development. 
 
 # DOCUMENTATION
-<a href = "https://github.com/Travistjx/LMS/blob/main/User%20Manual.pdf">User Manual</a>
+<a href = "[https://github.com/Travistjx/LMS/blob/main/User%20Manual.pdf](https://github.com/Travistjx/LMS/blob/main/Documentation/User%20Manual.pdf)">User Manual</a>
 
 # INSTALLATION / SETUP
 
