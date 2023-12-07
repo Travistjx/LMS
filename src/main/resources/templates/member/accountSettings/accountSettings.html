@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Account Settings</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <style>
+        .update-container {
+            margin: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .card-body {
+            background-color: white;
+            border-radius: 5px;
+            padding: 20px;
+
+            width: 450px;
+            max-width: 450px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .form-control {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 8px;
+            width: 100%;
+            max-width: 400px;
+
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .nav-link:hover {
+            background-color: #2e2e2e;
+            color: white;
+            }
+
+        .nav-item a {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Include a navigation bar -->
+    <div th:replace="common/member_navbar :: #navbar"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Include a side bar -->
+            <div th:replace="common/accountsettings_sidebar :: #navbar"></div>
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="container">
+                    <div th:if="${param.success}">
+                        <div class="alert alert-info">Account has been successfully updated!</div>
+                    </div>
+                    <!-- display user information in account settings -->
+                    <div style="margin-top: 50px;">
+                        <h1 class="text-center">Account Settings</h1>
+                        <div class="update-container">
+                            <div class="card-body">
+                                <h2 id = "profilePart">Profile</h2>
+                                <input type="hidden" name="_method" value="put" />
+                                <div class="form-group">
+                                    <label for="name">Name:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="name" th:value="${member.firstName + ' ' + member.lastName}" th:name="name" readonly>
+                                        <span class="input-group-text">
+                                            <a href="/accountsettings/updatename">
+                                                <span class="bi bi-arrow-right"></span>
+                                            </a>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="email" th:value="${member.email}" th:name="email" readonly>
+                                        <span class="input-group-text">
+                                            <a href="/accountsettings/updateemail">
+                                                <span class="bi bi-arrow-right"></span>
+                                            </a>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="gender">Gender:</label>
+
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="gender" th:value="${member.gender}" th:name="gender" readonly>
+                                        <span class="input-group-text">
+                                            <a href="/accountsettings/updategender">
+                                                <span class="bi bi-arrow-right"></span>
+                                            </a>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="libraryCard">Library Card:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="libraryCard" th:value="${member.libraryCard}" th:name="libraryCard" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="update-container">
+                            <div class="card-body">
+                                <h2 id = "addressPart">Address</h2>
+                                <input type="hidden" name="_method" value="put" />
+                                <div class="form-group">
+                                    <label for="addressOne">Address Line 1:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="addressOne" th:value="${member.addressOne}" th:name="addressOne" readonly>
+                                        <span class="input-group-text">
+                                            <a href="/accountsettings/updateaddressone">
+                                                <span class="bi bi-arrow-right"></span>
+                                            </a>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="addressTwo">Address Line 2:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="addressTwo" th:value="${member.addressTwo}"
+                                           th:name="addressTwo" readonly>
+                                        <span class="input-group-text">
+                                            <a href="/accountsettings/updateaddresstwo">
+                                                <span class="bi bi-arrow-right"></span>
+                                            </a>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="postalCode">Postal Code:</label>
+                                    <div class="input-group">
+                                     <input type="text" class="form-control" id="postalCode" th:value="${member.postalCode}"
+                                           th:name="postalCode" readonly>
+                                        <span class="input-group-text">
+                                            <a href="/accountsettings/updatepostalcode">
+                                                <span class="bi bi-arrow-right"></span>
+                                            </a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="update-container">
+                            <div class="card-body">
+                                <h2 id = "passwordPart">Password</h2>
+                                <div class="form-group">
+                                    <label for="password">Password:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="password" value="**********"
+                                           name="password" readonly>
+                                        <span class="input-group-text">
+                                            <a href="/accountsettings/updatepassword">
+                                                <span class="bi bi-arrow-right"></span>
+                                            </a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<nav class="navbar navbar-expand-lg navbar-white bg-dark" id = "navbar"
+     style = "box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/adminportal" style = "margin-left: 20px; color:white" ><b>LMS</b></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+
+      <ul class="navbar-nav ms-auto">
+        <!-- Dropdown with Account Settings and Logout -->
+        <li class="nav-item dropdown">
+          <button class="btn btn-link nav-link dropdown-toggle" type="button" id="accountDropdown" data-bs-toggle="dropdown" aria-expanded="false"
+                  style = "color:white;">
+            <span th:utext="${#strings.length(currentUser.firstName) > 10 ? currentUser.firstName.subSequence(0, 10) + '...' : currentUser.firstName}"></span>
+
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
+              <li><a class="dropdown-item" href="/adminportal/accountsettings" style = "color:black;">Account Settings</a></li>
+              <li><a class="dropdown-item" th:href="@{/logout}" style = "color:black;">Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

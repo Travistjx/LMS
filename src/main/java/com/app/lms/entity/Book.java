@@ -16,6 +16,11 @@ public class Book {
     private String description;
     private String category;
     private String publication_year;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private BookStatus status;
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "book_authors",
@@ -40,7 +45,9 @@ public class Book {
 
 
     public Book() {
+        this.status = BookStatus.AVAILABLE;
     }
+
 
     public Book(Long book_id, String title, String description, String category, String publication_year, Collection<Author> authors,
                 String image) {
@@ -93,11 +100,19 @@ public class Book {
         this.publication_year = publication_year;
     }
 
-    public Collection<Author> getAuthor() {
+    public Collection<Author> getAuthors() {
         return authors;
     }
 
-    public void setAuthor(Collection<Author> author) {
+    public void setAuthors(Collection<Author> author) {
         this.authors = author;
+    }
+
+    public BookStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(BookStatus status) {
+        this.status = status;
     }
 }

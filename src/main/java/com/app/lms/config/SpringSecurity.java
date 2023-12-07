@@ -19,20 +19,23 @@ public class SpringSecurity {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    //Encrypt password
     @Bean
     public static PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 
+    //Only allow access to user with appropriate role(s)
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((authorize) ->
                         authorize.requestMatchers("/register/**").permitAll()
-                                .requestMatchers("/index").permitAll()
+                                .requestMatchers("/").permitAll()
+                                .requestMatchers("/images/**", "/css/**", "/js/**").permitAll()
                                 .requestMatchers("/adminportal").hasRole("ADMIN")
                                 .requestMatchers("/adminportal/**").hasRole("ADMIN")
-                                .requestMatchers("/start").hasAnyRole("MEMBER")
+                                .requestMatchers("/home").hasAnyRole("MEMBER")
                                 .anyRequest().authenticated()
                 ).formLogin(
                         form -> form
@@ -47,6 +50,7 @@ public class SpringSecurity {
         return http.build();
     }
 
+    //Authenticate user
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth

@@ -4,98 +4,306 @@
 >
 <head>
     <meta charset="UTF-8">
-    <title>Registration and Login System</title>
+    <title>Registration</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        .nav-link {
+                color: white !important;
+           }
+
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+
+        .custom-btn {
+          background-color: #275db3;
+          transition: color 0.3s, background-color 0.3s;
+          outline-color: none;
+          border-radius: 30px;
+
+            /* Additional styling when the button is hovered over */
+            &:hover {
+              background-color: lightblue;
+            }
+        }
+
+        .top-display {
+            display: flex;
+            justify-content: space-between; /* Spacing between left and right divs */
+            align-items: center;
+        }
+
+        .left {
+
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Center vertically */
+            align-items: center; /* Center horizontally */
+
+            background-color: aliceblue;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            right: 60%;
+            left: 0;
+            height: 100%;
+            z-index: -2;
+        }
+
+
+        .right {
+           margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Center vertically */
+            align-items: center; /* Center horizontally */
+
+            height: 100%;
+            position: absolute;
+            top: 30%;
+            bottom: 0;
+            right: 0;
+            left: 40%;
+
+            z-index: -2;
+        }
+    </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" th:fragment="header">
-    <div class="container-fluid">
-        <a class="navbar-brand" th:href="@{/}">Registration and Login System</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</nav>
-<br />
-<br />
-<br />
-<div class="container">
-    <div class="row col-md-8 offset-md-2">
-        <div class="card">
-            <div th:if="${param.success}">
-                <div class="alert alert-info">You've successfully registered
-                    to our app!</div>
+    <!-- navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark" id="navbar" style="background-color: #272727;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#" style="font-size: 24px; padding-left: 20px;"><b>LMS</b></a >
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item" style = "right:0;">
+                        <button class="btn btn-outline-dark custom-btn">
+                            <a class="nav-link" href="/" style = "font-size: 18px; text-decoration:none; color: white;">Back to main page</a>
+                        </button>
+                    </li>
+                </ul>
             </div>
-            <div class="card-header">
-                <h2 class="text-center">Registration</h2>
+        </div>
+    </nav>
+    <div class="container" >
+        <div class = "top-display" >
+            <div class = "left">
+                <p style = "font-size: 30px;"><b>Already has an account?</b></p>
+                <p>Sign in now and find new books to read!</p>
+                <button type="submit" class="btn btn-primary" style = "padding: 13px 30px; font-size: 20px;">
+                    <a th:href = "@{/login}" style = "color: white; text-decoration: none;">Login</a>
+                </button>
             </div>
-            <div class="card-body">
-                <form method="post" role="form" th:action="@{/register/save}" th:object="${member}">
+            <div class = "right" >
+                    <h2 class="text-center" style ="font-size: 50px;">Registration</h2>
+                    <br/>
+                <div class="card-body">
+                    <!-- form to hanlde user information used to register new user -->
+                    <form method="post" role="form" th:action="@{/register/save}" th:object="${member}">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">First Name</label>
+                                    <input class="form-control"
+                                           id="firstName"
+                                           name="firstName"
+                                           placeholder="Enter first name"
+                                           th:field="*{firstName}"
+                                           type="text"
+                                    required/>
+                                    <p th:errors="*{firstName}" class="text-danger"
+                                       th:if="${#fields.hasErrors('firstName')}">
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-4">
+                                    <label class="form-label">Last Name</label>
+                                    <input class="form-control"
+                                           id="lastName"
+                                           name="lastName"
+                                           placeholder="Enter last name"
+                                           th:field="*{lastName}"
+                                           type="text"
+                                           required/>
+                                    <p th:errors="*{lastName}" class="text-danger"
+                                       th:if="${#fields.hasErrors('lastName')}">
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
 
-                    <div class="form-group mb-3">
-                        <label class="form-label">First Name</label>
-                        <input class="form-control"
-                               id="firstName"
-                               name="firstName"
-                               placeholder="Enter first name"
-                               th:field="*{firstName}"
-                               type="text"
-                        />
-                        <p th:errors="*{firstName}" class="text-danger"
-                           th:if="${#fields.hasErrors('firstName')}">
-                        </p>
-                    </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Email</label>
+                                    <input class="form-control"
+                                           id="email"
+                                           name="email"
+                                           placeholder="Enter email address"
+                                           th:field="*{email}"
+                                           type="email"
+                                           required/>
+                                    <p th:errors="*{email}" class="text-danger"
+                                       th:if="${#fields.hasErrors('email')}">
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Gender: </label>
+                                    <br/>
+                                    <div class="form-check  form-check-inline" >
+                                        <input class="form-check-input" type="radio" id="male" name="gender" value="MALE" th:field="*{gender}" required>
+                                        <label class="form-check-label" for="male">Male</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" id="female" name="gender" value="FEMALE" th:field="*{gender}" required>
+                                        <label class="form-check-label" for="female">Female</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" id="others" name="gender" value="OTHERS" th:field="*{gender}" required>
+                                        <label class="form-check-label" for="others">Others</label>
+                                    </div>
+                                </div>
+                            </div>
 
-                    <div class="form-group mb-3">
-                        <label class="form-label">Last Name</label>
-                        <input class="form-control"
-                               id="lastName"
-                               name="lastName"
-                               placeholder="Enter last name"
-                               th:field="*{lastName}"
-                               type="text"
-                        />
-                        <p th:errors="*{lastName}" class="text-danger"
-                           th:if="${#fields.hasErrors('lastName')}">
-                        </p>
-                    </div>
-                    <div class="form-group mb-3">
-                        <label class="form-label">Email</label>
-                        <input class="form-control"
-                               id="email"
-                               name="email"
-                               placeholder="Enter email address"
-                               th:field="*{email}"
-                               type="email"
-                        />
-                        <p th:errors="*{email}" class="text-danger"
-                           th:if="${#fields.hasErrors('email')}">
-                        </p>
-                    </div>
-                    <div class="form-group mb-3">
-                        <label class="form-label">Password</label>
-                        <input class="form-control"
-                               id="password"
-                               name="password"
-                               placeholder="Enter password"
-                               th:field="*{password}"
-                               type="password"
-                        />
-                        <p th:errors="*{password}" class="text-danger"
-                           th:if="${#fields.hasErrors('password')}">
-                        </p>
-                    </div>
 
-                    <div class="form-group mb-3">
-                        <button class="btn btn-primary" type="submit">Register</button>
-                        <span>Already registered? <a href="/" th:href="@{/login}">Login
-                             here</a></span>
-                    </div>
-                </form>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Password</label>
+                                    <input class="form-control"
+                                           id="password"
+                                           name="password"
+                                           placeholder="Enter password"
+                                           th:field="*{password}"
+                                           type="password"
+                                           required/>
+                                    <p th:errors="*{password}" class="text-danger"
+                                       th:if="${#fields.hasErrors('password')}">
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Confirm Password</label>
+                                    <input class="form-control"
+                                           id="confirmPassword"
+                                           name="confirmPassword"
+                                           placeholder="Confirm password"
+                                           type="password"
+                                           required/>
+                                    <p class="text-danger" id="passwordMismatchMessage" style="display: none;">
+                                        Passwords do not match.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Date of Birth</label>
+                                    <input class="form-control"
+                                           id="dob"
+                                           name="dob"
+                                           placeholder="Date of Birth"
+                                           th:field="*{birthday}"
+                                           type="date"
+                                           required/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Address Line 1</label>
+                                    <input class="form-control"
+                                           id="addressOne"
+                                           name="addressOne"
+                                           placeholder="Address Line 1"
+                                           th:field="*{addressOne}"
+                                           type="text"
+                                           required/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Address Line 2</label>
+                                    <input class="form-control"
+                                           id="addressTwo"
+                                           name="addressTwo"
+                                           placeholder="Address Line 2"
+                                           th:field="*{addressTwo}"
+                                           type="text"
+                                           required/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Postal Code</label>
+                                    <input class="form-control"
+                                           id="postalCode"
+                                           name="postalCode"
+                                           placeholder="Postal Code"
+                                           th:field="*{postalCode}"
+                                           type="text"
+                                           required/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Library Card Number</label>
+                                    <input class="form-control"
+                                           id="libraryCard"
+                                           name="libraryCard"
+                                           placeholder=""
+                                           th:field="*{libraryCard}"
+                                           type="text"
+                                           required/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="acceptTerms">
+                                <input type="checkbox" id="acceptTerms" name="acceptTerms" required>
+                                I accept the <a href="terms_and_conditions_link_here" target="_blank">Terms and Conditions</a>
+                            </label>
+                        </div>
+                        <br/>
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-primary" style = "padding: 10px 40px; font-size: 20px; text-align: center;">Sign Up</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var passwordField = document.getElementById('password');
+    var confirmPasswordField = document.getElementById('confirmPassword');
+    var passwordMismatchMessage = document.getElementById('passwordMismatchMessage');
+
+    confirmPasswordField.addEventListener('keyup', function () {
+        var password = passwordField.value;
+        var confirmPassword = confirmPasswordField.value;
+
+        if (password === confirmPassword) {
+            passwordMismatchMessage.style.display = 'none';
+        } else {
+            passwordMismatchMessage.style.display = 'block';
+        }
+    });
+});
+</script>
 </body>
 </html>

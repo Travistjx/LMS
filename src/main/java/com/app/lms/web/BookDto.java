@@ -1,29 +1,31 @@
 package com.app.lms.web;
 
+import com.app.lms.entity.BookStatus;
+import com.app.lms.entity.LoanStatus;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class BookDto {
+
+    private Long book_id;
     private String title;
     private String description;
     private String category;
+
+
     private String publication_year;
     private Collection<AuthorDto> authors;
     private String image;
 
+    private BookStatus status;
+
     public BookDto() {
         authors = new ArrayList<>();
+        this.status = BookStatus.AVAILABLE;
     }
 
-    public BookDto(String title, String description, String category, String publication_year, Collection<AuthorDto> authors,
-                   String image) {
-        this.title = title;
-        this.description = description;
-        this.category = category;
-        this.publication_year = publication_year;
-        this.authors = authors;
-        this.image = image;
-    }
+
 
     public String getImage() {
         return image;
@@ -71,5 +73,21 @@ public class BookDto {
 
     public void setPublication_year(String publication_year) {
         this.publication_year = publication_year;
+    }
+
+    public Long getBook_id() {
+        return book_id;
+    }
+
+    public void setBook_id(Long book_id) {
+        this.book_id = book_id;
+    }
+
+    public BookStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(BookStatus status) {
+        this.status = status;
     }
 }
