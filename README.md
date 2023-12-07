@@ -1,6 +1,6 @@
 # LMS
 <li><a href = "#about">About</a></li>
-<li><a href = "#projectstatus">Project Status</a></li>
+<li><a href = "##project-status">Project Status</a></li>
 <li><a href = "#installation--setup">Installation</a></li>
 <li><a href = "#reflection">Reflection</a></li>
 
