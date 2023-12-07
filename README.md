@@ -1,6 +1,7 @@
 # LMS
 <li><a href = "#about">About</a></li>
 <li><a href = "#project-status">Project Status</a></li>
+<li><a href = "documentation">Documentation</a></li>
 <li><a href = "#installation--setup">Installation</a></li>
 <li><a href = "#reflection">Reflection</a></li>
 
@@ -9,6 +10,9 @@ The Library Management System (LMS) is a web application designed to efficiently
 
 # PROJECT STATUS
 This project is currently in development. 
+
+# DOCUMENTATION
+<a href = "https://github.com/Travistjx/LMS/blob/main/User%20Manual.pdf">User Manual</a>
 
 # INSTALLATION / SETUP
 
