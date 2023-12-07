@@ -12,105 +12,97 @@
     <style>
         /*Ensure table is centered and there's gap around it*/
         .table-container {
-
-        padding: 20px;
-        border-radius: 5px;
-
-        max-width: 600px; /* Adjust the width as needed */
-        margin: 0 auto; /* Center the table horizontally */
+            padding: 20px;
+            border-radius: 5px;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-    .table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 20px;
-    }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
 
-    .table th,
-    .table td {
-        padding: 10px;
-        text-align: left;
-        border: 1px solid #ddd;
-    }
+        .table th,
+        .table td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
 
-    .table thead th {
-        background-color: #f5f5f5;
-        font-weight: bold;
-    }
+        .table thead th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+        }
 
         .nav-link:hover {
-           background-color: #2e2e2e; /* Background color when hovered over */
-           color: white; /* Text color when hovered over (optional) */
-           /* Other styles like padding, border-radius, etc. */
-           }
+           background-color: #2e2e2e;
+           color: white;
+        }
 
-            .nav-item a {
-               color: white; /* Text color for the first nav-link */
+        .nav-item a {
+           color: white;
+        }
 
-           }
-
-           .nav-item #first-link {
-               background-color: #383838;
-           }
+        .nav-item #first-link {
+           background-color: #383838;
+        }
     </style>
 </head>
 <body>
-<div th:replace="common/member_navbar :: #navbar"></div>
-<div class="container-fluid">
-    <div class="row">
-        <div th:replace="common/payment_sidebar :: #navbar"></div>
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <div style="margin-top: 50px;">
-                <div th:if="${param.success}">
-                    <div class="alert alert-info">Fine has been successfully deleted!</div>
-                </div>
-                <h2 class="text-center">Payment</h2>
-                <br/>
-<!--                <div class="form-outline" style="margin: 50px;">-->
-<!--                    <form th:action="@{/adminportal/managefines}" method="get">-->
-<!--                        <input type="search" id="form1" class="form-control" name="query" placeholder="Type query" th:value="${param.query}" aria-label="Search" />-->
-<!--                        <input type = "hidden" name="page" th:value="1">-->
-<!--                    </form>-->
-<!--                </div>-->
-                <form action = "/payment/checkout/pay" method = "post">
-                <div class="table-container">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>Fine Id</th>
-                            <th>Loan Id</th>
-                            <th>Book Id</th>
-                            <th>Book Title</th>
-                            <th>Fine Amount</th>
-
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="fine : ${selectedFines}">
-                            <td th:text="${fine.fine_id}"></td>
-                            <td th:text="${fine.loan.loan_id}"></td>
-                            <td th:text="${fine.loan.book.book_id}"></td>
-                            <td th:text="${fine.loan.book.title}"></td>
-                            <td th:text="${fine.amount}"></td>
-                        </tr>
-                        <tr>
-                            <td colspan="4">Total Amount:</td>
-                            <td th:text="${totalFineAmount}"></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <input type = "hidden" name = "confirmedFines" th:value = "${confirmedFines}">
-                    <input type = "hidden" name = "status" value = "none">
-                    <div style = "margin:50px;  display:flex; justify-content: space-between; ">
-                        <a class="btn btn-primary" th:href = "@{'/payment'}">Back</a>
-                        <button type = "submit" class="btn btn-primary">Continue</button>
+    <!-- include navigation bar -->
+    <div th:replace="common/member_navbar :: #navbar"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Include a side bar -->
+            <div th:replace="common/payment_sidebar :: #navbar"></div>
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div style="margin-top: 50px;">
+                    <div th:if="${param.success}">
+                        <div class="alert alert-info">Fine has been successfully deleted!</div>
                     </div>
-                </div>
+                    <h2 class="text-center">Payment</h2>
+                    <br/>
+                    <!-- form to enter in payment details -->
+                    <form action = "/payment/checkout/pay" method = "post">
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Fine Id</th>
+                                    <th>Loan Id</th>
+                                    <th>Book Id</th>
+                                    <th>Book Title</th>
+                                    <th>Fine Amount</th>
 
-                </form>
-            </div>
-        </main>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="fine : ${selectedFines}">
+                                    <td th:text="${fine.fine_id}"></td>
+                                    <td th:text="${fine.loan.loan_id}"></td>
+                                    <td th:text="${fine.loan.book.book_id}"></td>
+                                    <td th:text="${fine.loan.book.title}"></td>
+                                    <td th:text="${fine.amount}"></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">Total Amount:</td>
+                                    <td th:text="${totalFineAmount}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <input type = "hidden" name = "confirmedFines" th:value = "${confirmedFines}">
+                            <input type = "hidden" name = "status" value = "none">
+                            <div style = "margin:50px;  display:flex; justify-content: space-between; ">
+                                <a class="btn btn-primary" th:href = "@{'/payment'}">Back</a>
+                                <button type = "submit" class="btn btn-primary">Continue</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </main>
+        </div>
     </div>
-</div>
 </body>
 </html>

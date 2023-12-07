@@ -116,6 +116,7 @@ public class BookServiceImpl implements BookService {
     public void updateBooks(BookDto book, Long bookId, MultipartFile file, String authors) {
         Optional<Book> selectedBook = bookRepository.findById(bookId);
 
+        // if exists, update with new book information
         if (selectedBook.isPresent()){
             Book existingBook = selectedBook.get();
             Collection<Author> listAuthor = new ArrayList<>();
@@ -173,6 +174,7 @@ public class BookServiceImpl implements BookService {
     public Page<BookDto> searchBooks(String query, Pageable pageable, String searchBy, String statusFilter
                                      , String sort, String order) {
 
+        // set status
         BookStatus status = BookStatus.AVAILABLE;
         if (statusFilter.equals("ALL")){
             status = null;
@@ -184,15 +186,15 @@ public class BookServiceImpl implements BookService {
             status = BookStatus.CHECKED_OUT;
         }
 
+        // set sort order
         Sort.Direction direction = Sort.Direction.ASC;
 
         if (order.equals("desc")){
             direction = Sort.Direction.DESC;
         }
 
+        // set sort option
         Sort sortable = Sort.by(direction, "title"); // Default sorting by title
-
-
 
         if (sort != null) {
             switch (sort) {
@@ -212,7 +214,7 @@ public class BookServiceImpl implements BookService {
         if (searchBy.equals("any")){
             searchedBooks = bookRepository.searchForBooksWithStatusAndByAny(query, status, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
         }
-        else {
+        else { // if search filter != "any"
             searchedBooks = bookRepository.searchForBooksWithStatusAndNotAny(query, searchBy, status, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
         }
 

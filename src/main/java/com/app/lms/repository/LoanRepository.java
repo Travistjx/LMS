@@ -17,9 +17,7 @@ import java.util.List;
 
 public interface LoanRepository extends JpaRepository<Loan, Long> {
     List<Loan> findAllByStatus(LoanStatus status);
-
     List <Loan> findAllByStatusAndMember(LoanStatus status, Member member);
-
     List<Loan> findOverdueLoansByDueDateTimeBefore(LocalDateTime today);
 
     @Query("SELECT l FROM Loan l " +

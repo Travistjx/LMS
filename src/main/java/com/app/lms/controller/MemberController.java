@@ -22,13 +22,9 @@ import java.util.stream.Collectors;
 public class MemberController {
 
     private final BookService bookService;
-
     private final LoanService loanService;
-
     private final FineService fineService;
-
     private final MemberService memberService;
-
     private final PaymentService paymentService;
 
     public MemberController(BookService bookService, LoanService loanService, FineService fineService,
@@ -46,6 +42,9 @@ public class MemberController {
         String username = principal.getName();
         return memberService.findByEmail(username);
     }
+
+
+    /*--------------HOME/LANDING PAGE AFTER LOGIN----------------*/
 
     // Home page
     @GetMapping("/home")
@@ -89,14 +88,8 @@ public class MemberController {
         return "home";
     }
 
-    // Retrieve the account setting page
-    @GetMapping("/accountsettings")
-    public String showAccountSettings(Principal principal, Model model){
-        String username = principal.getName();
-        MemberDto member = memberService.findByEmail(username);
-        model.addAttribute("member", member);
-        return "member/accountSettings/accountSettings";
-    }
+
+    /*--------------BOOKS----------------*/
 
     // Retrieve pages for all books. If search filter is detected, searchBooks is used
     @GetMapping("/allbooks")
@@ -129,6 +122,9 @@ public class MemberController {
         model.addAttribute("order", order);
         return "books";
     }
+
+
+    /*--------------LOANS----------------*/
 
     // Retrieve pages for loan history. If search filter is detected, searchLoans is used
     @GetMapping("/loanhistory")
@@ -165,6 +161,165 @@ public class MemberController {
         model.addAttribute("sort", sort);
         model.addAttribute("order", order);
         return "loanhistory";
+    }
+
+
+    /*--------------FINES----------------*/
+
+    // Retrieve pages for fines. If search filter is detected, searchFines is used
+    @GetMapping("/fines")
+    public String showFines(@RequestParam(name = "page", defaultValue = "1") int pageNo,
+                              @RequestParam(name = "query", required = false) String query,
+                            @RequestParam(name = "searchBy", required = false) String searchBy,
+                            @RequestParam(name = "statusFilter", required = false) String statusFilter,
+                            @RequestParam(name = "sort", required = false) String sort,
+                            @RequestParam(name = "order", required = false) String order,
+                            Model model, Principal principal) {
+        int pageSize = 5;
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+        Page<FineDto> page;
+
+        String username = principal.getName();
+        MemberDto member = memberService.findByEmail(username);
+
+        if ((query != null && !query.isEmpty()) || statusFilter != null){
+            page = fineService.searchFines(query, pageable, Optional.of(member.getMember_id()),
+                    IdType.MEMBER_ID, statusFilter, searchBy, sort, order);
+        } else {
+            // Otherwise, retrieve paginated members
+            page = fineService.findPaginated(pageNo, pageSize, Optional.of(member.getMember_id()), IdType.MEMBER_ID);
+        }
+
+        List<FineDto> listFines = page.getContent();
+//        fineService.calculateFinesForOverdueLoans();
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("fines", listFines);
+        model.addAttribute("query", query);
+        model.addAttribute("statusFilter", statusFilter);
+        model.addAttribute("searchBy", searchBy);
+        model.addAttribute("sort", sort);
+        model.addAttribute("order", order);
+        return "fines";
+    }
+
+
+    /*--------------PAYMENT----------------*/
+
+    // Retrieve payment page
+    @GetMapping("/payment")
+    public String showPayment (Principal principal, Model model){
+        String username = principal.getName();
+        MemberDto member = memberService.findByEmail(username);
+        List <FineDto> fineList = fineService.findFinesByMemberId(member.getMember_id())
+                .stream().filter(fine -> fine.getStatus().equals(FineStatus.UNPAID) && fine.getLoan().getStatus().equals(LoanStatus.RETURNED))
+                .collect(Collectors.toList());
+
+        model.addAttribute("fines", fineList);
+        return "payment";
+    }
+
+    // Retrieve payment checkout page
+    @PostMapping("/payment/checkout")
+    public String confirmPayment (Principal principal, Model model,
+                           @RequestParam(value = "fine_ids", required = true) String fine_ids){
+        String[] fineIdsArray = fine_ids.split(",");
+        String username = principal.getName();
+        MemberDto member = memberService.findByEmail(username);
+        List <FineDto> fineList = fineService.findFinesByMemberId(member.getMember_id());
+        List<FineDto> selectedFines = fineList.stream()
+                .filter(fine -> Arrays.stream(fineIdsArray).anyMatch(id -> fine.getFine_id().equals(Long.parseLong(id))))
+                .collect(Collectors.toList());
+
+        Double totalFineAmount = selectedFines.stream()
+                .mapToDouble(fine -> fine.getAmount()) // Assuming FineDto has a method to get the amount, replace it with the actual method
+                .sum();
+
+        model.addAttribute("confirmedFines", fine_ids);
+        model.addAttribute("totalFineAmount", totalFineAmount);
+        model.addAttribute("selectedFines", selectedFines);
+        return "makePayment";
+    }
+
+    // For user to make payment, before directing to a results page
+    @PostMapping("/payment/checkout/pay")
+    public String paymentType (Principal principal, Model model,
+                               @RequestParam(value = "confirmedFines", required = true) String fine_ids,
+                               @RequestParam(value = "status", required = false) String paymentStatus){
+        String[] fineIdsArray = fine_ids.split(",");
+        String username = principal.getName();
+        MemberDto member = memberService.findByEmail(username);
+        List <FineDto> fineList = fineService.findFinesByMemberId(member.getMember_id());
+        List<FineDto> selectedFines = fineList.stream()
+                .filter(fine -> Arrays.stream(fineIdsArray).anyMatch(id -> fine.getFine_id().equals(Long.parseLong(id))))
+                .collect(Collectors.toList());
+
+        Double totalFineAmount = selectedFines.stream()
+                .mapToDouble(fine -> fine.getAmount()) // Assuming FineDto has a method to get the amount, replace it with the actual method
+                .sum();
+
+        if (paymentStatus.equals("processing")){
+            paymentService.makePayment(selectedFines, totalFineAmount, "Credit/Debit Card", username);
+            PaymentDto paymentDto = paymentService.getPaymentsByUser(member.getMember_id());
+            model.addAttribute("payment", paymentDto);
+            return "paymentSuccess";
+        }
+        else{
+            model.addAttribute("totalFineAmount", totalFineAmount);
+            model.addAttribute("confirmedFines", fine_ids);
+            model.addAttribute("selectedFines", selectedFines);
+            return "paymentType";
+        }
+    }
+
+    // Retrieve pages for payment history. If search filter is detected, searchPayments is used
+    @GetMapping("/paymenthistory")
+    public String showPaymentHistory(Principal principal,
+                                  @RequestParam(name = "page", defaultValue = "1") int pageNo,
+                                  @RequestParam(name = "query", required = false) String query,
+                                     @RequestParam(name = "searchBy", required = false) String searchBy,
+                                     @RequestParam(name = "statusFilter", required = false) String statusFilter,
+                                     @RequestParam(name = "sort", required = false) String sort,
+                                     @RequestParam(name = "order", required = false) String order,
+                                     Model model) {
+        String username = principal.getName();
+        MemberDto member = memberService.findByEmail(username);
+
+        int pageSize = 5;
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+        Page<PaymentDto> page;
+        if ((query != null && !query.isEmpty()) || statusFilter != null || searchBy != null){
+            page = paymentService.searchPayments(query, pageable, Optional.of(member.getMember_id()),
+                    IdType.MEMBER_ID, statusFilter, searchBy, sort, order);
+        } else {
+            // Otherwise, retrieve paginated members
+            page = paymentService.findPaginated(pageNo, pageSize, Optional.of(member.getMember_id()), IdType.MEMBER_ID);
+        }
+
+        List<PaymentDto> listPayments = page.getContent();
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("payments", listPayments);
+        model.addAttribute("query", query);
+        model.addAttribute("statusFilter", statusFilter);
+        model.addAttribute("searchBy", searchBy);
+        model.addAttribute("sort", sort);
+        model.addAttribute("order", order);
+        return "paymentHistory";
+    }
+
+
+    /*--------------ACCOUNT SETTINGS----------------*/
+
+    // Retrieve the account setting page
+    @GetMapping("/accountsettings")
+    public String showAccountSettings(Principal principal, Model model){
+        String username = principal.getName();
+        MemberDto member = memberService.findByEmail(username);
+        model.addAttribute("member", member);
+        return "member/accountSettings/accountSettings";
     }
 
     // Retrieve the update name page
@@ -299,146 +454,5 @@ public class MemberController {
 
         memberService.updatePassword(newPassword, username);
         return "redirect:/accountsettings?success";
-    }
-
-    // Retrieve pages for fines. If search filter is detected, searchFines is used
-    @GetMapping("/fines")
-    public String showFines(@RequestParam(name = "page", defaultValue = "1") int pageNo,
-                              @RequestParam(name = "query", required = false) String query,
-                            @RequestParam(name = "searchBy", required = false) String searchBy,
-                            @RequestParam(name = "statusFilter", required = false) String statusFilter,
-                            @RequestParam(name = "sort", required = false) String sort,
-                            @RequestParam(name = "order", required = false) String order,
-                            Model model, Principal principal) {
-        int pageSize = 5;
-        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
-        Page<FineDto> page;
-
-        String username = principal.getName();
-        MemberDto member = memberService.findByEmail(username);
-
-        if ((query != null && !query.isEmpty()) || statusFilter != null){
-            page = fineService.searchFines(query, pageable, Optional.of(member.getMember_id()),
-                    IdType.MEMBER_ID, statusFilter, searchBy, sort, order);
-        } else {
-            // Otherwise, retrieve paginated members
-            page = fineService.findPaginated(pageNo, pageSize, Optional.of(member.getMember_id()), IdType.MEMBER_ID);
-        }
-
-        List<FineDto> listFines = page.getContent();
-//        fineService.calculateFinesForOverdueLoans();
-        model.addAttribute("currentPage", pageNo);
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("totalItems", page.getTotalElements());
-        model.addAttribute("fines", listFines);
-        model.addAttribute("query", query);
-        model.addAttribute("statusFilter", statusFilter);
-        model.addAttribute("searchBy", searchBy);
-        model.addAttribute("sort", sort);
-        model.addAttribute("order", order);
-        return "fines";
-    }
-
-    // Retrieve payment page
-    @GetMapping("/payment")
-    public String showPayment (Principal principal, Model model){
-        String username = principal.getName();
-        MemberDto member = memberService.findByEmail(username);
-        List <FineDto> fineList = fineService.findFinesByMemberId(member.getMember_id())
-                .stream().filter(fine -> fine.getStatus().equals(FineStatus.UNPAID) && fine.getLoan().getStatus().equals(LoanStatus.RETURNED))
-                .collect(Collectors.toList());
-
-        model.addAttribute("fines", fineList);
-        return "payment";
-    }
-
-    // Retrieve payment checkout page
-    @PostMapping("/payment/checkout")
-    public String confirmPayment (Principal principal, Model model,
-                           @RequestParam(value = "fine_ids", required = true) String fine_ids){
-        String[] fineIdsArray = fine_ids.split(",");
-        String username = principal.getName();
-        MemberDto member = memberService.findByEmail(username);
-        List <FineDto> fineList = fineService.findFinesByMemberId(member.getMember_id());
-        List<FineDto> selectedFines = fineList.stream()
-                .filter(fine -> Arrays.stream(fineIdsArray).anyMatch(id -> fine.getFine_id().equals(Long.parseLong(id))))
-                .collect(Collectors.toList());
-
-        Double totalFineAmount = selectedFines.stream()
-                .mapToDouble(fine -> fine.getAmount()) // Assuming FineDto has a method to get the amount, replace it with the actual method
-                .sum();
-
-        model.addAttribute("confirmedFines", fine_ids);
-        model.addAttribute("totalFineAmount", totalFineAmount);
-        model.addAttribute("selectedFines", selectedFines);
-        return "makePayment";
-    }
-
-    // For user to make payment, before directing to a results page
-    @PostMapping("/payment/checkout/pay")
-    public String paymentType (Principal principal, Model model,
-                               @RequestParam(value = "confirmedFines", required = true) String fine_ids,
-                               @RequestParam(value = "status", required = false) String paymentStatus){
-        String[] fineIdsArray = fine_ids.split(",");
-        String username = principal.getName();
-        MemberDto member = memberService.findByEmail(username);
-        List <FineDto> fineList = fineService.findFinesByMemberId(member.getMember_id());
-        List<FineDto> selectedFines = fineList.stream()
-                .filter(fine -> Arrays.stream(fineIdsArray).anyMatch(id -> fine.getFine_id().equals(Long.parseLong(id))))
-                .collect(Collectors.toList());
-
-        Double totalFineAmount = selectedFines.stream()
-                .mapToDouble(fine -> fine.getAmount()) // Assuming FineDto has a method to get the amount, replace it with the actual method
-                .sum();
-
-        if (paymentStatus.equals("processing")){
-            paymentService.makePayment(selectedFines, totalFineAmount, "Credit/Debit Card", username);
-            PaymentDto paymentDto = paymentService.getPaymentsByUser(member.getMember_id());
-            model.addAttribute("payment", paymentDto);
-            return "paymentSuccess";
-        }
-        else{
-            model.addAttribute("totalFineAmount", totalFineAmount);
-            model.addAttribute("confirmedFines", fine_ids);
-            model.addAttribute("selectedFines", selectedFines);
-            return "paymentType";
-        }
-    }
-
-    // Retrieve pages for payment history. If search filter is detected, searchPayments is used
-    @GetMapping("/paymenthistory")
-    public String showPaymentHistory(Principal principal,
-                                  @RequestParam(name = "page", defaultValue = "1") int pageNo,
-                                  @RequestParam(name = "query", required = false) String query,
-                                     @RequestParam(name = "searchBy", required = false) String searchBy,
-                                     @RequestParam(name = "statusFilter", required = false) String statusFilter,
-                                     @RequestParam(name = "sort", required = false) String sort,
-                                     @RequestParam(name = "order", required = false) String order,
-                                     Model model) {
-        String username = principal.getName();
-        MemberDto member = memberService.findByEmail(username);
-
-        int pageSize = 5;
-        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
-        Page<PaymentDto> page;
-        if ((query != null && !query.isEmpty()) || statusFilter != null || searchBy != null){
-            page = paymentService.searchPayments(query, pageable, Optional.of(member.getMember_id()),
-                    IdType.MEMBER_ID, statusFilter, searchBy, sort, order);
-        } else {
-            // Otherwise, retrieve paginated members
-            page = paymentService.findPaginated(pageNo, pageSize, Optional.of(member.getMember_id()), IdType.MEMBER_ID);
-        }
-
-        List<PaymentDto> listPayments = page.getContent();
-        model.addAttribute("currentPage", pageNo);
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("totalItems", page.getTotalElements());
-        model.addAttribute("payments", listPayments);
-        model.addAttribute("query", query);
-        model.addAttribute("statusFilter", statusFilter);
-        model.addAttribute("searchBy", searchBy);
-        model.addAttribute("sort", sort);
-        model.addAttribute("order", order);
-        return "paymentHistory";
     }
 }

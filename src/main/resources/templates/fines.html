@@ -250,6 +250,7 @@
   <div th:replace="common/member_navbar :: #navbar"></div>
   <div class="container-fluid">
     <div class="row">
+      <!-- Include a side bar -->
       <div th:replace="common/member_sidebar :: #navbar"></div>
       <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
         <div style="margin-top: 50px;">
@@ -266,11 +267,12 @@
                 Add Filters
               </button>
             </div>
-            <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <!-- search filter modal -->
+            <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="fineModalLabel" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Filters</h5>
+                    <h5 class="modal-title" id="fineModalLabel">Filters</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">

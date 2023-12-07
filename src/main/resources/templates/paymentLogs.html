@@ -12,57 +12,55 @@
   <style>
     /*Ensure table is centered and there's gap around it*/
     .table-container {
-
       padding: 20px;
       border-radius: 5px;
-       display: flex;
+      display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      max-width: 600px; /* Adjust the width as needed */
-      margin: 0 auto; /* Center the table horizontally */
+      max-width: 600px;
+      margin: 0 auto;
     }
-/*
-.table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-}
 
-.table th,
-.table td {
-    padding: 10px;
-    text-align: left;
-    border: 1px solid #ddd;
-}
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
 
-.table thead th {
-    background-color: #f5f5f5;
-    font-weight: bold;
-}
-*/
+    .table th,
+    .table td {
+        padding: 10px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }
+
+    .table thead th {
+        background-color: #f5f5f5;
+        font-weight: bold;
+    }
+
     .nav-link:hover {
-       background-color: #2e2e2e; /* Background color when hovered over */
-       color: white; /* Text color when hovered over (optional) */
-       /* Other styles like padding, border-radius, etc. */
-       }
+       background-color: #2e2e2e;
+       color: white;
+     }
 
-        .nav-item a {
-           color: white; /* Text color for the first nav-link */
+    .nav-item a {
+       color: white;
 
-       }
+    }
 
-       .nav-item #tenth-link {
-           background-color: #383838;
-       }
+    .nav-item #tenth-link {
+       background-color: #383838;
+    }
 
-     .filter-button {
-        background-color: #ffffff;
-        border: 1px solid #ced4da;
-        color: #495057;
-        padding: 6px 12px;
-        border-radius: 4px;
-        cursor: pointer;
+    .filter-button {
+      background-color: #ffffff;
+      border: 1px solid #ced4da;
+      color: #495057;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
     }
 
     .filter-button:hover {
@@ -74,7 +72,6 @@
         color: #ffffff !important;
     }
 
-
     .up-arrow {
         width: 0;
         height: 0;
@@ -83,7 +80,6 @@
         border-bottom: solid 7px grey;
         border-top-width: 0;
         cursor: pointer;
-
     }
 
     .down-arrow {
@@ -108,453 +104,456 @@
         display: flex;
         align-items: center;
         cursor: pointer;
-
     }
   </style>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-             // Get the current URL
-             var currentUrl = window.location.href;
+       // Get the current URL
+       var currentUrl = window.location.href;
 
-             if (currentUrl.indexOf('statusFilter=SUCCESSFUL') !== -1) {
-                changeButtonStyle('successfulButton', '#007bff');
-            } else if (currentUrl.indexOf('statusFilter=FAILED') !== -1) {
-                changeButtonStyle('failedButton', '#007bff');
-            } else if (currentUrl.indexOf('statusFilter=PENDING') !== -1) {
-                changeButtonStyle('pendingButton', '#007bff');
-            } else if (currentUrl.indexOf('statusFilter=ALL') !== -1) {
-                changeButtonStyle('allButton', '#007bff');
-            }
+       if (currentUrl.indexOf('statusFilter=SUCCESSFUL') !== -1) {
+          changeButtonStyle('successfulButton', '#007bff');
+      } else if (currentUrl.indexOf('statusFilter=FAILED') !== -1) {
+          changeButtonStyle('failedButton', '#007bff');
+      } else if (currentUrl.indexOf('statusFilter=PENDING') !== -1) {
+          changeButtonStyle('pendingButton', '#007bff');
+      } else if (currentUrl.indexOf('statusFilter=ALL') !== -1) {
+          changeButtonStyle('allButton', '#007bff');
+      }
 
-            function changeButtonStyle(buttonId, color) {
-                var button = document.getElementById(buttonId);
-                if (button) {
-                    button.style.backgroundColor = color;
-                    button.style.color = "white";
-                }
-            }
+      function changeButtonStyle(buttonId, color) {
+          var button = document.getElementById(buttonId);
+          if (button) {
+              button.style.backgroundColor = color;
+              button.style.color = "white";
+          }
+      }
 
-         });
+    });
 
 
-        function sortTable(n) {
-            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-            table = document.getElementById("myTable");
-            switching = true;
+      function sortTable(n) {
+          var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+          table = document.getElementById("myTable");
+          switching = true;
 
-            //Set the sorting direction to ascending:
-            dir = "asc";
+          //Set the sorting direction to ascending:
+          dir = "asc";
 
-            /*Make a loop that will continue until
-            no switching has been done:*/
+          /*Make a loop that will continue until
+          no switching has been done:*/
 
-            while (switching) {
-                switching = false;
-                rows = table.rows;
+          while (switching) {
+              switching = false;
+              rows = table.rows;
 
-                /*Loop through all table rows (except the
-                first, which contains table headers):*/
-                for (i = 1; i < (rows.length - 1); i++) {
-                    shouldSwitch = false;
+              /*Loop through all table rows (except the
+              first, which contains table headers):*/
+              for (i = 1; i < (rows.length - 1); i++) {
+                  shouldSwitch = false;
 
-                    /*Get the two elements you want to compare,
-                    one from current row and one from the next:*/
-                    x = rows[i].getElementsByTagName("TD")[n];
-                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                  /*Get the two elements you want to compare,
+                  one from current row and one from the next:*/
+                  x = rows[i].getElementsByTagName("TD")[n];
+                  y = rows[i + 1].getElementsByTagName("TD")[n];
 
-                    /*check if the two rows should switch place,
-                     based on the direction, asc or desc:*/
-                    if (dir == "asc") {
-                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-                          //if so, mark as a switch and break the loop:
-                          shouldSwitch= true;
-                          break;
-                        }
-                    }
-                    else if (dir == "desc") {
-                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-                          //if so, mark as a switch and break the loop:
-                          shouldSwitch = true;
-                          break;
-                        }
-                    }
-                }
+                  /*check if the two rows should switch place,
+                   based on the direction, asc or desc:*/
+                  if (dir == "asc") {
+                      if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                        //if so, mark as a switch and break the loop:
+                        shouldSwitch= true;
+                        break;
+                      }
+                  }
+                  else if (dir == "desc") {
+                      if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                        //if so, mark as a switch and break the loop:
+                        shouldSwitch = true;
+                        break;
+                      }
+                  }
+              }
 
-                if (shouldSwitch) {
-                    /*If a switch has been marked, make the switch
-                    and mark that a switch has been done:*/
-                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+              if (shouldSwitch) {
+                  /*If a switch has been marked, make the switch
+                  and mark that a switch has been done:*/
+                  rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
 
-                    switching = true;
+                  switching = true;
 
-                    //Each time a switch is done, increase this count by 1:
-                    switchcount ++;
-                }
-                else {
-                        /*If no switching has been done AND the direction is "asc",
-                        set the direction to "desc" and run the while loop again.*/
-                        if (switchcount == 0 && dir == "asc") {
-                        dir = "desc";
-                        switching = true;
-                    }
-                }
-            }
-        updateArrows(n, dir);
+                  //Each time a switch is done, increase this count by 1:
+                  switchcount ++;
+              }
+              else {
+                      /*If no switching has been done AND the direction is "asc",
+                      set the direction to "desc" and run the while loop again.*/
+                      if (switchcount == 0 && dir == "asc") {
+                      dir = "desc";
+                      switching = true;
+                  }
+              }
+          }
+      updateArrows(n, dir);
     }
 
 
-     function updateArrows(columnIndex, direction) {
-        var arrows = document.querySelectorAll(".arrow-container");
-        arrows[columnIndex].querySelector(".up-arrow").style.borderBottom = direction === "asc" ? "solid 7px black" : "solid 7px grey";
-        arrows[columnIndex].querySelector(".down-arrow").style.borderTop = direction === "desc" ? "solid 7px black" : "solid 7px grey";
+    function updateArrows(columnIndex, direction) {
+      var arrows = document.querySelectorAll(".arrow-container");
+      arrows[columnIndex].querySelector(".up-arrow").style.borderBottom = direction === "asc" ? "solid 7px black" : "solid 7px grey";
+      arrows[columnIndex].querySelector(".down-arrow").style.borderTop = direction === "desc" ? "solid 7px black" : "solid 7px grey";
     }
 
     function sortTableNumber(n) {
-                var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-                table = document.getElementById("myTable");
-                switching = true;
+      var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+      table = document.getElementById("myTable");
+      switching = true;
 
-                //Set the sorting direction to ascending:
-                dir = "asc";
+      //Set the sorting direction to ascending:
+      dir = "asc";
 
-                /*Make a loop that will continue until
-                no switching has been done:*/
+      /*Make a loop that will continue until
+      no switching has been done:*/
 
-                while (switching) {
-                    switching = false;
-                    rows = table.rows;
+      while (switching) {
+        switching = false;
+        rows = table.rows;
 
-                    /*Loop through all table rows (except the
-                    first, which contains table headers):*/
-                    for (i = 1; i < (rows.length - 1); i++) {
-                        shouldSwitch = false;
+        /*Loop through all table rows (except the
+        first, which contains table headers):*/
+        for (i = 1; i < (rows.length - 1); i++) {
+            shouldSwitch = false;
 
-                        /*Get the two elements you want to compare,
-                        one from current row and one from the next:*/
-                        x = rows[i].getElementsByTagName("TD")[n];
-                        y = rows[i + 1].getElementsByTagName("TD")[n];
+          /*Get the two elements you want to compare,
+          one from current row and one from the next:*/
+          x = rows[i].getElementsByTagName("TD")[n];
+          y = rows[i + 1].getElementsByTagName("TD")[n];
 
-                        /*check if the two rows should switch place,
-                         based on the direction, asc or desc:*/
-                        if (dir == "asc") {
-                            if (Number(x.innerHTML) > Number(y.innerHTML)) {
-                                //if so, mark as a switch and break the loop:
-                                shouldSwitch = true;
-                                break;
-                              }
-                        }
-                        else if (dir == "desc") {
-                            if (Number(x.innerHTML) < Number(y.innerHTML)) {
-                                //if so, mark as a switch and break the loop:
-                                shouldSwitch = true;
-                                break;
-                              }
-                        }
-                    }
-
-                    if (shouldSwitch) {
-                        /*If a switch has been marked, make the switch
-                        and mark that a switch has been done:*/
-                        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-
-                        switching = true;
-
-                        //Each time a switch is done, increase this count by 1:
-                        switchcount ++;
-                    }
-                    else {
-                            /*If no switching has been done AND the direction is "asc",
-                            set the direction to "desc" and run the while loop again.*/
-                            if (switchcount == 0 && dir == "asc") {
-                            dir = "desc";
-                            switching = true;
-                        }
-                    }
+          /*check if the two rows should switch place,
+           based on the direction, asc or desc:*/
+          if (dir == "asc") {
+              if (Number(x.innerHTML) > Number(y.innerHTML)) {
+                  //if so, mark as a switch and break the loop:
+                  shouldSwitch = true;
+                  break;
                 }
-            updateArrows(n, dir);
+          }
+          else if (dir == "desc") {
+              if (Number(x.innerHTML) < Number(y.innerHTML)) {
+                  //if so, mark as a switch and break the loop:
+                  shouldSwitch = true;
+                  break;
+                }
+          }
         }
+
+        if (shouldSwitch) {
+            /*If a switch has been marked, make the switch
+            and mark that a switch has been done:*/
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+
+            switching = true;
+
+            //Each time a switch is done, increase this count by 1:
+            switchcount ++;
+        }
+        else {
+                /*If no switching has been done AND the direction is "asc",
+                set the direction to "desc" and run the while loop again.*/
+                if (switchcount == 0 && dir == "asc") {
+                dir = "desc";
+                switching = true;
+            }
+        }
+      }
+      updateArrows(n, dir);
+    }
   </script>
 </head>
 <body>
-<div th:replace="common/admin_navbar :: #navbar"></div>
-<div class="container-fluid">
-  <div class="row">
-    <div th:replace="common/admin_sidebar :: #navbar"></div>
-    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-      <div style="margin-top: 50px;">
-        <h2 class="text-center">Payment History</h2>
-        <br/>
-        <form th:action="@{/adminportal/paymentlogs}" method="get">
-          <div style = "display:flex; margin: 50px; justify-content: center;">
-            <input type="search" id="form1" style = "width:55%" class="form-control" name="query" placeholder="Type query" th:value="${param.query}" aria-label="Search" />
-            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#filterModal">
-              Add Filters
-            </button>
-          </div>
-          <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Filters</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <!-- Your filters go here -->
-
-                  <!-- Query -->
-
-                  <!-- Search By -->
-                  <div class="mb-3">
-                    <label for="searchBy" class="form-label"><b>Search By:</b></label>
-                    <select class="form-select" id="searchBy" name="searchBy" >
-                      <option value="any" th:selected="${searchBy == 'any'}">Any</option>
-                      <option value="paymentId" th:selected="${searchBy == 'paymentId'}">Payment Id</option>
-                      <option value="memberId" th:selected="${searchBy == 'memberId'}">Member Id</option>
-                      <option value="name" th:selected="${searchBy == 'name'}">Name</option>
-                      <option value="fineId" th:selected="${searchBy == 'fineId'}">Fine Id</option>
-                      <option value="invoiceNumber" th:selected="${searchBy == 'invoiceNumber'}">Invoice Number</option>
-                      <option value="transactionReference" th:selected="${searchBy == 'transactionReference'}">Transaction Reference</option>
-                      <option value="paymentType" th:selected="${searchBy == 'paymentType'}">Payment Type</option>
-                      <option value="paymentAmount" th:selected="${searchBy == 'paymentAmount'}">Amount</option>
-                      <option value="paymentDateTime" th:selected="${searchBy == 'paymentDateTime'}">Date / Time</option>
-                    </select>
+  <!-- include navigation bar -->
+  <div th:replace="common/admin_navbar :: #navbar"></div>
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Include a side bar -->
+      <div th:replace="common/admin_sidebar :: #navbar"></div>
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div style="margin-top: 50px;">
+          <h2 class="text-center">Payment History</h2>
+          <br/>
+          <!-- Form for search query and filter for payment logs for all members/users -->
+          <form th:action="@{/adminportal/paymentlogs}" method="get">
+            <div style = "display:flex; margin: 50px; justify-content: center;">
+              <input type="search" id="form1" style = "width:55%" class="form-control" name="query" placeholder="Type query" th:value="${param.query}" aria-label="Search" />
+              <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#filterModal">
+                Add Filters
+              </button>
+            </div>
+            <!-- search filter modal -->
+            <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="filterModalLabel">Filters</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
-                  <!-- Status Filter -->
-                  <div class="mb-3">
-                    <label><b>Status Filter:</b></label><br>
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="statusFilter" id="allRadio" value="ALL" th:checked="${statusFilter == null or statusFilter == 'ALL'}">
-                      <label class="form-check-label" for="allRadio">All</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="statusFilter" id="successfulRadio" value="SUCCESSFUL" th:checked="${statusFilter == 'SUCCESSFUL'}">
-                      <label class="form-check-label" for="successfulRadio">Successful</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="statusFilter" id="pendingRadio" value="PENDING" th:checked="${statusFilter == 'PENDING'}">
-                      <label class="form-check-label" for="pendingRadio">Pending</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="statusFilter" id="failedRadio" value="FAILED" th:checked="${statusFilter == 'FAILED'}">
-                      <label class="form-check-label" for="failedRadio">Failed</label>
-                    </div>
-                  </div>
-                  <!-- Sorting -->
-                  <div style = "display: flex;">
+                  <div class="modal-body">
+                    <!-- Your filters go here -->
+
+                    <!-- Query -->
+
+                    <!-- Search By -->
                     <div class="mb-3">
-                      <label for="sort" class="form-label"><b>Sort By:</b></label>
-                      <select class="form-select" id="sort" name="sort">
-                        <!-- Options go here -->
-                        <option value="paymentId" th:selected="${sort == 'paymentId'}">Payment Id</option>
-                        <option value="memberId" th:selected="${sort == 'memberId'}">Member Id</option>
-                        <option value="name" th:selected="${sort == 'name'}">Name</option>
-                        <option value="fineId" th:selected="${sort == 'fineId'}">Fine Id</option>
-                        <option value="invoiceNumber" th:selected="${sort == 'invoiceNumber'}">Invoice Number</option>
-                        <option value="transactionRef" th:selected="${sort == 'transactionRef'}">Transaction Reference</option>
-                        <option value="paymentMethod" th:selected="${sort == 'paymentMethod'}">Payment Type</option>
-                        <option value="paymentAmount" th:selected="${sort == 'paymentAmount'}">Amount</option>
-                        <option value="paymentDateTime" th:selected="${sort == 'paymentDateTime'}">Date/Time</option>
+                      <label for="searchBy" class="form-label"><b>Search By:</b></label>
+                      <select class="form-select" id="searchBy" name="searchBy" >
+                        <option value="any" th:selected="${searchBy == 'any'}">Any</option>
+                        <option value="paymentId" th:selected="${searchBy == 'paymentId'}">Payment Id</option>
+                        <option value="memberId" th:selected="${searchBy == 'memberId'}">Member Id</option>
+                        <option value="name" th:selected="${searchBy == 'name'}">Name</option>
+                        <option value="fineId" th:selected="${searchBy == 'fineId'}">Fine Id</option>
+                        <option value="invoiceNumber" th:selected="${searchBy == 'invoiceNumber'}">Invoice Number</option>
+                        <option value="transactionReference" th:selected="${searchBy == 'transactionReference'}">Transaction Reference</option>
+                        <option value="paymentType" th:selected="${searchBy == 'paymentType'}">Payment Type</option>
+                        <option value="paymentAmount" th:selected="${searchBy == 'paymentAmount'}">Amount</option>
+                        <option value="paymentDateTime" th:selected="${searchBy == 'paymentDateTime'}">Date / Time</option>
                       </select>
                     </div>
-                    <div class="mb-3" style = "margin-left: 10px;">
-                      <label for="order" class="form-label"><b>Order:</b></label>
-                      <select class="form-select" id="order" name="order">
-                        <!-- Options go here -->
-                        <option value="asc" th:selected="${order == 'asc'}">Ascending</option>
-                        <option value="desc" th:selected="${order == 'desc'}">Descending</option>
-                      </select>
+                    <!-- Status Filter -->
+                    <div class="mb-3">
+                      <label><b>Status Filter:</b></label><br>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="statusFilter" id="allRadio" value="ALL" th:checked="${statusFilter == null or statusFilter == 'ALL'}">
+                        <label class="form-check-label" for="allRadio">All</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="statusFilter" id="successfulRadio" value="SUCCESSFUL" th:checked="${statusFilter == 'SUCCESSFUL'}">
+                        <label class="form-check-label" for="successfulRadio">Successful</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="statusFilter" id="pendingRadio" value="PENDING" th:checked="${statusFilter == 'PENDING'}">
+                        <label class="form-check-label" for="pendingRadio">Pending</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="statusFilter" id="failedRadio" value="FAILED" th:checked="${statusFilter == 'FAILED'}">
+                        <label class="form-check-label" for="failedRadio">Failed</label>
+                      </div>
                     </div>
-                  </div>
-                  <button type="submit" class="btn btn-primary">Apply Filters</button>
+                    <!-- Sorting -->
+                    <div style = "display: flex;">
+                      <div class="mb-3">
+                        <label for="sort" class="form-label"><b>Sort By:</b></label>
+                        <select class="form-select" id="sort" name="sort">
+                          <!-- Options go here -->
+                          <option value="paymentId" th:selected="${sort == 'paymentId'}">Payment Id</option>
+                          <option value="memberId" th:selected="${sort == 'memberId'}">Member Id</option>
+                          <option value="name" th:selected="${sort == 'name'}">Name</option>
+                          <option value="fineId" th:selected="${sort == 'fineId'}">Fine Id</option>
+                          <option value="invoiceNumber" th:selected="${sort == 'invoiceNumber'}">Invoice Number</option>
+                          <option value="transactionRef" th:selected="${sort == 'transactionRef'}">Transaction Reference</option>
+                          <option value="paymentMethod" th:selected="${sort == 'paymentMethod'}">Payment Type</option>
+                          <option value="paymentAmount" th:selected="${sort == 'paymentAmount'}">Amount</option>
+                          <option value="paymentDateTime" th:selected="${sort == 'paymentDateTime'}">Date/Time</option>
+                        </select>
+                      </div>
+                      <div class="mb-3" style = "margin-left: 10px;">
+                        <label for="order" class="form-label"><b>Order:</b></label>
+                        <select class="form-select" id="order" name="order">
+                          <!-- Options go here -->
+                          <option value="asc" th:selected="${order == 'asc'}">Ascending</option>
+                          <option value="desc" th:selected="${order == 'desc'}">Descending</option>
+                        </select>
+                      </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Apply Filters</button>
 
+                  </div>
                 </div>
               </div>
             </div>
+
+          </form>
+          <div class="table-container">
+            <table class="table table-bordered" id="myTable">
+              <thead>
+              <tr>
+                <th onclick="sortTableNumber(0)">
+                  <div class="sortable-header">
+                    Payment Id
+                    <div class="arrow-container">
+                      <div class="up-arrow"></div>
+                      <div class="down-arrow"></div>
+                    </div>
+                  </div>
+                </th>
+                <th onclick="sortTableNumber(1)">
+                  <div class="sortable-header">
+                    Member Id
+                    <div class="arrow-container">
+                      <div class="up-arrow"></div>
+                      <div class="down-arrow"></div>
+                    </div>
+                  </div>
+                </th>
+                <th onclick="sortTable(2)">
+                  <div class="sortable-header">
+                    Name
+                    <div class="arrow-container">
+                      <div class="up-arrow"></div>
+                      <div class="down-arrow"></div>
+                    </div>
+                  </div>
+                </th>
+                <th onclick="sortTableNumber(3)">
+                  <div class="sortable-header">
+                    Fine Id
+                    <div class="arrow-container">
+                      <div class="up-arrow"></div>
+                      <div class="down-arrow"></div>
+                    </div>
+                  </div>
+                </th>
+                <th onclick="sortTable(4)">
+                  <div class="sortable-header">
+                    Invoice No
+                    <div class="arrow-container">
+                      <div class="up-arrow"></div>
+                      <div class="down-arrow"></div>
+                    </div>
+                  </div>
+                </th>
+                <th onclick="sortTable(5)">
+                  <div class="sortable-header">
+                    Transaction Ref
+                    <div class="arrow-container">
+                      <div class="up-arrow"></div>
+                      <div class="down-arrow"></div>
+                    </div>
+                  </div>
+                </th>
+                <th onclick="sortTable(6)">
+                  <div class="sortable-header">
+                    Payment Type
+                    <div class="arrow-container">
+                      <div class="up-arrow"></div>
+                      <div class="down-arrow"></div>
+                    </div>
+                  </div>
+                </th>
+                <th onclick="sortTableNumber(7)">
+                  <div class="sortable-header">
+                    Amount
+                    <div class="arrow-container">
+                      <div class="up-arrow"></div>
+                      <div class="down-arrow"></div>
+                    </div>
+                  </div>
+                </th>
+                <th onclick="sortTable(8)">
+                  <div class="sortable-header">
+                   Date/Time
+                    <div class="arrow-container">
+                      <div class="up-arrow"></div>
+                      <div class="down-arrow"></div>
+                    </div>
+                  </div>
+                </th>
+                <th onclick="sortTable(9)">
+                  <div class="sortable-header">
+                    Status
+                    <div class="arrow-container">
+                      <div class="up-arrow"></div>
+                      <div class="down-arrow"></div>
+                    </div>
+                  </div>
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr th:each="payment : ${payments}">
+                <td th:text="${payment.payment_id}"></td>
+                <td th:text="${payment.member.member_id}"></td>
+                <td th:text="${payment.member.firstName + ' ' + payment.member.lastName}"></td>
+                <td>
+                      <span th:each="currentFine, paymentStat : ${payment.fines}">
+                          <span th:text="${currentFine.fine_id}"></span>
+                          <span th:if="${!paymentStat.last}">, </span>
+                      </span>
+                </td>
+                <td th:text="${payment.invoiceNumber}"></td>
+                <td th:text="${payment.transactionReference}"></td>
+                <td th:text="${payment.paymentMethod}"></td>
+                <td th:text="${payment.paymentAmount}"></td>
+                <td th:with = "paymentDateFormatted = ${#temporals.format(payment.paymentDateTime, 'yyyy-MM-dd, HH:mm:ss')}">
+                  <span th:text="${paymentDateFormatted}"></span>
+                </td>
+                <td th:text="${payment.status}"></td>
+              </tr>
+              </tbody>
+            </table>
           </div>
 
-        </form>
-        <div class="table-container">
-          <table class="table table-bordered" id="myTable">
-            <thead>
-            <tr>
-              <th onclick="sortTableNumber(0)">
-                <div class="sortable-header">
-                  Payment Id
-                  <div class="arrow-container">
-                    <div class="up-arrow"></div>
-                    <div class="down-arrow"></div>
-                  </div>
-                </div>
-              </th>
-              <th onclick="sortTableNumber(1)">
-                <div class="sortable-header">
-                  Member Id
-                  <div class="arrow-container">
-                    <div class="up-arrow"></div>
-                    <div class="down-arrow"></div>
-                  </div>
-                </div>
-              </th>
-              <th onclick="sortTable(2)">
-                <div class="sortable-header">
-                  Name
-                  <div class="arrow-container">
-                    <div class="up-arrow"></div>
-                    <div class="down-arrow"></div>
-                  </div>
-                </div>
-              </th>
-              <th onclick="sortTableNumber(3)">
-                <div class="sortable-header">
-                  Fine Id
-                  <div class="arrow-container">
-                    <div class="up-arrow"></div>
-                    <div class="down-arrow"></div>
-                  </div>
-                </div>
-              </th>
-              <th onclick="sortTable(4)">
-                <div class="sortable-header">
-                  Invoice No
-                  <div class="arrow-container">
-                    <div class="up-arrow"></div>
-                    <div class="down-arrow"></div>
-                  </div>
-                </div>
-              </th>
-              <th onclick="sortTable(5)">
-                <div class="sortable-header">
-                  Transaction Ref
-                  <div class="arrow-container">
-                    <div class="up-arrow"></div>
-                    <div class="down-arrow"></div>
-                  </div>
-                </div>
-              </th>
-              <th onclick="sortTable(6)">
-                <div class="sortable-header">
-                  Payment Type
-                  <div class="arrow-container">
-                    <div class="up-arrow"></div>
-                    <div class="down-arrow"></div>
-                  </div>
-                </div>
-              </th>
-              <th onclick="sortTableNumber(7)">
-                <div class="sortable-header">
-                  Amount
-                  <div class="arrow-container">
-                    <div class="up-arrow"></div>
-                    <div class="down-arrow"></div>
-                  </div>
-                </div>
-              </th>
-              <th onclick="sortTable(8)">
-                <div class="sortable-header">
-                 Date/Time
-                  <div class="arrow-container">
-                    <div class="up-arrow"></div>
-                    <div class="down-arrow"></div>
-                  </div>
-                </div>
-              </th>
-              <th onclick="sortTable(9)">
-                <div class="sortable-header">
-                  Status
-                  <div class="arrow-container">
-                    <div class="up-arrow"></div>
-                    <div class="down-arrow"></div>
-                  </div>
-                </div>
-              </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="payment : ${payments}">
-              <td th:text="${payment.payment_id}"></td>
-              <td th:text="${payment.member.member_id}"></td>
-              <td th:text="${payment.member.firstName + ' ' + payment.member.lastName}"></td>
-              <td>
-                    <span th:each="currentFine, paymentStat : ${payment.fines}">
-                        <span th:text="${currentFine.fine_id}"></span>
-                        <span th:if="${!paymentStat.last}">, </span>
-                    </span>
-              </td>
-              <td th:text="${payment.invoiceNumber}"></td>
-              <td th:text="${payment.transactionReference}"></td>
-              <td th:text="${payment.paymentMethod}"></td>
-              <td th:text="${payment.paymentAmount}"></td>
-              <td th:with = "paymentDateFormatted = ${#temporals.format(payment.paymentDateTime, 'yyyy-MM-dd, HH:mm:ss')}">
-                <span th:text="${paymentDateFormatted}"></span>
-              </td>
-              <td th:text="${payment.status}"></td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
+          <div th:if="${totalPages > 1}">
+            <div class="row col-sm-10 align-items-center">
+              <div class="col-sm-6">
+                <ul class="pagination justify-content-center">
+                  <li class="page-item">
+                    <a class="page-link" th:href="@{'/adminportal/paymentlogs' + (${query} != null ? '?query=' + ${query} + '&amp;' : '?') + (${searchBy} != null ? 'searchBy=' + ${searchBy} + '&amp;' : '') + (${statusFilter} != null ? 'statusFilter=' + ${statusFilter} + '&amp;' : '') + (${sort} != null ? 'sort=' + ${sort} + '&amp;' : '') + (${order} != null ? 'order=' + ${order} + '&amp;' : '') + 'page=1'}">
+                      <i class="bi bi-chevron-double-left"></i>
+                    </a>
+                  </li>
+                  <li class="page-item">
+                    <a th:if="${currentPage > 1}" class="page-link" th:href="@{'/adminportal/paymentlogs' + (${query} != null ? '?query=' + ${query} + '&amp;' : '?') + (${searchBy} != null ? 'searchBy=' + ${searchBy} + '&amp;' : '') + (${statusFilter} != null ? 'statusFilter=' + ${statusFilter} + '&amp;' : '') + (${sort} != null ? 'sort=' + ${sort} + '&amp;' : '') + (${order} != null ? 'order=' + ${order} + '&amp;' : '') + 'page=' + ${currentPage - 1}}">
+                      <i class="bi bi-arrow-left"></i>
+                    </a>
+                    <span th:unless="${currentPage > 1}" class="page-link disabled">
+                          <i class="bi bi-arrow-left"></i>
+                      </span>
+                  </li>
 
-        <div th:if="${totalPages > 1}">
-          <div class="row col-sm-10 align-items-center">
-            <div class="col-sm-6">
-              <ul class="pagination justify-content-center">
-                <li class="page-item">
-                  <a class="page-link" th:href="@{'/adminportal/paymentlogs' + (${query} != null ? '?query=' + ${query} + '&amp;' : '?') + (${searchBy} != null ? 'searchBy=' + ${searchBy} + '&amp;' : '') + (${statusFilter} != null ? 'statusFilter=' + ${statusFilter} + '&amp;' : '') + (${sort} != null ? 'sort=' + ${sort} + '&amp;' : '') + (${order} != null ? 'order=' + ${order} + '&amp;' : '') + 'page=1'}">
-                    <i class="bi bi-chevron-double-left"></i>
-                  </a>
-                </li>
-                <li class="page-item">
-                  <a th:if="${currentPage > 1}" class="page-link" th:href="@{'/adminportal/paymentlogs' + (${query} != null ? '?query=' + ${query} + '&amp;' : '?') + (${searchBy} != null ? 'searchBy=' + ${searchBy} + '&amp;' : '') + (${statusFilter} != null ? 'statusFilter=' + ${statusFilter} + '&amp;' : '') + (${sort} != null ? 'sort=' + ${sort} + '&amp;' : '') + (${order} != null ? 'order=' + ${order} + '&amp;' : '') + 'page=' + ${currentPage - 1}}">
-                    <i class="bi bi-arrow-left"></i>
-                  </a>
-                  <span th:unless="${currentPage > 1}" class="page-link disabled">
-                        <i class="bi bi-arrow-left"></i>
-                    </span>
-                </li>
+                  <li class="page-item" th:each="i: ${#numbers.sequence(currentPage - 1 > 0 ? currentPage - 1 : 1, currentPage + 1 < totalPages ? currentPage + 1 : totalPages)}">
+                    <a class="page-link" th:if="${currentPage != i}" th:href="@{'/adminportal/paymentlogs' + (${query} != null ? '?query=' + ${query} + '&amp;' : '?') + (${searchBy} != null ? 'searchBy=' + ${searchBy} + '&amp;' : '') + (${statusFilter} != null ? 'statusFilter=' + ${statusFilter} + '&amp;' : '') + (${sort} != null ? 'sort=' + ${sort} + '&amp;' : '') + (${order} != null ? 'order=' + ${order} + '&amp;' : '') + 'page=' + ${i}}">
+                      <span th:text="${i}" th:class="${currentPage == i ? 'font-weight-bold' : ''}"></span>
+                    </a>
+                    <span class="page-link" th:unless="${currentPage != i}">
+                          <span th:text="${i}" th:class="${currentPage == i ? 'font-weight-bold text-dark' : 'text-muted'}"></span>
+                      </span>
+                  </li>
 
-                <li class="page-item" th:each="i: ${#numbers.sequence(currentPage - 1 > 0 ? currentPage - 1 : 1, currentPage + 1 < totalPages ? currentPage + 1 : totalPages)}">
-                  <a class="page-link" th:if="${currentPage != i}" th:href="@{'/adminportal/paymentlogs' + (${query} != null ? '?query=' + ${query} + '&amp;' : '?') + (${searchBy} != null ? 'searchBy=' + ${searchBy} + '&amp;' : '') + (${statusFilter} != null ? 'statusFilter=' + ${statusFilter} + '&amp;' : '') + (${sort} != null ? 'sort=' + ${sort} + '&amp;' : '') + (${order} != null ? 'order=' + ${order} + '&amp;' : '') + 'page=' + ${i}}">
-                    <span th:text="${i}" th:class="${currentPage == i ? 'font-weight-bold' : ''}"></span>
-                  </a>
-                  <span class="page-link" th:unless="${currentPage != i}">
-                        <span th:text="${i}" th:class="${currentPage == i ? 'font-weight-bold text-dark' : 'text-muted'}"></span>
-                    </span>
-                </li>
+                  <li class="page-item">
+                    <a th:if="${currentPage < totalPages}" class="page-link" th:href="@{'/adminportal/paymentlogs' + (${query} != null ? '?query=' + ${query} + '&amp;' : '?') + (${searchBy} != null ? 'searchBy=' + ${searchBy} + '&amp;' : '') + (${statusFilter} != null ? 'statusFilter=' + ${statusFilter} + '&amp;' : '') + (${sort} != null ? 'sort=' + ${sort} + '&amp;' : '') + (${order} != null ? 'order=' + ${order} + '&amp;' : '') + 'page=' + ${currentPage + 1}}">
+                      <i class="bi bi-arrow-right"></i>
+                    </a>
+                    <span th:unless="${currentPage < totalPages}" class="page-link disabled">
+                          <i class="bi bi-arrow-right"></i>
+                      </span>
+                  </li>
+                  <li class="page-item">
+                    <a class="page-link" th:href="@{'/adminportal/paymentlogs' + (${query} != null ? '?query=' + ${query} + '&amp;' : '?') + (${searchBy} != null ? 'searchBy=' + ${searchBy} + '&amp;' : '') + (${statusFilter} != null ? 'statusFilter=' + ${statusFilter} + '&amp;' : '') + (${sort} != null ? 'sort=' + ${sort} + '&amp;' : '') + (${order} != null ? 'order=' + ${order} + '&amp;' : '') + 'page=' + ${totalPages}}">
+                      <i class="bi bi-chevron-double-right"></i>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <div class="col-sm-3 text-center">
+                <form method="get" th:action="@{'/adminportal/paymentlogs'}" id = "pageFilter">
 
-                <li class="page-item">
-                  <a th:if="${currentPage < totalPages}" class="page-link" th:href="@{'/adminportal/paymentlogs' + (${query} != null ? '?query=' + ${query} + '&amp;' : '?') + (${searchBy} != null ? 'searchBy=' + ${searchBy} + '&amp;' : '') + (${statusFilter} != null ? 'statusFilter=' + ${statusFilter} + '&amp;' : '') + (${sort} != null ? 'sort=' + ${sort} + '&amp;' : '') + (${order} != null ? 'order=' + ${order} + '&amp;' : '') + 'page=' + ${currentPage + 1}}">
-                    <i class="bi bi-arrow-right"></i>
-                  </a>
-                  <span th:unless="${currentPage < totalPages}" class="page-link disabled">
-                        <i class="bi bi-arrow-right"></i>
-                    </span>
-                </li>
-                <li class="page-item">
-                  <a class="page-link" th:href="@{'/adminportal/paymentlogs' + (${query} != null ? '?query=' + ${query} + '&amp;' : '?') + (${searchBy} != null ? 'searchBy=' + ${searchBy} + '&amp;' : '') + (${statusFilter} != null ? 'statusFilter=' + ${statusFilter} + '&amp;' : '') + (${sort} != null ? 'sort=' + ${sort} + '&amp;' : '') + (${order} != null ? 'order=' + ${order} + '&amp;' : '') + 'page=' + ${totalPages}}">
-                    <i class="bi bi-chevron-double-right"></i>
-                  </a>
-                </li>
-              </ul>
+                  <span class="text-dark font-weight-bold">
+                      <input type="hidden" name="query" th:if="${query}" th:value="${query}" />
+                      <input type="hidden" name="searchBy" th:if="${searchBy}" th:value="${searchBy}" />
+                      <input type="hidden" name="statusFilter" th:if="${statusFilter}" th:value="${statusFilter}" />
+                      <input type="hidden" name="sort" th:if="${sort}" th:value="${sort}" />
+                      <input type="hidden" name="order" th:if="${order}" th:value="${order}" />
+                    Page <input type="number" name="page" class="form-control" style="width: 60px; display: inline-block;" th:value="${currentPage}" /> out of <span th:text="${totalPages}"></span>
+                  </span>
+                </form>
+              </div>
             </div>
-            <div class="col-sm-3 text-center">
-              <form method="get" th:action="@{'/adminportal/paymentlogs'}" id = "pageFilter">
 
-                <span class="text-dark font-weight-bold">
-                    <input type="hidden" name="query" th:if="${query}" th:value="${query}" />
-                    <input type="hidden" name="searchBy" th:if="${searchBy}" th:value="${searchBy}" />
-                    <input type="hidden" name="statusFilter" th:if="${statusFilter}" th:value="${statusFilter}" />
-                    <input type="hidden" name="sort" th:if="${sort}" th:value="${sort}" />
-                    <input type="hidden" name="order" th:if="${order}" th:value="${order}" />
-                  Page <input type="number" name="page" class="form-control" style="width: 60px; display: inline-block;" th:value="${currentPage}" /> out of <span th:text="${totalPages}"></span>
-                </span>
-              </form>
-            </div>
           </div>
-
         </div>
-      </div>
+    </div>
+    </main>
   </div>
-  </main>
-</div>
-</div>
-</body>
-</html>
+  </div>
+  </body>
+  </html>

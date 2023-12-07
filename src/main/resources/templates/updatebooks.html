@@ -19,7 +19,6 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             width: 400px;
             max-width: 400px;
-
         }
 
         .form-group {
@@ -36,7 +35,6 @@
             padding: 8px;
             width: 100%;
             max-width: 400px;
-
         }
 
         .btn-primary {
@@ -44,16 +42,14 @@
             border-color: #007bff;
         }
 
-         .nav-link:hover {
-        background-color: #2e2e2e; /* Background color when hovered over */
-        color: white; /* Text color when hovered over (optional) */
-        /* Other styles like padding, border-radius, etc. */
+        .nav-link:hover {
+            background-color: #2e2e2e;
+            color: white;
         }
 
          .nav-item a {
-            color: white; /* Text color for the first nav-link */
-
-        }
+            color: white;
+         }
 
         .nav-item #third-link {
             background-color: #383838;
@@ -61,59 +57,61 @@
     </style>
 </head>
 <body>
-<!-- Include a navigation bar using Thymeleaf fragment replacement -->
-<div th:replace="common/admin_navbar :: #navbar"></div>
-<div class="container-fluid">
-    <div class="row">
+    <!-- Include a navigation bar -->
+    <div th:replace="common/admin_navbar :: #navbar"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Include a side bar -->
+            <div th:replace="common/admin_sidebar :: #navbar"></div>
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div style="margin-top: 50px;">
+                    <div th:if="${param.success}">
+                        <div class="alert alert-info">Book has been successfully updated!</div>
+                    </div>
+                    <h2 class="text-center">Update Book</h2>
+                    <div class="update-container">
+                        <div>
+                            <!-- form to take in changes made to book to be updated -->
+                            <form method="post" role="form" enctype="multipart/form-data" th:action="@{'/adminportal/updatebooks/' + ${book.book_id} + '/save'}" th:object="${book}">
+                                <input type="hidden" name="_method" value="put" />
+                                <div class="text-center">
+                                    <img th:if="${book.image != null}" th:src="'data:image/jpeg;base64,' + ${book.image}" style="width: 300px; height: 450px;margin:20px" alt="Book Image">
+                                </div>
+                                <div class="form-group">
+                                    <label for="title">Title:</label>
+                                    <input type="text" class="form-control" id="title" th:value="${book.title}" th:name="title">
+                                </div>
+                                <div class="form-group">
+                                    <label for="category">Category:</label>
+                                    <input type="text" class="form-control" id="category" th:value="${book.category}" th:name="category">
+                                </div>
+                                <div class="form-group">
+                                    <label for="description">Description:</label>
+                                    <textarea class="form-control" id="description" th:text="${book.description}"
+                                              th:name="description"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="publication_year">Publication Year:</label>
+                                    <input type="text" class="form-control" id="publication_year" th:value="${book.publication_year}"
+                                           th:name="publication_year">
+                                </div>
+                                <div class="form-group">
+                                    <label for="currentAuthors">Authors:</label>
+                                    <input type="text" class="form-control" id="currentAuthors" th:value="${authors}" name="currentAuthors">
+                                </div>
 
-        <div th:replace="common/admin_sidebar :: #navbar"></div>
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <div style="margin-top: 50px;">
-<div th:if="${param.success}">
-    <div class="alert alert-info">Book has been successfully updated!</div>
-</div>
-    <h2 class="text-center">Update Book</h2>
-
-<div class="update-container">
-    <div>
-        <form method="post" role="form" enctype="multipart/form-data" th:action="@{'/adminportal/updatebooks/' + ${book.book_id} + '/save'}" th:object="${book}">
-            <input type="hidden" name="_method" value="put" />
-            <div class="text-center">
-                <img th:if="${book.image != null}" th:src="'data:image/jpeg;base64,' + ${book.image}" style="width: 300px; height: 450px;margin:20px" alt="Book Image">
-            </div>
-            <div class="form-group">
-                <label for="title">Title:</label>
-                <input type="text" class="form-control" id="title" th:value="${book.title}" th:name="title">
-            </div>
-            <div class="form-group">
-                <label for="category">Category:</label>
-                <input type="text" class="form-control" id="category" th:value="${book.category}" th:name="category">
-            </div>
-            <div class="form-group">
-                <label for="description">Description:</label>
-                <textarea class="form-control" id="description" th:text="${book.description}"
-                          th:name="description"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="publication_year">Publication Year:</label>
-                <input type="text" class="form-control" id="publication_year" th:value="${book.publication_year}"
-                       th:name="publication_year">
-            </div>
-            <div class="form-group">
-                <label for="currentAuthors">Authors:</label>
-                <input type="text" class="form-control" id="currentAuthors" th:value="${authors}" name="currentAuthors">
-            </div>
-
-            <div class="form-group mb-3">
-                <label class="form-label">Upload new image</label>
-                <input class="form-control" type="file" id="imageFile" name="imageFile">
-            </div>
-            <button class="btn btn-primary" type="submit">Save Changes</button>
-            <a class="btn btn-primary" th:href = "@{'/adminportal/managebooks'}">Back to manage books</a>
-        </form>
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Upload new image</label>
+                                    <input class="form-control" type="file" id="imageFile" name="imageFile">
+                                </div>
+                                <button class="btn btn-primary" type="submit">Save Changes</button>
+                                <a class="btn btn-primary" th:href = "@{'/adminportal/managebooks'}">Back to manage books</a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
     </div>
-
-</div>
-</div>
 </body>
 </html>

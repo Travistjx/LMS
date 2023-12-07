@@ -18,7 +18,7 @@
         }
 
         .nav-item a {
-            color: white; /* Text color for the first nav-link */
+            color: white;
         }
 
         .nav-item #fourth-link {
@@ -31,6 +31,7 @@
     <div th:replace="common/admin_navbar :: #navbar"></div>
     <div class="container-fluid">
         <div class="row">
+            <!-- Include a side bar -->
             <div th:replace="common/admin_sidebar :: #navbar"></div>
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div class="container">
@@ -39,12 +40,10 @@
                         <div th:if="${param.success}">
                             <div class="alert alert-info">You've successfully created an account!</div>
                         </div>
-
-                            <h2 class="text-center">Create Account</h2>
-
+                        <h2 class="text-center">Create Account</h2>
                         <div class="card-body">
+                            <!-- form to handle user information to be registered/created -->
                             <form method="post" role="form" th:action="@{/adminportal/createaccount/save}" th:object="${member}">
-
                                 <div class="form-group mb-3">
                                     <label class="form-label">First Name</label>
                                     <input class="form-control"

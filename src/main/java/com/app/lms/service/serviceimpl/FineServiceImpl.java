@@ -25,13 +25,9 @@ import java.util.stream.Collectors;
 public class FineServiceImpl implements FineService {
     private final LoanRepository loanRepository;
     private final FineRepository fineRepository;
-
     private final MemberRepository memberRepository;
     private final MemberService memberService;
-
-
     private final LoanService loanService;
-
     // Define the fine rate (e.g., $1 per day)
     private static final double FINE_RATE_PER_DAY = 1.0;
 
@@ -59,7 +55,6 @@ public class FineServiceImpl implements FineService {
                 .collect(Collectors.toList());
 
         for (Loan loan : overdueLoans) {
-
 
             // Calculate the number of days overdue
             long daysOverdue = ChronoUnit.DAYS.between(loan.getDueDateTime(), today);
@@ -108,10 +103,7 @@ public class FineServiceImpl implements FineService {
 
         // Convert book and member entities to DTOs
         LoanDto loanDto = loanService.convertEntityToDto(fine.getLoan());
-//        MemberDto memberDto = memberService.convertEntityToDto(fine.getMember());
-
         fineDto.setLoan(loanDto);
-//        fineDto.setMember(memberDto);
 
         // Set the status here based on the loan's status
         if (fine.getStatus() == FineStatus.PAID) {
@@ -128,6 +120,7 @@ public class FineServiceImpl implements FineService {
                                      String statusFilter, String searchBy, String sort, String order) {
         Page<Fine> selectedFines = fineRepository.findAll(pageable);
 
+        // set status
         FineStatus status = FineStatus.UNPAID;
         if (statusFilter.equals("ALL")){
             status = null;
@@ -139,15 +132,15 @@ public class FineServiceImpl implements FineService {
             status = FineStatus.UNPAID;
         }
 
+        // set sort ordeer
         Sort.Direction direction = Sort.Direction.ASC;
 
         if (order.equals("desc")){
             direction = Sort.Direction.DESC;
         }
 
+        // set sort option
         Sort sortable = Sort.by(direction, "fine_id"); // Default sorting by title
-
-
 
         if (sort != null) {
             switch (sort) {
@@ -180,7 +173,7 @@ public class FineServiceImpl implements FineService {
                 if (searchBy.equals("any")) {
                     selectedFines = fineRepository.searchFinesByMemberWithStatusAndByAny(query, status, selectedId, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
                 }
-                else {
+                else {  // if search by member and search != "any"
                     selectedFines = fineRepository.searchFinesByMemberWithStatusAndNotAny(query, status, searchBy,selectedId, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
                 }
 
@@ -190,7 +183,7 @@ public class FineServiceImpl implements FineService {
             if (searchBy.equals("any")){
                 selectedFines = fineRepository.searchFinesWithStatusAndByAny(query, status, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
             }
-            else {
+            else { // if searchBy != "any"
                 selectedFines = fineRepository.searchFinesWithStatusAndNotAny(query, status, searchBy, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
             }
         }

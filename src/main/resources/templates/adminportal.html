@@ -33,7 +33,6 @@
         }
 
         .top {
-
             width: 1060px;
             background-color: white;
             border: none;
@@ -48,8 +47,8 @@
 
         .middle-row {
             display: flex;
-            justify-content: center; /* Center horizontally */
-            align-items: center; /* Center vertically */
+            justify-content: center;
+            align-items: center;
         }
 
         .small-box {
@@ -103,6 +102,7 @@
     <div th:replace="common/admin_navbar :: #navbar"></div>
     <div class="container-fluid">
         <div class="row">
+            <!-- Include a side bar -->
             <div th:replace="common/admin_sidebar :: #navbar"></div>
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div class = "work-area">
@@ -110,6 +110,7 @@
                     <h2 style = >Hello <span style = "color: blue">Admin</span>, welcome to
                         <span style = "color: black">Dashboard</span></h2>
                 </div>
+                <!-- boxes to display some general book/loan information -->
                 <div class = "middle-row">
                     <div class = "small-box">
                         <img th:src = "@{/images/book.svg}" alt = "no image found" style = "width: 70px; margin: 15px;">
@@ -144,6 +145,7 @@
                         </p>
                     </div>
                 </div>
+                <!-- boxes to display some general book/user information -->
                 <div class = "container">
                     <div class = "box">
                         <div style="display: flex; align-items: center;  justify-content: space-between;">

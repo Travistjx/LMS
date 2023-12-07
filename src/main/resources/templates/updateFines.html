@@ -19,7 +19,6 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             width: 400px;
             max-width: 400px;
-
         }
 
         .form-group {
@@ -36,7 +35,6 @@
             padding: 8px;
             width: 100%;
             max-width: 400px;
-
         }
 
         .btn-primary {
@@ -45,80 +43,73 @@
         }
 
         .nav-link:hover {
-           background-color: #2e2e2e; /* Background color when hovered over */
-           color: white; /* Text color when hovered over (optional) */
-           /* Other styles like padding, border-radius, etc. */
-           }
+           background-color: #2e2e2e;
+           color: white;
+        }
 
-            .nav-item a {
-               color: white; /* Text color for the first nav-link */
+        .nav-item a {
+           color: white;
+        }
 
-           }
-
-           .nav-item #ninth-link {
-               background-color: #383838;
-           }
+        .nav-item #ninth-link {
+            background-color: #383838;
+        }
     </style>
 </head>
 <body>
-<!-- Include a navigation bar using Thymeleaf fragment replacement -->
-<div th:replace="common/admin_navbar :: #navbar"></div>
-<div class="container-fluid">
-    <div class="row">
-        <div th:replace="common/admin_sidebar :: #navbar"></div>
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <div style="margin-top: 50px;">
-                <div th:if="${param.success}">
-                    <div class="alert alert-info">Fine has been successfully updated!</div>
-                </div>
-                <h2 class="text-center">Update Fine</h2>
-
-                <div class="update-container">
-                    <div>
-                        <form method="post" role="form" enctype="multipart/form-data" th:action="@{'/adminportal/updatefines/' + ${fine.fine_id} + '/save'}" th:object="${fine}">
-                            <input type="hidden" name="_method" value="put" />
-                            <div class="row">
-                            <div class="form-group">
-                                <label for="fineId">Fine Id:</label>
-                                <input type="text" class="form-control" id="fineId" th:value="${fine.fine_id}" th:name="fineId" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label for="loanId">Loan Id:</label>
-                                <input type="text" class="form-control" id="loanId" th:value="${fine.loan.loan_id}" th:name="loanId" readonly>
-                            </div>
-                            </div>
-                            <div class="row">
-                            <div class="form-group">
-                                <label for="member">Member Id and Name:</label>
-                                <input type="text" class="form-control" id="member" th:value="${fine.loan.member.member_id + ', ' + fine.loan.member.firstName + ' ' + fine.loan.member.lastName}" th:name="member" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label for="book">Book Id and Title:</label>
-                                <input type="text" class="form-control" id="book" th:value="${fine.loan.book.book_id + ', ' + fine.loan.book.title}" th:name="book" readonly>
-                            </div>
-                            </div>
-<!--                            <div class="form-group mb-3">-->
-<!--                                <label for="loanId">Loan:</label>-->
-<!--                                <select class="form-control" id="loanId" name="loanId">-->
-<!--                                    <option th:each="loan : ${allLoans}" th:value="${loan.loan_id}"-->
-<!--                                            th:text="${'Loan Id: ' + loan.loan_id + ' Member Id: ' + loan.member.member_id + ' Book Id: ' + loan.book.book_id}"-->
-<!--                                            th:selected="${loan.loan_id == fine.loan.loan_id}"></option>-->
-<!--                                </select>-->
-<!--                            </div>-->
-                            <div class="form-group">
-                                <label for="status">Status:</label>
-                                <select class="form-control" id="status" th:field="*{status}">
-                                    <option value="PAID" th:text="PAID" th:selected="${fine.status == 'PAID'}">Paid</option>
-                                    <option value="UNPAID" th:text="UNPAID" th:selected="${fine.status == 'UNPAID'}">Unpaid</option>
-                                </select>
-                            </div>
-
-
-                            <button class="btn btn-primary" type="submit">Save Changes</button>
-                            <a class="btn btn-primary" th:href="@{'/adminportal/managefines'}">Back</a>
-                        </form>
+    <!-- Include a navigation bar  -->
+    <div th:replace="common/admin_navbar :: #navbar"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Include a side bar -->
+            <div th:replace="common/admin_sidebar :: #navbar"></div>
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div style="margin-top: 50px;">
+                    <div th:if="${param.success}">
+                        <div class="alert alert-info">Fine has been successfully updated!</div>
                     </div>
+                    <h2 class="text-center">Update Fine</h2>
 
+                    <div class="update-container">
+                        <div>
+                            <!-- form to take in changes made to fine to be updated -->
+                            <form method="post" role="form" enctype="multipart/form-data" th:action="@{'/adminportal/updatefines/' + ${fine.fine_id} + '/save'}" th:object="${fine}">
+                                <input type="hidden" name="_method" value="put" />
+                                <div class="row">
+                                <div class="form-group">
+                                    <label for="fineId">Fine Id:</label>
+                                    <input type="text" class="form-control" id="fineId" th:value="${fine.fine_id}" th:name="fineId" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="loanId">Loan Id:</label>
+                                    <input type="text" class="form-control" id="loanId" th:value="${fine.loan.loan_id}" th:name="loanId" readonly>
+                                </div>
+                                </div>
+                                <div class="row">
+                                <div class="form-group">
+                                    <label for="member">Member Id and Name:</label>
+                                    <input type="text" class="form-control" id="member" th:value="${fine.loan.member.member_id + ', ' + fine.loan.member.firstName + ' ' + fine.loan.member.lastName}" th:name="member" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="book">Book Id and Title:</label>
+                                    <input type="text" class="form-control" id="book" th:value="${fine.loan.book.book_id + ', ' + fine.loan.book.title}" th:name="book" readonly>
+                                </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="status">Status:</label>
+                                    <select class="form-control" id="status" th:field="*{status}">
+                                        <option value="PAID" th:text="PAID" th:selected="${fine.status == 'PAID'}">Paid</option>
+                                        <option value="UNPAID" th:text="UNPAID" th:selected="${fine.status == 'UNPAID'}">Unpaid</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-primary" type="submit">Save Changes</button>
+                                <a class="btn btn-primary" th:href="@{'/adminportal/managefines'}">Back</a>
+                            </form>
+                        </div>
+                    </div>
                 </div>
+            </main>
+        </div>
+    </div>
 </body>
 </html>

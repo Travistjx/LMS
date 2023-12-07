@@ -25,11 +25,8 @@ public class AdminController {
 
     private final MemberService memberService;
     private final BookService bookService;
-
     private final LoanService loanService;
-
     private final FineService fineService;
-
     private final PaymentService paymentService;
 
     public AdminController(MemberService memberService, BookService bookService, LoanService loanService,
@@ -47,6 +44,8 @@ public class AdminController {
         String username = principal.getName();
         return memberService.findByEmail(username);
     }
+
+    /*--------------LANDING PAGE AFTER LOGIN----------------*/
 
     // Landing page
     @GetMapping("")
@@ -138,6 +137,7 @@ public class AdminController {
         int pageSize = 5;
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
         Page<BookDto> page;
+
         if ((query != null && !query.isEmpty()) || searchBy != null || statusFilter != null)  {
             page = bookService.searchBooks(query, pageable, searchBy, statusFilter, sort, order);
         } else {
@@ -233,6 +233,7 @@ public class AdminController {
         int pageSize = 5;
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
         Page<MemberDto> page;
+
         if ((query != null && !query.isEmpty()) || statusFilter != null || searchBy != null) {
             page = memberService.searchMembers(query, pageable, statusFilter, searchBy, sort, order);
         } else {
@@ -262,6 +263,7 @@ public class AdminController {
         List<BookDto> allBooks = bookService.findAllBooks().stream().filter(bookDto ->
                 bookDto.getStatus() == BookStatus.AVAILABLE).collect(Collectors.toList());
         List<MemberDto> allMembers = memberService.findAllUsers();
+
         model.addAttribute("loan", new LoanDto());
         model.addAttribute("allBooks", allBooks);
         model.addAttribute("allMembers", allMembers);
@@ -285,6 +287,7 @@ public class AdminController {
     public String showReturnBooksForm(Model model) {
         List<BookDto> allBooks = bookService.findAllBooks();
         List<MemberDto> allMembers = memberService.findAllUsers();
+
         model.addAttribute("loan", new LoanDto());
         model.addAttribute("allBooks", allBooks);
         model.addAttribute("allMembers", allMembers);
@@ -325,6 +328,7 @@ public class AdminController {
         int pageSize = 5;
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
         Page<LoanDto> page;
+
         if ((query != null && !query.isEmpty()) || statusFilter != null || searchBy != null) {
             page = loanService.searchLoans(query, pageable, Optional.empty(), IdType.NONE, statusFilter, searchBy, sort ,order);
         } else {
@@ -334,6 +338,7 @@ public class AdminController {
 
         List<LoanDto> listLoans = page.getContent();
         fineService.calculateFinesForOverdueLoans();
+
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
@@ -399,6 +404,7 @@ public class AdminController {
         int pageSize = 5;
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
         Page<LoanDto> page;
+
         if ((query != null && !query.isEmpty()) || statusFilter != null){
             page = loanService.searchLoans(query, pageable, Optional.of(id), IdType.MEMBER_ID,
                     statusFilter, searchBy, sort, order);
@@ -408,6 +414,7 @@ public class AdminController {
         }
 
         List<LoanDto> listLoans = page.getContent();
+
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
@@ -436,6 +443,7 @@ public class AdminController {
 
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
         Page<LoanDto> page;
+
         if ((query != null && !query.isEmpty()) || statusFilter != null || searchBy != null){
             page = loanService.searchLoans(query, pageable, Optional.of(id), IdType.BOOK_ID, statusFilter, searchBy, sort, order);
         } else {
@@ -444,6 +452,7 @@ public class AdminController {
         }
 
         List<LoanDto> listLoans = page.getContent();
+
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
@@ -474,6 +483,7 @@ public class AdminController {
         int pageSize = 5;
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
         Page<FineDto> page;
+
         if (query != null && !query.isEmpty() || statusFilter != null || searchBy != null) {
             page = fineService.searchFines(query, pageable, Optional.empty(), IdType.NONE, statusFilter, searchBy, sort, order);
         } else {
@@ -482,7 +492,7 @@ public class AdminController {
         }
 
         List<FineDto> listFines = page.getContent();
-//        fineService.calculateFinesForOverdueLoans();
+
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
@@ -515,7 +525,7 @@ public class AdminController {
         return "updatefines";
     }
 
-    // Update/Save tphe changes made to any fine
+    // Update/Save the changes made to any fine
     @PutMapping("/updatefines/{id}/save")
     public String updateLoans(@ModelAttribute("fine") FineDto fine,
                               @PathVariable(value = "id") Long id) {
@@ -530,6 +540,9 @@ public class AdminController {
         return "redirect:/adminportal/managefines?success";
     }
 
+
+    /*--------------PAYMENT----------------*/
+
     // Retrieve the payment logs based on payment Id
     // If search filter is detected, searchPayments is used
     @GetMapping("/paymentlogs")
@@ -543,6 +556,7 @@ public class AdminController {
         int pageSize = 5;
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
         Page<PaymentDto> page;
+
         if (query != null && !query.isEmpty() || statusFilter != null || searchBy != null) {
             page = paymentService.searchPayments(query, pageable, Optional.empty(), IdType.NONE, statusFilter, searchBy, sort, order);
         } else {
@@ -551,6 +565,7 @@ public class AdminController {
         }
 
         List<PaymentDto> listPayments = page.getContent();
+
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
@@ -562,6 +577,9 @@ public class AdminController {
         model.addAttribute("order", order);
         return "paymentLogs";
     }
+
+
+    /*--------------ACCOUNT SETTINGS----------------*/
 
     // Retrieve Account Settings page
     @GetMapping("/accountsettings")

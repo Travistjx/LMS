@@ -17,8 +17,7 @@
         }
 
         .nav-item a {
-            color: white; /* Text color for the first nav-link */
-
+            color: white;
         }
 
         .nav-item #first-link {
@@ -29,13 +28,11 @@
             display: flex;
             flex-direction: column; /* Stack child elements vertically */
             align-items: center;
-
             justify-content: flex-start; /* Start content from the top */
             overflow: hidden;
         }
 
         .top {
-
             width: 1060px;
             background-color: white;
             border: none;
@@ -45,10 +42,9 @@
             align-items: center;
             padding: 40px;
             max-width: 1000px;
-
         }
 
-       .middle-row {
+        .middle-row {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -72,10 +68,10 @@
             border: none;
         }
 
-         table {
+        table {
             width: 100%;
             border-collapse: collapse; /* Remove spacing between table cells */
-         }
+        }
 
          tr:not(:last-child) {
                 border-bottom: 1px solid #ddd;
@@ -96,6 +92,7 @@
     <div th:replace="common/member_navbar :: #navbar"></div>
     <div class="container-fluid">
         <div class="row">
+            <!-- Include a side bar -->
             <div th:replace="common/member_sidebar :: #navbar"></div>
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <div class = "work-area">
@@ -103,6 +100,7 @@
                         <h2 style = >Hello <span th:utext="${currentUser.firstName + '!'}" style = "color: blue;"></span></h2>
                     </div>
                     <div class = "middle-row" style = "max-width: 1000px; width: 1000px;">
+                        <!-- boxes to display some general book/loan information -->
                         <div class = "small-box">
                             <img th:src = "@{/images/book.svg}" alt = "no image found" style = "width: 50px; margin: 15px;border-radius: 50%;">
                             <p style="margin: 15px; text-align: center;color:grey; white-space: nowrap;">Books Borrowed<br/>
@@ -128,6 +126,7 @@
                             </p>
                         </div>
                     </div>
+                    <!-- bottom part of the page to display some random books -->
                     <div class="container" style = "max-width: 1000px; margin-top: 30px;">
                         <div style="display: flex; align-items: center;  justify-content: space-between; margin-down: 10px;">
                             <h5 style="margin: 15px;">Discover Books</h5>
@@ -138,20 +137,19 @@
                         <div class="row">
                             <th:block th:each="book, bookStat : ${randomBooks}">
                                 <div class="col-md-3">
-                                <a data-bs-toggle="modal" th:data-bs-target="'#exampleModal-' + ${book.book_id}" style = "cursor: pointer">
+                                <a data-bs-toggle="modal" th:data-bs-target="'#bookModal-' + ${book.book_id}" style = "cursor: pointer">
                                     <div class="box">
                                         <div class="text-center"> <!-- Center-align text -->
                                             <img th:if="${book.image != null}"
                                                  th:src="'data:image/jpeg;base64,' + ${book.image}" style="width: 150px;height: 225px;"
                                                  class="card-img-top" alt="Book Image">
-
                                             <h5 class="mb-3" th:text="${book.title}" style = "font-size: 14px; margin-top: 10px;"></h5>
                                         </div>
                                     </div>
                                 </a>
                                 </div>
                                 <!-- Modal -->
-                                <div class="modal fade" th:id="'exampleModal-' + ${book.book_id}" tabindex="-1" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal fade" th:id="'bookModal-' + ${book.book_id}" tabindex="-1" data-bs-keyboard="false" aria-labelledby="bookModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                                         <div class="modal-content">
                                             <div class="modal-body text-center">

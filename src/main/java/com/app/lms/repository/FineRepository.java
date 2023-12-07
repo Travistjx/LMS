@@ -12,7 +12,7 @@ import java.util.List;
 public interface FineRepository extends JpaRepository<Fine, Long> {
     List<Fine> findByLoan (Loan loan);
 
-    @Query("SELECT l FROM Fine l " +
+    @Query("SELECTl FROM Fine l " +
             "WHERE (l.loan.loan_id LIKE %:query% OR " +
             "l.fine_id LIKE %:query% OR " +
             "l.loan.member.firstName LIKE %:query% OR " +

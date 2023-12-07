@@ -162,6 +162,7 @@ public class MemberServiceImpl implements MemberService {
     public void updateAccounts(MemberDto member, Long memberId, String roles) {
         Optional<Member> selectedMember= memberRepository.findById(memberId);
 
+        // if exists, update account with the changes
         if (selectedMember.isPresent()){
             Member existingMember = selectedMember.get();
             Collection<Role> listRole = new ArrayList<>();
@@ -178,7 +179,6 @@ public class MemberServiceImpl implements MemberService {
                 }
 
             }
-
 
             existingMember.setRoles(listRole);
             existingMember.setFirstName(member.getFirstName());
@@ -214,6 +214,8 @@ public class MemberServiceImpl implements MemberService {
     public Page<MemberDto> searchMembers(String query, Pageable pageable, String statusFilter, String searchBy,
                                          String sort, String order) {
         Page<Member> memberPage = null;
+
+        // set status
         String status = "";
         if (statusFilter.equals("ALL")){
             status = null;
@@ -222,14 +224,15 @@ public class MemberServiceImpl implements MemberService {
             status = statusFilter;
         }
 
+        //set sort order
         Sort.Direction direction = Sort.Direction.ASC;
 
         if (order.equals("desc")){
             direction = Sort.Direction.DESC;
         }
 
+        // set sort option
         Sort sortable = Sort.by(direction, "member_id"); // Default sorting by title
-
 
         if (sort != null) {
             switch (sort) {
@@ -248,7 +251,7 @@ public class MemberServiceImpl implements MemberService {
         if (searchBy.equals("any")){
             memberPage = memberRepository.searchMembersWithStatusAndByAny(query, status, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
         }
-        else {
+        else { // if searchBy != "any"
             memberPage = memberRepository.searchMembersWithStatusAndNotAny(query, status, searchBy, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
         }
         List<MemberDto> memberDtoList = memberPage.getContent().stream()

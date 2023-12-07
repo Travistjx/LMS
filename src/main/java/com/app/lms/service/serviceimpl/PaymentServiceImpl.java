@@ -25,12 +25,9 @@ import java.util.stream.Collectors;
 public class PaymentServiceImpl implements PaymentService {
 
     private final FineRepository fineRepository;
-
     private final MemberRepository memberRepository;
     private final PaymentRepository paymentRepository;
-
     private final FineService fineService;
-
     private final MemberService memberService;
 
     public PaymentServiceImpl(FineRepository fineRepository, MemberRepository memberRepository,
@@ -63,6 +60,7 @@ public class PaymentServiceImpl implements PaymentService {
         Member member = memberRepository.findByEmail(email);
         payment.setMember(member);
 
+        // find latest payment
         Payment latestPayment = paymentRepository.findFirstByOrderByPaymentDateTimeDesc();
         String formattedInvoiceNumber = "";
 
@@ -103,6 +101,7 @@ public class PaymentServiceImpl implements PaymentService {
                                            String statusFilter, String searchBy, String sort, String order) {
         Page<Payment> selectedPayment = null;
 
+        // set status
         PaymentStatus status = PaymentStatus.FAILED;
         if (statusFilter.equals("ALL")){
             status = null;
@@ -117,15 +116,15 @@ public class PaymentServiceImpl implements PaymentService {
             status = PaymentStatus.PENDING;
         }
 
+        // set sort order
         Sort.Direction direction = Sort.Direction.ASC;
 
         if (order.equals("desc")){
             direction = Sort.Direction.DESC;
         }
 
+        // set sort option
         Sort sortable = Sort.by(direction, "payment_id"); // Default sorting by title
-
-
 
         if (sort != null) {
             switch (sort) {
@@ -167,7 +166,7 @@ public class PaymentServiceImpl implements PaymentService {
                     selectedPayment = paymentRepository.searchPaymentsByMemberWithStatusAndByAny(query,
                             selectedId, status, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
                 }
-                else {
+                else { // if search by member and searchBy != "any"
                     selectedPayment = paymentRepository.searchPaymentsByMemberWithStatusAndNotAny(query,
                             selectedId, status, searchBy, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
                 }
@@ -177,7 +176,7 @@ public class PaymentServiceImpl implements PaymentService {
             if (searchBy.equals("any")){
                 selectedPayment = paymentRepository.searchPaymentsWithStatusAndByAny(query, status, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
             }
-            else {
+            else { // if searchBy != "any"
                 selectedPayment = paymentRepository.searchPaymentsWithStatusAndNotAny(query, status, searchBy, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
             }
         }
@@ -194,6 +193,7 @@ public class PaymentServiceImpl implements PaymentService {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
         Page<Payment> paymentPage = this.paymentRepository.findAll(pageable);
 
+        // if finding by member or book
         if (id.isPresent()){
             Long paymentId = id.get();
 

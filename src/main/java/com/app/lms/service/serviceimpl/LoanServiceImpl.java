@@ -41,8 +41,10 @@ public class LoanServiceImpl implements LoanService {
     @Override
     public void issueBooks(LoanDto loanDto){
         Loan loan = new Loan();
+
         Book selectedBook = bookRepository.findById(loanDto.getBook().getBook_id()).get();
         Member selectedMember = memberRepository.findById(loanDto.getMember().getMember_id()).get();
+
         selectedBook.setStatus(BookStatus.CHECKED_OUT);
         loan.setBook(selectedBook);
         loan.setMember(selectedMember);
@@ -54,7 +56,7 @@ public class LoanServiceImpl implements LoanService {
         loanRepository.save(loan);
     }
 
-    // Retrieve pages of loans based on search filters
+    // Retrieve list of loans based on Member Id and Book Id
     @Override
     public List<LoanDto> searchLoans(Long bookId, Long memberId) {
         List<Loan> loans = loanRepository.findAll();
@@ -124,6 +126,7 @@ public class LoanServiceImpl implements LoanService {
 
         Page<Loan> selectedLoans = null;
 
+        // set status
         LoanStatus status = LoanStatus.ACTIVE;
         if (statusFilter.equals("ALL")){
             status = null;
@@ -138,15 +141,15 @@ public class LoanServiceImpl implements LoanService {
             status = LoanStatus.RETURNED;
         }
 
+        // set sort order
         Sort.Direction direction = Sort.Direction.ASC;
 
         if (order.equals("desc")){
             direction = Sort.Direction.DESC;
         }
 
+        // set sort option
         Sort sortable = Sort.by(direction, "loan_id"); // Default sorting by title
-
-
 
         if (sort != null) {
             switch (sort) {
@@ -187,7 +190,7 @@ public class LoanServiceImpl implements LoanService {
                 if (searchBy.equals("any")){
                     selectedLoans = loanRepository.searchLoansByMemberWithStatusAndByAny(query, selectedId, status, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
                 }
-                else {
+                else {  // if search by member and searchBy != "any"
                     selectedLoans = loanRepository.searchLoansByMemberWithStatusAndNotAny(query, selectedId, status, searchBy, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
                 }
             }
@@ -195,7 +198,7 @@ public class LoanServiceImpl implements LoanService {
                 if (searchBy.equals("any")){
                     selectedLoans = loanRepository.searchLoansByBookWithStatusAndByAny(query, selectedId, status, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
                 }
-                else {
+                else { // if search by book and searchBy != "any"
                     selectedLoans = loanRepository.searchLoansByBookWithStatusAndNotAny(query, selectedId, status, searchBy, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
                 }
             }
@@ -204,11 +207,10 @@ public class LoanServiceImpl implements LoanService {
             if (searchBy.equals("any")){
                 selectedLoans = loanRepository.searchLoansWithStatusAndByAny(query, status, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
             }
-            else {
+            else { // if searchBy != "any"
                 selectedLoans = loanRepository.searchLoansWithStatusAndNotAny(query, status, searchBy, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortable));
             }
         }
-
 
         List <LoanDto> selectedLoansDto = selectedLoans.getContent().stream().map(this::convertEntityToDto)
                 .collect(Collectors.toList());
@@ -223,7 +225,7 @@ public class LoanServiceImpl implements LoanService {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
         Page<Loan> loanPage = this.loanRepository.findAll(pageable);
 
-        if (id.isPresent()){
+        if (id.isPresent()){ // if finding by member or book type
             Long selectedId = id.get();
 
             if (idType == IdType.MEMBER_ID){
@@ -274,6 +276,7 @@ public class LoanServiceImpl implements LoanService {
     public void updateLoans(LoanDto loan, Long loanId, Long memberId, Long bookId) {
         Optional<Loan> selectedLoan = loanRepository.findById(loanId);
 
+        // if exists, update loan with changes
         if (selectedLoan.isPresent()){
             Loan existingLoan = selectedLoan.get();
             Member member = memberRepository.findById(memberId).get();

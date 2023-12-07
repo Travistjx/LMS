@@ -7,59 +7,58 @@
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
-<div class="container">
-    <div class="row col-md-8 offset-md-2">
-        <div class="card">
-            <div class="card-body">
-                <!-- Use a <div> to wrap the content -->
-                <div>
-                    <!-- Check if any loans were found -->
-                    <th:block th:if="${existingLoans.size() > 0}">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th>Loan ID</th>
-                                <th>Book Title</th>
-                                <th>Member Name</th>
-                                <th>Loan Date</th>
-                                <th>Due Date</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <!-- Use Thymeleaf iteration to display each loan -->
-                            <tr th:each="loan : ${existingLoans}">
-                                <td th:text="${loan.loan_id}"></td>
-                                <td th:text="${loan.book != null ? loan.book.title : 'N/A'}"></td>
-                                <td th:text="${loan.member != null ? loan.member.firstName + ' ' + loan.member.lastName : 'N/A'}"></td>
-                                <td th:with="loanDateFormatted=${#temporals.format(loan.loanDateTime, 'yyyy-MM-dd, HH:mm:ss')}">
-                                    <span th:text="${loanDateFormatted}"></span>
-                                </td>
-                                <td th:with="dueDateFormatted=${#temporals.format(loan.dueDateTime, 'yyyy-MM-dd, HH:mm:ss')}">
-                                    <span th:text="${dueDateFormatted}"></span>
-                                </td>
-                                <td th:text="${loan.status}"></td>
-                                <td>
-                                    <!-- Create a button or link for returning this loan -->
-                                    <form method="post" th:action="@{'/adminportal/returnbooks/return/' + ${loan.loan_id}}">
-                                        <input type="hidden" name="_method" value="put" />
-                                        <button type="submit" class="btn btn-primary">Return</button>
-                                    </form>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </th:block>
+    <div class="container">
+        <div class="row col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-body">
+                    <div>
+                        <!-- Check if any loans were found -->
+                        <th:block th:if="${existingLoans.size() > 0}">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Loan ID</th>
+                                    <th>Book Title</th>
+                                    <th>Member Name</th>
+                                    <th>Loan Date</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- Use Thymeleaf iteration to display each loan -->
+                                <tr th:each="loan : ${existingLoans}">
+                                    <td th:text="${loan.loan_id}"></td>
+                                    <td th:text="${loan.book != null ? loan.book.title : 'N/A'}"></td>
+                                    <td th:text="${loan.member != null ? loan.member.firstName + ' ' + loan.member.lastName : 'N/A'}"></td>
+                                    <td th:with="loanDateFormatted=${#temporals.format(loan.loanDateTime, 'yyyy-MM-dd, HH:mm:ss')}">
+                                        <span th:text="${loanDateFormatted}"></span>
+                                    </td>
+                                    <td th:with="dueDateFormatted=${#temporals.format(loan.dueDateTime, 'yyyy-MM-dd, HH:mm:ss')}">
+                                        <span th:text="${dueDateFormatted}"></span>
+                                    </td>
+                                    <td th:text="${loan.status}"></td>
+                                    <td>
+                                        <!-- Create a button or link for returning this loan -->
+                                        <form method="post" th:action="@{'/adminportal/returnbooks/return/' + ${loan.loan_id}}">
+                                            <input type="hidden" name="_method" value="put" />
+                                            <button type="submit" class="btn btn-primary">Return</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </th:block>
 
-                    <!-- Display a message if no loans were found -->
-                    <div th:if="${existingLoans.size() == 0}">
-                        <p>No loans matching the criteria were found.</p>
+                        <!-- Display a message if no loans were found -->
+                        <div th:if="${existingLoans.size() == 0}">
+                            <p>No loans matching the criteria were found.</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 </body>
 </html>

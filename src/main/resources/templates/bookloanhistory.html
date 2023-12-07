@@ -11,7 +11,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
   <style>
-    /*Ensure table is centered and there's gap around it*/
+    /* Ensure table is centered and there's gap around it */
     .table-container {
         margin: 50px;
         display: flex;
@@ -112,70 +112,68 @@
      });
 
     function sortTable(n) {
-            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-            table = document.getElementById("myTable");
-            switching = true;
+      var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+      table = document.getElementById("myTable");
+      switching = true;
 
-            //Set the sorting direction to ascending:
-            dir = "asc";
+      //Set the sorting direction to ascending:
+      dir = "asc";
 
-            /*Make a loop that will continue until
-            no switching has been done:*/
-            while (switching) {
-                switching = false;
-                rows = table.rows;
+      /*Make a loop that will continue until
+      no switching has been done:*/
+      while (switching) {
+          switching = false;
+          rows = table.rows;
 
-                /*Loop through all table rows (except the
-                first, which contains table headers):*/
-                for (i = 1; i < (rows.length - 1); i++) {
-                    shouldSwitch = false;
+          /*Loop through all table rows (except the
+          first, which contains table headers):*/
+          for (i = 1; i < (rows.length - 1); i++) {
+              shouldSwitch = false;
 
-                    /*Get the two elements you want to compare,
-                    one from current row and one from the next:*/
-                    x = rows[i].getElementsByTagName("TD")[n];
-                    y = rows[i + 1].getElementsByTagName("TD")[n];
+              /*Get the two elements you want to compare,
+              one from current row and one from the next:*/
+              x = rows[i].getElementsByTagName("TD")[n];
+              y = rows[i + 1].getElementsByTagName("TD")[n];
 
-                    /*check if the two rows should switch place,
-                     based on the direction, asc or desc:*/
-                    if (dir == "asc") {
-                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-                          //if so, mark as a switch and break the loop:
-                          shouldSwitch= true;
-                          break;
-                        }
-                    }
-                    else if (dir == "desc") {
-                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-                          //if so, mark as a switch and break the loop:
-                          shouldSwitch = true;
-                          break;
-                        }
-                    }
-                }
+              /*check if the two rows should switch place,
+               based on the direction, asc or desc:*/
+              if (dir == "asc") {
+                  if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch= true;
+                    break;
+                  }
+              }
+              else if (dir == "desc") {
+                  if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch = true;
+                    break;
+                  }
+              }
+          }
 
-                if (shouldSwitch) {
-                    /*If a switch has been marked, make the switch
-                    and mark that a switch has been done:*/
-                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          if (shouldSwitch) {
+              /*If a switch has been marked, make the switch
+              and mark that a switch has been done:*/
+              rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
 
-                    switching = true;
+              switching = true;
 
-                    //Each time a switch is done, increase this count by 1:
-                    switchcount ++;
-                }
-                else {
-                        /*If no switching has been done AND the direction is "asc",
-                        set the direction to "desc" and run the while loop again.*/
-                        if (switchcount == 0 && dir == "asc") {
-                        dir = "desc";
-                        switching = true;
-                    }
-                }
-            }
-        updateArrows(n, dir);
+              //Each time a switch is done, increase this count by 1:
+              switchcount ++;
+          }
+          else {
+                  /*If no switching has been done AND the direction is "asc",
+                  set the direction to "desc" and run the while loop again.*/
+                  if (switchcount == 0 && dir == "asc") {
+                  dir = "desc";
+                  switching = true;
+              }
+          }
+      }
+      updateArrows(n, dir);
     }
-
-
 
 
     function updateArrows(columnIndex, direction) {
@@ -255,6 +253,7 @@
   <div th:replace="common/admin_navbar :: #navbar"></div>
   <div class="container-fluid">
     <div class="row">
+      <!-- Include a side bar -->
       <div th:replace="common/admin_sidebar :: #navbar"></div>
       <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
         <div style="margin-top: 50px;">
@@ -273,11 +272,12 @@
                 Add Filters
               </button>
             </div>
-            <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <!-- search filter modal -->
+            <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Filters</h5>
+                    <h5 class="modal-title" id="filterModalLabel">Filters</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">

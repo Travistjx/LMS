@@ -28,6 +28,7 @@
     <div th:replace="common/admin_navbar :: #navbar"></div>
     <div class="container-fluid">
         <div class="row">
+            <!-- Include a side bar -->
             <div th:replace="common/admin_sidebar :: #navbar"></div>
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div class="container">
@@ -36,11 +37,10 @@
                     <div th:if="${param.success}">
                         <div class="alert alert-info">You've successfully added the book!</div>
                     </div>
-
-                        <h2 class="text-center">Add Books</h2>
+                    <h2 class="text-center">Add Books</h2>
                     </div>
                     <div class="card-body">
-                        <!-- Form to add book -->
+                        <!-- Form to handle book information to add book -->
                         <form method="post" role="form" enctype="multipart/form-data" th:action="@{/adminportal/addbooks/save}" th:object="${book}">
                             <div class="form-group mb-3">
                                 <label class="form-label">Title</label>

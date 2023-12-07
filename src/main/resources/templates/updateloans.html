@@ -19,7 +19,6 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             width: 400px;
             max-width: 400px;
-
         }
 
         .form-group {
@@ -36,7 +35,6 @@
             padding: 8px;
             width: 100%;
             max-width: 400px;
-
         }
 
         .btn-primary {
@@ -45,83 +43,83 @@
         }
 
         .nav-link:hover {
-           background-color: #2e2e2e; /* Background color when hovered over */
-           color: white; /* Text color when hovered over (optional) */
-           /* Other styles like padding, border-radius, etc. */
-           }
+           background-color: #2e2e2e;
+           color: white;
+        }
 
-            .nav-item a {
-               color: white; /* Text color for the first nav-link */
+        .nav-item a {
+           color: white;
+        }
 
-           }
-
-           .nav-item #eighth-link {
-               background-color: #383838;
-           }
+        .nav-item #eighth-link {
+           background-color: #383838;
+        }
     </style>
 </head>
 <body>
-<!-- Include a navigation bar using Thymeleaf fragment replacement -->
-<div th:replace="common/admin_navbar :: #navbar"></div>
-<div class="container-fluid">
-    <div class="row">
-        <div th:replace="common/admin_sidebar :: #navbar"></div>
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <div style="margin-top: 50px;">
-<div th:if="${param.success}">
-    <div class="alert alert-info">Loan has been successfully updated!</div>
-</div>
-    <h2 class="text-center">Update Loan</h2>
-
-<div class="update-container">
-    <div>
-        <form method="post" role="form" enctype="multipart/form-data" th:action="@{'/adminportal/updateloans/' + ${loan.loan_id} + '/save'}" th:object="${loan}">
-            <input type="hidden" name="_method" value="put" />
-            <div class="form-group">
-                <label for="loanId">Loan Id:</label>
-                <input type="text" class="form-control" id="loanId" th:value="${loan.loan_id}" th:name="loanId" readonly>
-            </div>
-            <div class="form-group mb-3">
-                <label for="memberId">Member Id / Name:</label>
-                <select class="form-control" id="memberId" name="memberId">
-                    <option th:each="member : ${allMembers}" th:value="${member.member_id}" th:text="${member.member_id + ', ' + member.firstName + ' ' + member.lastName}"
-                            th:selected="${member.member_id == loan.member.member_id}"></option>
-                </select>
-            </div>
-            <div class="form-group mb-3">
-                <label for="bookId">Book Id / Title:</label>
-                <select class="form-control" id="bookId" name="bookId">
-                    <option th:each="book : ${allBooks}" th:value="${book.book_id}" th:text="${book.book_id + ', ' + book.title}"
-                            th:selected="${book.book_id == loan.book.book_id}"></option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="loanDateTIme">Loan Date/Time:</label>
-                <input type="datetime-local" class="form-control" id="loanDateTIme" th:value="${loan.loanDateTime}" th:name="loanDateTime" >
-            </div>
-            <div class="form-group">
-                <label for="dueDateTIme">Due Date/Time:</label>
-                <input type="datetime-local" class="form-control" id="dueDateTIme" th:value="${loan.dueDateTime}" th:name="dueDateTime" >
-            </div>
-            <div class="form-group">
-                <label for="returnedDateTIme">Returned Date/Time:</label>
-                <input type="datetime-local" class="form-control" id="returnedDateTIme" th:value="${loan.returnedDateTime}" th:name="returnedDateTime" >
-            </div>
-            <div class="form-group">
-                <label for="status">Status:</label>
-                <select class="form-control" id="status" th:field="*{status}">
-                    <option value="RETURNED" th:text="RETURNED" th:selected="${loan.status == 'RETURNED'}">Returned</option>
-                    <option value="ACTIVE" th:text="ACTIVE" th:selected="${loan.status == 'ACTIVE'}">Active</option>
-                    <option value="OVERDUE" th:text="OVERDUE" th:selected="${loan.status == 'OVERDUE'}">Overdue</option>
-                </select>
-            </div>
-
-
-            <button class="btn btn-primary" type="submit">Save Changes</button>
-            <a class="btn btn-primary" th:href="@{'/adminportal/manageloans'}">Back</a>
-        </form>
+    <!-- Include a navigation bar -->
+    <div th:replace="common/admin_navbar :: #navbar"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Include a side bar -->
+            <div th:replace="common/admin_sidebar :: #navbar"></div>
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div style="margin-top: 50px;">
+                    <div th:if="${param.success}">
+                        <div class="alert alert-info">Loan has been successfully updated!</div>
+                    </div>
+                     <h2 class="text-center">Update Loan</h2>
+                    <div class="update-container">
+                        <div>
+                            <!-- form to takes in changes made to loan to be updated -->
+                            <form method="post" role="form" enctype="multipart/form-data" th:action="@{'/adminportal/updateloans/' + ${loan.loan_id} + '/save'}" th:object="${loan}">
+                                <input type="hidden" name="_method" value="put" />
+                                <div class="form-group">
+                                    <label for="loanId">Loan Id:</label>
+                                    <input type="text" class="form-control" id="loanId" th:value="${loan.loan_id}" th:name="loanId" readonly>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="memberId">Member Id / Name:</label>
+                                    <select class="form-control" id="memberId" name="memberId">
+                                        <option th:each="member : ${allMembers}" th:value="${member.member_id}" th:text="${member.member_id + ', ' + member.firstName + ' ' + member.lastName}"
+                                                th:selected="${member.member_id == loan.member.member_id}"></option>
+                                    </select>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="bookId">Book Id / Title:</label>
+                                    <select class="form-control" id="bookId" name="bookId">
+                                        <option th:each="book : ${allBooks}" th:value="${book.book_id}" th:text="${book.book_id + ', ' + book.title}"
+                                                th:selected="${book.book_id == loan.book.book_id}"></option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="loanDateTIme">Loan Date/Time:</label>
+                                    <input type="datetime-local" class="form-control" id="loanDateTIme" th:value="${loan.loanDateTime}" th:name="loanDateTime" >
+                                </div>
+                                <div class="form-group">
+                                    <label for="dueDateTIme">Due Date/Time:</label>
+                                    <input type="datetime-local" class="form-control" id="dueDateTIme" th:value="${loan.dueDateTime}" th:name="dueDateTime" >
+                                </div>
+                                <div class="form-group">
+                                    <label for="returnedDateTIme">Returned Date/Time:</label>
+                                    <input type="datetime-local" class="form-control" id="returnedDateTIme" th:value="${loan.returnedDateTime}" th:name="returnedDateTime" >
+                                </div>
+                                <div class="form-group">
+                                    <label for="status">Status:</label>
+                                    <select class="form-control" id="status" th:field="*{status}">
+                                        <option value="RETURNED" th:text="RETURNED" th:selected="${loan.status == 'RETURNED'}">Returned</option>
+                                        <option value="ACTIVE" th:text="ACTIVE" th:selected="${loan.status == 'ACTIVE'}">Active</option>
+                                        <option value="OVERDUE" th:text="OVERDUE" th:selected="${loan.status == 'OVERDUE'}">Overdue</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-primary" type="submit">Save Changes</button>
+                                <a class="btn btn-primary" th:href="@{'/adminportal/manageloans'}">Back</a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
     </div>
-
-</div>
-</body>
-</html>
+    </body>
+    </html>
