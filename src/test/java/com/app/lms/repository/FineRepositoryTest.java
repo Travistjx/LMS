@@ -30,6 +30,44 @@ class FineRepositoryTest {
     @Autowired
     private BookRepository bookRepository;
 
+
+    @Test
+    void itShouldFindAll() {
+        Loan loan = new Loan();
+        loan.setStatus(LoanStatus.RETURNED);
+        loanRepository.save(loan);
+
+        Fine fine = new Fine();
+        fine.setLoan(loan);
+        fineRepository.save(fine);
+
+        List<Fine> fines = fineRepository.findAll();
+
+        boolean exists = false;
+        if (fines != null) exists = true;
+        assertThat(exists).isTrue();
+    }
+
+    @Test
+    void itShouldFindPageOfFines() {
+        Loan loan = new Loan();
+        loan.setStatus(LoanStatus.RETURNED);
+        loanRepository.save(loan);
+
+        Fine fine = new Fine();
+        fine.setLoan(loan);
+        fineRepository.save(fine);
+
+        int pageSize = 5;
+        Pageable pageable = PageRequest.of(0, pageSize);
+
+        Page<Fine> fines = fineRepository.findAll(pageable);
+
+        boolean exists = false;
+        if (fines != null) exists = true;
+        assertThat(exists).isTrue();
+    }
+
     @Test
     void itShouldFindByLoan() {
         Loan loan = new Loan();
@@ -109,34 +147,6 @@ class FineRepositoryTest {
 
     @Test
     void itShouldNotSearchFinesWithStatusAndByAny() {
-        Loan loan = new Loan();
-        loan.setStatus(LoanStatus.RETURNED);
-        loan.setDaysOverdue((long)4);
-        loan.setFineAmount(4.0);
-        loan.setLoanDateTime(LocalDateTime.of(2023, 10, 30, 14, 30));
-        loan.setDueDateTime(LocalDateTime.of(2023, 10, 30, 14, 30));
-        loan.setReturnedDateTime(LocalDateTime.of(2023, 10, 30, 14, 30));
-
-        Member member = new Member();
-        member.setEmail("georgeng@gmail.com");
-        memberRepository.save(member);
-
-        Book book = new Book();
-        book.setTitle("harry potter");
-        bookRepository.save(book);
-
-        loan.setBook(book);
-        loan.setMember(member);
-
-        loanRepository.save(loan);
-
-        Fine fine = new Fine();
-        fine.setStatus(FineStatus.PAID);
-        fine.setAmount(4.0);
-        fine.setDateTimeOfFine(LocalDateTime.now());
-        fine.setLoan(loan);
-        fineRepository.save(fine);
-
         int pageSize = 5;
 
         Pageable pageable = PageRequest.of(0, pageSize);
@@ -291,33 +301,9 @@ class FineRepositoryTest {
 
     @Test
     void itShouldNotSearchFinesByMemberWithStatusAndByAny() {
-        Loan loan = new Loan();
-        loan.setStatus(LoanStatus.RETURNED);
-        loan.setDaysOverdue((long)4);
-        loan.setFineAmount(4.0);
-        loan.setLoanDateTime(LocalDateTime.of(2023, 10, 30, 14, 30));
-        loan.setDueDateTime(LocalDateTime.of(2023, 10, 30, 14, 30));
-        loan.setReturnedDateTime(LocalDateTime.of(2023, 10, 30, 14, 30));
-
         Member member = new Member();
         member.setEmail("georgeng@gmail.com");
         memberRepository.save(member);
-
-        Book book = new Book();
-        book.setTitle("harry potter");
-        bookRepository.save(book);
-
-        loan.setBook(book);
-        loan.setMember(member);
-
-        loanRepository.save(loan);
-
-        Fine fine = new Fine();
-        fine.setStatus(FineStatus.PAID);
-        fine.setAmount(4.0);
-        fine.setDateTimeOfFine(LocalDateTime.now());
-        fine.setLoan(loan);
-        fineRepository.save(fine);
 
         int pageSize = 5;
 

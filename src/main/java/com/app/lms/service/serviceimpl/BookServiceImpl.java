@@ -37,6 +37,7 @@ public class BookServiceImpl implements BookService {
         book.setDescription(bookDto.getDescription());
         book.setPublication_year(bookDto.getPublication_year()); // Use correct property name
         book.setCategory(bookDto.getCategory());
+        book.setDeleted(false);
 
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
 
@@ -162,11 +163,10 @@ public class BookServiceImpl implements BookService {
         Book bookToDelete = bookRepository.findById(id).orElse(null);
 
         if (bookToDelete != null) {
-            // Remove the roles from the member
-            bookToDelete.setAuthors(Collections.emptyList());
 
             // Delete the member
-            bookRepository.delete(bookToDelete);
+            bookToDelete.setDeleted(true);
+            bookRepository.save(bookToDelete);
         }
     }
 

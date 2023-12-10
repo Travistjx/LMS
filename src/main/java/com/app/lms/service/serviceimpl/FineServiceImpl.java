@@ -80,6 +80,7 @@ public class FineServiceImpl implements FineService {
                 newFine.setAmount(fineAmount);
                 newFine.setDateTimeOfFine(today);
                 newFine.setStatus(FineStatus.UNPAID);
+                newFine.setDeleted(false);
 
                 fineRepository.save(newFine);
             }
@@ -247,7 +248,8 @@ public class FineServiceImpl implements FineService {
 
         if (fineToDelete != null) {
             // Delete the loan
-            fineRepository.delete(fineToDelete);
+            fineToDelete.setDeleted(true);
+            fineRepository.save(fineToDelete);
         }
     }
 

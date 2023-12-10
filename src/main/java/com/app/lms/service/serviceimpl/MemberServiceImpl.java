@@ -45,6 +45,7 @@ public class MemberServiceImpl implements MemberService {
         member.setBirthday(memberDto.getBirthday());
         member.setPostalCode(memberDto.getPostalCode());
         member.setLibraryCard(memberDto.getLibraryCard());
+        member.setDeleted(false);
 
         //encrypt the password once we integrate spring security
         //user.setPassword(userDto.getPassword());
@@ -180,6 +181,9 @@ public class MemberServiceImpl implements MemberService {
 
             }
 
+            if (member.getPassword() != null && !member.getPassword().isEmpty()) {
+                existingMember.setPassword(passwordEncoder.encode(member.getPassword()));
+            }
             existingMember.setRoles(listRole);
             existingMember.setFirstName(member.getFirstName());
             existingMember.setLastName(member.getLastName());
@@ -187,8 +191,8 @@ public class MemberServiceImpl implements MemberService {
             existingMember.setLibraryCard(member.getLibraryCard());
             existingMember.setGender(member.getGender());
             existingMember.setBirthday(member.getBirthday());
-            existingMember.setAddressOne(member.getAddressOne());
             existingMember.setAddressOne(member.getAddressTwo());
+            existingMember.setAddressOne(member.getAddressOne());
             existingMember.setPostalCode(member.getPostalCode());
 
             memberRepository.save(existingMember);
@@ -201,11 +205,8 @@ public class MemberServiceImpl implements MemberService {
         Member memberToDelete = memberRepository.findById(id).orElse(null);
 
         if (memberToDelete != null) {
-            // Remove the roles from the member
-            memberToDelete.setRoles(Collections.emptyList());
-
-            // Delete the member
-            memberRepository.delete(memberToDelete);
+            memberToDelete.setDeleted(true);
+            memberRepository.save( memberToDelete);
         }
     }
 

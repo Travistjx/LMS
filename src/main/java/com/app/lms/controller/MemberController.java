@@ -160,7 +160,7 @@ public class MemberController {
         model.addAttribute("searchBy", searchBy);
         model.addAttribute("sort", sort);
         model.addAttribute("order", order);
-        return "loanhistory";
+        return "loanHistory";
     }
 
 

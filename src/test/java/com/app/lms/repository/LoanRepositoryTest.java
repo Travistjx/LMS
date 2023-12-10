@@ -27,6 +27,34 @@ class LoanRepositoryTest {
     private BookRepository bookRepository;
 
     @Test
+    void itShouldFindAll() {
+        Loan loan = new Loan();
+        loan.setStatus(LoanStatus.RETURNED);
+        loanRepository.save(loan);
+
+        List<Loan> loans = loanRepository.findAll();
+
+        boolean exists = false;
+        if (loans != null) exists = true;
+        assertThat(exists).isTrue();
+    }
+
+    @Test
+    void itShouldFindPageOfLoans() {
+        Loan loan = new Loan();
+        loan.setStatus(LoanStatus.RETURNED);
+        loanRepository.save(loan);
+
+        int pageSize = 5;
+        Pageable pageable = PageRequest.of(0, pageSize);
+
+        Page<Loan> loans = loanRepository.findAll(pageable);
+
+        boolean exists = false;
+        if (loans != null) exists = true;
+        assertThat(exists).isTrue();
+    }
+    @Test
     void itShouldFindAllLoansByStatus() {
         Loan loan = new Loan();
         loan.setStatus(LoanStatus.RETURNED);

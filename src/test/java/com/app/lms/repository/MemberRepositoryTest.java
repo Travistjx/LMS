@@ -1,8 +1,6 @@
 package com.app.lms.repository;
 
-import com.app.lms.entity.BookStatus;
-import com.app.lms.entity.Member;
-import com.app.lms.entity.Role;
+import com.app.lms.entity.*;
 import com.app.lms.web.BookDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +13,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -24,6 +23,50 @@ class MemberRepositoryTest {
     @Autowired
     private MemberRepository memberRepository;
 
+    @Test
+    void itShouldFindAll() {
+        Member member = new Member();
+        member.setEmail("georgeng@gmail.com");
+
+        member.setFirstName("george");
+        member.setLastName("ng");
+        member.setPassword("123");
+
+        Role role = new Role();
+        role.setName("ROLE_MEMBER");
+        member.setRoles(Arrays.asList(role));
+        memberRepository.save(member);
+
+        List<Member> members = memberRepository.findAll();
+
+        boolean exists = false;
+        if (members != null) exists = true;
+        assertThat(exists).isTrue();
+    }
+
+    @Test
+    void itShouldFindPageOfMembers() {
+        Member member = new Member();
+        member.setEmail("georgeng@gmail.com");
+
+        member.setFirstName("george");
+        member.setLastName("ng");
+        member.setPassword("123");
+
+        Role role = new Role();
+        role.setName("ROLE_MEMBER");
+        member.setRoles(Arrays.asList(role));
+        memberRepository.save(member);
+
+        int pageSize = 5;
+        Pageable pageable = PageRequest.of(0, pageSize);
+
+        Page<Member> members = memberRepository.findAll(pageable);
+
+        boolean exists = false;
+        if (members != null) exists = true;
+        assertThat(exists).isTrue();
+    }
     @Test
     void itShouldCheckIfMemberExistsByEmail() {
 

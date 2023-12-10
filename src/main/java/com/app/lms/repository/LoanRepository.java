@@ -16,12 +16,24 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface LoanRepository extends JpaRepository<Loan, Long> {
+
+    @Query("SELECT l FROM Loan l WHERE l.deleted IS NULL OR l.deleted = false")
     List<Loan> findAllByStatus(LoanStatus status);
+    @Query("SELECT l FROM Loan l WHERE l.deleted IS NULL OR l.deleted = false")
     List <Loan> findAllByStatusAndMember(LoanStatus status, Member member);
+
+    @Query("SELECT l FROM Loan l WHERE l.deleted IS NULL OR l.deleted = false")
     List<Loan> findOverdueLoansByDueDateTimeBefore(LocalDateTime today);
+
+    @Query("SELECT l FROM Loan l WHERE l.deleted IS NULL OR l.deleted = false")
+    List<Loan> findAll();
+
+    @Query("SELECT l FROM Loan l WHERE l.deleted = false")
+    Page<Loan> findAll(Pageable pageable);
 
     @Query("SELECT l FROM Loan l " +
             "WHERE " +
+            "l.deleted = false AND " +
             "((:searchBy = 'loanId' AND l.loan_id LIKE %:query%) OR " +
             "(:searchBy = 'loanDateTime' AND l.loanDateTime LIKE %:query%) OR " +
             "(:searchBy = 'dueDateTime' AND l.dueDateTime LIKE %:query%) OR " +
@@ -40,7 +52,8 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
                                                   Pageable pageable);
 
     @Query("SELECT l FROM Loan l " +
-            "WHERE (l.loan_id LIKE %:query% OR " +
+            "WHERE l.deleted = false AND " +
+            "(l.loan_id LIKE %:query% OR " +
             "l.loanDateTime LIKE %:query% OR " +
             "l.dueDateTime LIKE %:query% OR " +
             "(l.returnedDateTime IS NOT NULL AND l.returnedDateTime LIKE %:query%) OR " +
@@ -57,7 +70,8 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
                                             Pageable pageable);
 
     @Query("SELECT l FROM Loan l " +
-            "WHERE (l.loan_id LIKE %:query% OR " +
+            "WHERE l.deleted = false AND " +
+            "(l.loan_id LIKE %:query% OR " +
             "l.loanDateTime LIKE %:query% OR " +
             "l.dueDateTime LIKE %:query% OR " +
             "(l.returnedDateTime IS NOT NULL AND l.returnedDateTime LIKE %:query%) OR " +
@@ -75,7 +89,7 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
                                    Pageable pageable);
 
     @Query("SELECT l FROM Loan l " +
-            "WHERE " +
+            "WHERE l.deleted = false AND " +
             "((:searchBy = 'loanId' AND l.loan_id LIKE %:query%) OR " +
             "(:searchBy = 'loanDateTime' AND l.loanDateTime LIKE %:query%) OR " +
             "(:searchBy = 'dueDateTime' AND l.dueDateTime LIKE %:query%) OR " +
@@ -93,7 +107,8 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
                                                     Pageable pageable);
 
     @Query("SELECT l FROM Loan l " +
-            "WHERE (l.loan_id LIKE %:query% OR " +
+            "WHERE l.deleted = false AND " +
+            "(l.loan_id LIKE %:query% OR " +
             "l.loanDateTime LIKE %:query% OR " +
             "l.dueDateTime LIKE %:query% OR " +
             "(l.returnedDateTime IS NOT NULL AND l.returnedDateTime LIKE %:query%) OR " +
@@ -110,7 +125,7 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
                                  Pageable pageable);
 
     @Query("SELECT l FROM Loan l " +
-            "WHERE " +
+            "WHERE l.deleted = false AND " +
             "((:searchBy = 'loanId' AND l.loan_id LIKE %:query%) OR " +
             "(:searchBy = 'loanDateTime' AND l.loanDateTime LIKE %:query%) OR " +
             "(:searchBy = 'dueDateTime' AND l.dueDateTime LIKE %:query%) OR " +
@@ -128,7 +143,10 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
                                               @Param("searchBy") String searchBy,
                                               Pageable pageable);
 
+    @Query("SELECT l FROM Loan l WHERE l.deleted = false")
     Page<Loan> findAllByMember(Member member, Pageable pageable);
+
+    @Query("SELECT l FROM Loan l WHERE l.deleted = false")
     Page<Loan> findAllByBook(Book book, Pageable pageable);
 }
 

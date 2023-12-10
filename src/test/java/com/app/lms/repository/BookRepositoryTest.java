@@ -1,9 +1,6 @@
 package com.app.lms.repository;
 
-import com.app.lms.entity.Author;
-import com.app.lms.entity.Book;
-import com.app.lms.entity.BookStatus;
-import com.app.lms.entity.Member;
+import com.app.lms.entity.*;
 import com.app.lms.service.BookService;
 import com.app.lms.web.BookDto;
 import org.assertj.core.util.Arrays;
@@ -18,6 +15,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,6 +25,59 @@ class BookRepositoryTest {
 
     @Autowired
     private BookRepository bookRepository;
+
+    @Test
+    void itShouldFindAll() {
+        Book book = new Book();
+        book.setTitle("Magical creatures and their majestic ways");
+        book.setCategory("Thriller");
+        book.setDescription("Set in the 19th century, Harry and his friend");
+        book.setPublication_year("1994");
+        book.setImage("img.jpg");
+        book.setStatus(BookStatus.AVAILABLE);
+
+        Author author = new Author();
+        author.setFirstName("Harry");
+        author.setLastName("Potter");
+        Collection<Author> authorList = new ArrayList<>();
+        authorList.add(author);
+        book.setAuthors(authorList);
+        bookRepository.save(book);
+
+        List<Book> books = bookRepository.findAll();
+
+        boolean exists = false;
+        if (books != null) exists = true;
+        assertThat(exists).isTrue();
+    }
+
+    @Test
+    void itShouldFindPageOfBooks() {
+        Book book = new Book();
+        book.setTitle("Magical creatures and their majestic ways");
+        book.setCategory("Thriller");
+        book.setDescription("Set in the 19th century, Harry and his friend");
+        book.setPublication_year("1994");
+        book.setImage("img.jpg");
+        book.setStatus(BookStatus.AVAILABLE);
+
+        Author author = new Author();
+        author.setFirstName("Harry");
+        author.setLastName("Potter");
+        Collection<Author> authorList = new ArrayList<>();
+        authorList.add(author);
+        book.setAuthors(authorList);
+        bookRepository.save(book);
+
+        int pageSize = 5;
+        Pageable pageable = PageRequest.of(0, pageSize);
+
+        Page<Book> books = bookRepository.findAll(pageable);
+
+        boolean exists = false;
+        if (books != null) exists = true;
+        assertThat(exists).isTrue();
+    }
 
     @Test
     void itShouldCheckIfBookExistsByTitle() {
