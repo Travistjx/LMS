@@ -3,7 +3,9 @@ ADMIN
 - Manage Loans (Update, View, Delete, Search)
 - Manage Fines (Update, View, Delete, Search)
 - Manage Books (Add, View, Update, Delete, Search)
-- Manage Payments (View, Update, Delete, Search)
+- Manage Payments (View, Search)
+- Account Loan History (View, Search, Delete, Update)
+- Book Loan History (View, Search, Delete, Update)
 - Issue Books
 - Return Books
 - Account Settings
@@ -11,14 +13,10 @@ ADMIN
 - LOG OUT
 
 LIBRARY PATRONS
-- View Books
-- Search Books
-- View Loans
-- Search Loans
-- View Fines
-- Search Fines
-- View Payment
-- Search Payment
+- Books (View, Search)
+- Loans (View, Search)
+- Fines (View, Search)
+- Payment (View, Search)
 - Make Payment
 - Account Settings
 - LOG IN
