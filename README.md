@@ -2,6 +2,7 @@
 <li><a href = "#about">About</a></li>
 <li><a href = "#project-status">Project Status</a></li>
 <li><a href = "#documentation">Documentation</a></li>
+<li><a href = "#test">Test</a></li>
 <li><a href = "#installation--setup">Installation</a></li>
 <li><a href = "#reflection">Reflection</a></li>
 
@@ -15,7 +16,7 @@ This project is currently in development.
 <a href = "https://github.com/Travistjx/LMS/blob/main/Documentation/User%20Manual.pdf">User Manual</a> <br/>
 <a href = "https://github.com/Travistjx/LMS/blob/main/Documentation/User%20Requirements">User Requirements</a>
 
-# Tests
+# Test
 <a href = "https://github.com/Travistjx/LMS/tree/main/Tests">Tests for website</a>
 
 # INSTALLATION / SETUP
