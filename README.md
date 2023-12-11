@@ -15,6 +15,9 @@ This project is currently in development.
 <a href = "https://github.com/Travistjx/LMS/blob/main/Documentation/User%20Manual.pdf">User Manual</a> <br/>
 <a href = "https://github.com/Travistjx/LMS/blob/main/Documentation/User%20Requirements">User Requirements</a>
 
+# Tests
+<a href = "https://github.com/Travistjx/LMS/tree/main/Tests">Tests for website</a>
+
 # INSTALLATION / SETUP
 
 
