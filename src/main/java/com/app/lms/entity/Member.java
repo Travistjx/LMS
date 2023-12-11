@@ -42,8 +42,6 @@
 
         private String postalCode;
 
-        private String libraryCard;
-
         private boolean deleted;
 
         @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

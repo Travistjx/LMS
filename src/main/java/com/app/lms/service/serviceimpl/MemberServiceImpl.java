@@ -44,7 +44,6 @@ public class MemberServiceImpl implements MemberService {
         member.setAddressTwo(memberDto.getAddressTwo());
         member.setBirthday(memberDto.getBirthday());
         member.setPostalCode(memberDto.getPostalCode());
-        member.setLibraryCard(memberDto.getLibraryCard());
         member.setDeleted(false);
 
         //encrypt the password once we integrate spring security
@@ -188,7 +187,6 @@ public class MemberServiceImpl implements MemberService {
             existingMember.setFirstName(member.getFirstName());
             existingMember.setLastName(member.getLastName());
             existingMember.setEmail(member.getEmail());
-            existingMember.setLibraryCard(member.getLibraryCard());
             existingMember.setGender(member.getGender());
             existingMember.setBirthday(member.getBirthday());
             existingMember.setAddressOne(member.getAddressTwo());
@@ -285,7 +283,6 @@ public class MemberServiceImpl implements MemberService {
         memberDto.setMember_id(member.getMember_id());
         memberDto.setGender(member.getGender());
         memberDto.setBirthday(member.getBirthday());
-        memberDto.setLibraryCard(member.getLibraryCard());
         memberDto.setAddressOne(member.getAddressOne());
         memberDto.setAddressTwo(member.getAddressTwo());
         memberDto.setPostalCode(member.getPostalCode());

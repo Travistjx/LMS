@@ -75,8 +75,9 @@ public interface FineRepository extends JpaRepository<Fine, Long> {
                                                       Pageable pageable);
 
     //Find all by the member attribute, that's part of the loan attribute in Loan (Fine.loan.member)
-    @Query("SELECT l FROM Fine l WHERE l.deleted IS NULL OR l.deleted = false")
-    Page<Fine> findAllByLoan_Member(Member member, Pageable pageable);
+    @Query("SELECT f FROM Fine f JOIN f.loan l JOIN l.member m WHERE m = :member AND (l.deleted IS NULL OR l.deleted = false)")
+    Page<Fine> findAllByLoan_Member(@Param("member") Member member, Pageable pageable);
+
 
     @Query("SELECT l FROM Fine l WHERE l.deleted IS NULL OR l.deleted = false")
     List<Fine> findAll();

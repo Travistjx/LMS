@@ -143,10 +143,11 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
                                               @Param("searchBy") String searchBy,
                                               Pageable pageable);
 
-    @Query("SELECT l FROM Loan l WHERE l.deleted = false")
-    Page<Loan> findAllByMember(Member member, Pageable pageable);
+    @Query("SELECT l FROM Loan l WHERE l.member = :member AND l.deleted = false")
+    Page<Loan> findAllByMember(@Param("member") Member member, Pageable pageable);
 
-    @Query("SELECT l FROM Loan l WHERE l.deleted = false")
-    Page<Loan> findAllByBook(Book book, Pageable pageable);
+
+    @Query("SELECT l FROM Loan l WHERE l.book = :book AND l.deleted = false")
+    Page<Loan> findAllByBook(@Param("book") Book book, Pageable pageable);
 }
 

@@ -358,6 +358,18 @@ public class AdminController {
         return "redirect:/adminportal/manageloans?success";
     }
 
+    @DeleteMapping("/manageaccounts/loanhistory/{id}")
+    public String deleteLoansFromAccount(@PathVariable(value = "id") Long id) {
+        loanService.deleteLoans(id);
+        return "redirect:/adminportal/manageaccounts/loanhistory?memberId={id}&success";
+    }
+
+    @DeleteMapping("/managebooks/loanhistory/{id}")
+    public String deleteLoansFromBook(@PathVariable(value = "id") Long id) {
+        loanService.deleteLoans(id);
+        return "redirect:/adminportal/managebooks/loanhistory?bookId={id}&success";
+    }
+
     // Direct to update loans page based on Loan Id
     @GetMapping("/updateloans")
     public String showUpdateLoansForm(@RequestParam(name = "loanId") Long id,
@@ -621,7 +633,7 @@ public class AdminController {
     public String updateEmail (@ModelAttribute("member") MemberDto memberDto, Principal principal){
         String username = principal.getName();
         memberService.updateEmail(memberDto, username);
-        return "redirect:/logout";
+        return "redirect:/logout?emailUpdated";
     }
 
     // Retrieve the update gender page
