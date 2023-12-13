@@ -6,23 +6,18 @@ import com.app.lms.entity.Role;
 import com.app.lms.repository.MemberRepository;
 import com.app.lms.repository.RoleRepository;
 import com.app.lms.web.MemberDto;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -53,7 +48,6 @@ class MemberServiceImplTest {
     void canSaveUser() {
         MemberDto member = new MemberDto();
         member.setEmail("georgeng@gmail.com");
-
         member.setFirstName("george");
         member.setLastName("ng");
         member.setPassword("123");
@@ -264,10 +258,10 @@ class MemberServiceImplTest {
 
         memberService.deleteMembers(member.getMember_id());
         ArgumentCaptor<Member> memberArgumentCaptor = ArgumentCaptor.forClass(Member.class);
-        verify(memberRepository).delete(memberArgumentCaptor.capture());
+        verify(memberRepository).save(memberArgumentCaptor.capture());
         Member capturedMember = memberArgumentCaptor.getValue();
 
-        assertThat(capturedMember).isEqualTo(member);
+        assertThat(capturedMember.isDeleted()).isEqualTo(true);
     }
 
     //generate a page of members that fit the search criteria

@@ -72,7 +72,7 @@
     <!-- navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark" id="navbar" style="background-color: #272727;">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#" style="font-size: 24px; padding-left: 20px;"><b>LMS</b></a >
+            <a class="navbar-brand" href="/" style="font-size: 24px; padding-left: 20px;"><b>LMS</b></a >
             <!-- Add the navbar-toggler button -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -88,6 +88,11 @@
             </div>
         </div>
     </nav>
+    <div th:if="${param.error}">
+        <div class="alert alert-info">
+            No such account has been found!
+        </div>
+    </div>
     <div class="container">
         <div class="row">
             <div class = "top-display">

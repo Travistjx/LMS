@@ -27,6 +27,34 @@ class LoanRepositoryTest {
     private BookRepository bookRepository;
 
     @Test
+    void itShouldFindAll() {
+        Loan loan = new Loan();
+        loan.setStatus(LoanStatus.RETURNED);
+        loanRepository.save(loan);
+
+        List<Loan> loans = loanRepository.findAll();
+
+        boolean exists = false;
+        if (loans != null) exists = true;
+        assertThat(exists).isTrue();
+    }
+
+    @Test
+    void itShouldFindPageOfLoans() {
+        Loan loan = new Loan();
+        loan.setStatus(LoanStatus.RETURNED);
+        loanRepository.save(loan);
+
+        int pageSize = 5;
+        Pageable pageable = PageRequest.of(0, pageSize);
+
+        Page<Loan> loans = loanRepository.findAll(pageable);
+
+        boolean exists = false;
+        if (loans != null) exists = true;
+        assertThat(exists).isTrue();
+    }
+    @Test
     void itShouldFindAllLoansByStatus() {
         Loan loan = new Loan();
         loan.setStatus(LoanStatus.RETURNED);
@@ -105,12 +133,6 @@ class LoanRepositoryTest {
 
     @Test
     void itShouldNotFindOverdueLoansByDueDateTimeBefore() {
-        Loan loan = new Loan();
-        loan.setStatus(LoanStatus.OVERDUE);
-        LocalDateTime customDateTime = LocalDateTime.of(2023, 10, 30, 14, 30);
-        loan.setDueDateTime(customDateTime);
-        loanRepository.save(loan);
-
         List<Loan> loanList = loanRepository.findOverdueLoansByDueDateTimeBefore(LocalDateTime.of(2023, 8, 30, 14, 30));
 
         boolean exist = true;

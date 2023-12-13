@@ -3,7 +3,6 @@ package com.app.lms.controller;
 import com.app.lms.entity.FineStatus;
 import com.app.lms.entity.IdType;
 import com.app.lms.entity.LoanStatus;
-import com.app.lms.entity.Member;
 import com.app.lms.service.*;
 import com.app.lms.web.*;
 import org.springframework.data.domain.Page;
@@ -160,7 +159,7 @@ public class MemberController {
         model.addAttribute("searchBy", searchBy);
         model.addAttribute("sort", sort);
         model.addAttribute("order", order);
-        return "loanhistory";
+        return "loanHistory";
     }
 
 

@@ -200,8 +200,11 @@ class LoanServiceImplTest {
 
         loanService.deleteLoans((long)1);
 
-        verify(loanRepository).delete(loan);
+        ArgumentCaptor <Loan> loanArgumentCaptor = ArgumentCaptor.forClass(Loan.class);
+        verify(loanRepository).save(loanArgumentCaptor.capture());
+        Loan capturedLoan = loanArgumentCaptor.getValue();
 
+        assertThat(capturedLoan .isDeleted()).isEqualTo(true);
     }
 
     @Test

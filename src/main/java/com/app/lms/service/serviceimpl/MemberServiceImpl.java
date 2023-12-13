@@ -4,16 +4,12 @@ import com.app.lms.entity.*;
 import com.app.lms.repository.RoleRepository;
 import com.app.lms.repository.MemberRepository;
 import com.app.lms.service.MemberService;
-import com.app.lms.web.AuthorDto;
-import com.app.lms.web.BookDto;
 import com.app.lms.web.MemberDto;
 import com.app.lms.web.RoleDto;
 import org.springframework.data.domain.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -44,7 +40,7 @@ public class MemberServiceImpl implements MemberService {
         member.setAddressTwo(memberDto.getAddressTwo());
         member.setBirthday(memberDto.getBirthday());
         member.setPostalCode(memberDto.getPostalCode());
-        member.setLibraryCard(memberDto.getLibraryCard());
+        member.setDeleted(false);
 
         //encrypt the password once we integrate spring security
         //user.setPassword(userDto.getPassword());
@@ -180,15 +176,17 @@ public class MemberServiceImpl implements MemberService {
 
             }
 
+            if (member.getPassword() != null && !member.getPassword().isEmpty()) {
+                existingMember.setPassword(passwordEncoder.encode(member.getPassword()));
+            }
             existingMember.setRoles(listRole);
             existingMember.setFirstName(member.getFirstName());
             existingMember.setLastName(member.getLastName());
             existingMember.setEmail(member.getEmail());
-            existingMember.setLibraryCard(member.getLibraryCard());
             existingMember.setGender(member.getGender());
             existingMember.setBirthday(member.getBirthday());
-            existingMember.setAddressOne(member.getAddressOne());
             existingMember.setAddressOne(member.getAddressTwo());
+            existingMember.setAddressOne(member.getAddressOne());
             existingMember.setPostalCode(member.getPostalCode());
 
             memberRepository.save(existingMember);
@@ -201,11 +199,8 @@ public class MemberServiceImpl implements MemberService {
         Member memberToDelete = memberRepository.findById(id).orElse(null);
 
         if (memberToDelete != null) {
-            // Remove the roles from the member
-            memberToDelete.setRoles(Collections.emptyList());
-
-            // Delete the member
-            memberRepository.delete(memberToDelete);
+            memberToDelete.setDeleted(true);
+            memberRepository.save( memberToDelete);
         }
     }
 
@@ -284,7 +279,6 @@ public class MemberServiceImpl implements MemberService {
         memberDto.setMember_id(member.getMember_id());
         memberDto.setGender(member.getGender());
         memberDto.setBirthday(member.getBirthday());
-        memberDto.setLibraryCard(member.getLibraryCard());
         memberDto.setAddressOne(member.getAddressOne());
         memberDto.setAddressTwo(member.getAddressTwo());
         memberDto.setPostalCode(member.getPostalCode());

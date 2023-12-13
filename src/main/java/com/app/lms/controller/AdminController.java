@@ -1,7 +1,6 @@
 package com.app.lms.controller;
 
 import com.app.lms.entity.BookStatus;
-import com.app.lms.entity.Member;
 import com.app.lms.service.*;
 import com.app.lms.entity.IdType;
 import com.app.lms.web.*;
@@ -67,7 +66,7 @@ public class AdminController {
         model.addAttribute("totalMembers", totalMembers);
         model.addAttribute("activeLoans", activeLoans);
         model.addAttribute("overdueLoans", overdueLoans);
-        return "adminportal";
+        return "adminPortal";
     }
 
     /*--------------BOOKS------------- */
@@ -77,7 +76,7 @@ public class AdminController {
     public String showAddBooksForm(Model model) {
         BookDto book = new BookDto();
         model.addAttribute("book", book);
-        return "addbooks";
+        return "addBooks";
     }
 
     // Retrieve Update Books page based on Book Id
@@ -93,9 +92,9 @@ public class AdminController {
                     .collect(Collectors.joining(", "));
             model.addAttribute("authors", authors);
         } else {
-            return "managebooks";
+            return "manageBooks";
         }
-        return "updatebooks";
+        return "updateBooks";
     }
 
     // Save (new) changes for book based on update
@@ -155,7 +154,7 @@ public class AdminController {
         model.addAttribute("statusFilter", statusFilter);
         model.addAttribute("sort", sort);
         model.addAttribute("order", order);
-        return "managebooks";
+        return "manageBooks";
     }
 
 
@@ -166,7 +165,7 @@ public class AdminController {
     public String createAccount(Model model) {
         MemberDto member = new MemberDto();
         model.addAttribute("member", member);
-        return "createaccount";
+        return "createAccount";
     }
 
     // Handler method to handle create account form submit request
@@ -181,7 +180,7 @@ public class AdminController {
         }
         if (result.hasErrors()) {
             model.addAttribute("member", member);
-            return "createaccount";
+            return "createAccount";
         }
         memberService.saveUser(member);
         return "redirect:/adminportal/createaccount?success";
@@ -200,9 +199,9 @@ public class AdminController {
                     .collect(Collectors.joining(", "));
             model.addAttribute("roles", roles);
         } else {
-            return "manageaccounts";
+            return "manageAccounts";
         }
-        return "updateaccounts";
+        return "updateAccounts";
     }
 
     // Update/Save changes to account
@@ -251,7 +250,7 @@ public class AdminController {
         model.addAttribute("searchBy", searchBy);
         model.addAttribute("sort", sort);
         model.addAttribute("order", order);
-        return "manageaccounts";
+        return "manageAccounts";
     }
 
 
@@ -267,14 +266,14 @@ public class AdminController {
         model.addAttribute("loan", new LoanDto());
         model.addAttribute("allBooks", allBooks);
         model.addAttribute("allMembers", allMembers);
-        return "issuebooks";
+        return "issueBooks";
     }
 
     // Issue the books and save the loan in the database
     @PostMapping("/issuebooks/save")
     public String issueBook(@ModelAttribute("loan") LoanDto loan, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            return "issuebooks"; // Return to the form with errors
+            return "issueBooks"; // Return to the form with errors
         }
 
         loanService.issueBooks(loan);
@@ -291,7 +290,7 @@ public class AdminController {
         model.addAttribute("loan", new LoanDto());
         model.addAttribute("allBooks", allBooks);
         model.addAttribute("allMembers", allMembers);
-        return "returnbooks";
+        return "returnBooks";
     }
 
     // Retrieve any existing loan based on search (Book Id and Member Id)
@@ -348,7 +347,7 @@ public class AdminController {
         model.addAttribute("searchBy", searchBy);
         model.addAttribute("sort", sort);
         model.addAttribute("order", order);
-        return "manageloans";
+        return "manageLoans";
     }
 
     // Delete loans
@@ -356,6 +355,18 @@ public class AdminController {
     public String deleteLoans(@PathVariable(value = "id") Long id) {
         loanService.deleteLoans(id);
         return "redirect:/adminportal/manageloans?success";
+    }
+
+    @DeleteMapping("/manageaccounts/loanhistory/{id}")
+    public String deleteLoansFromAccount(@PathVariable(value = "id") Long id) {
+        loanService.deleteLoans(id);
+        return "redirect:/adminportal/manageaccounts/loanhistory?memberId={id}&success";
+    }
+
+    @DeleteMapping("/managebooks/loanhistory/{id}")
+    public String deleteLoansFromBook(@PathVariable(value = "id") Long id) {
+        loanService.deleteLoans(id);
+        return "redirect:/adminportal/managebooks/loanhistory?bookId={id}&success";
     }
 
     // Direct to update loans page based on Loan Id
@@ -375,9 +386,9 @@ public class AdminController {
             model.addAttribute("allMembers", allMembers);
 
         } else {
-            return "manageloans";
+            return "manageLoans";
         }
-        return "updateloans";
+        return "updateLoans";
     }
 
     // Update/Save the (new) changes to the loan
@@ -425,7 +436,7 @@ public class AdminController {
         model.addAttribute("searchBy", searchBy);
         model.addAttribute("sort", sort);
         model.addAttribute("order", order);
-        return "accountloanhistory";
+        return "accountLoanHistory";
     }
 
     // Retrieve the loan history based on Book Id
@@ -463,7 +474,7 @@ public class AdminController {
         model.addAttribute("book_id", id);
         model.addAttribute("sort", sort);
         model.addAttribute("order", order);
-        return "bookloanhistory";
+        return "bookLoanHistory";
     }
 
 
@@ -520,9 +531,9 @@ public class AdminController {
             model.addAttribute("allLoans", allLoans);
 
         } else {
-            return "managefines";
+            return "manageFines";
         }
-        return "updatefines";
+        return "updateFines";
     }
 
     // Update/Save the changes made to any fine
@@ -621,7 +632,7 @@ public class AdminController {
     public String updateEmail (@ModelAttribute("member") MemberDto memberDto, Principal principal){
         String username = principal.getName();
         memberService.updateEmail(memberDto, username);
-        return "redirect:/logout";
+        return "redirect:/logout?emailUpdated";
     }
 
     // Retrieve the update gender page

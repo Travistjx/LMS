@@ -12,8 +12,9 @@ import java.util.List;
 public interface FineRepository extends JpaRepository<Fine, Long> {
     List<Fine> findByLoan (Loan loan);
 
-    @Query("SELECTl FROM Fine l " +
-            "WHERE (l.loan.loan_id LIKE %:query% OR " +
+    @Query("SELECT l FROM Fine l " +
+            "WHERE l.deleted = false AND " +
+            "(l.loan.loan_id LIKE %:query% OR " +
             "l.fine_id LIKE %:query% OR " +
             "l.loan.member.firstName LIKE %:query% OR " +
             "l.loan.member.lastName LIKE %:query% OR " +
@@ -28,7 +29,7 @@ public interface FineRepository extends JpaRepository<Fine, Long> {
                                              Pageable pageable);
 
     @Query("SELECT l FROM Fine l " +
-            "WHERE " +
+            "WHERE l.deleted = false AND " +
             "((:searchBy = 'loanId' AND l.loan.loan_id LIKE %:query%) OR " +
             "(:searchBy = 'fineId' AND l.fine_id LIKE %:query%) OR " +
             "((:searchBy = 'name' AND l.loan.member.firstName LIKE %:query%) OR " +
@@ -44,7 +45,8 @@ public interface FineRepository extends JpaRepository<Fine, Long> {
                                               Pageable pageable);
 
     @Query("SELECT l FROM Fine l " +
-            "WHERE (l.loan.loan_id LIKE %:query% OR " +
+            "WHERE l.deleted = false AND " +
+            "(l.loan.loan_id LIKE %:query% OR " +
             "l.fine_id LIKE %:query% OR " +
             "l.loan.book.book_id LIKE %:query% OR " +
             "l.loan.book.title LIKE %:query% OR " +
@@ -52,12 +54,12 @@ public interface FineRepository extends JpaRepository<Fine, Long> {
             "(l.loan.member.member_id = :member_id) " +
             "AND (:statusFilter IS NULL OR l.status = :statusFilter)")
     Page<Fine> searchFinesByMemberWithStatusAndByAny(@Param("query") String query,
-                                             @Param("statusFilter") FineStatus statusFilter,
+                                                     @Param("statusFilter") FineStatus statusFilter,
                                                      @Param("member_id") Long member_id,
-                                             Pageable pageable);
+                                                     Pageable pageable);
 
     @Query("SELECT l FROM Fine l " +
-            "WHERE " +
+            "WHERE l.deleted = false AND " +
             "((:searchBy = 'loanId' AND l.loan.loan_id LIKE %:query%) OR " +
             "(:searchBy = 'fineId' AND l.fine_id LIKE %:query%) OR " +
             "(:searchBy = 'bookId' AND l.loan.book.book_id LIKE %:query%) OR " +
@@ -66,12 +68,19 @@ public interface FineRepository extends JpaRepository<Fine, Long> {
             "AND l.loan.member.member_id = :member_id " +
             "AND (:statusFilter IS NULL OR l.status = :statusFilter)")
     Page<Fine> searchFinesByMemberWithStatusAndNotAny(@Param("query") String query,
-                                              @Param("statusFilter") FineStatus statusFilter,
-                                              @Param("searchBy") String searchBy,
+                                                      @Param("statusFilter") FineStatus statusFilter,
+                                                      @Param("searchBy") String searchBy,
                                                       @Param("member_id") Long member_id,
-                                              Pageable pageable);
+                                                      Pageable pageable);
 
     //Find all by the member attribute, that's part of the loan attribute in Loan (Fine.loan.member)
-    Page<Fine> findAllByLoan_Member(Member member, Pageable pageable);
+    @Query("SELECT f FROM Fine f JOIN f.loan l JOIN l.member m WHERE m = :member AND (l.deleted IS NULL OR l.deleted = false)")
+    Page<Fine> findAllByLoan_Member(@Param("member") Member member, Pageable pageable);
 
+
+    @Query("SELECT l FROM Fine l WHERE l.deleted IS NULL OR l.deleted = false")
+    List<Fine> findAll();
+
+    @Query("SELECT l FROM Fine l WHERE l.deleted IS NULL OR l.deleted = false")
+    Page<Fine> findAll(Pageable pageable);
 }

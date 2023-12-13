@@ -11,6 +11,7 @@ import com.app.lms.service.MemberService;
 import com.app.lms.web.BookDto;
 import com.app.lms.web.LoanDto;
 import com.app.lms.web.MemberDto;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -48,6 +49,7 @@ public class LoanServiceImpl implements LoanService {
         selectedBook.setStatus(BookStatus.CHECKED_OUT);
         loan.setBook(selectedBook);
         loan.setMember(selectedMember);
+        loan.setDeleted(false);
         loan.setLoanDateTime(loanDto.getLoanDateTime());
         loan.setDueDateTime(loanDto.getDueDateTime());
         loan.setFineAmount(0.0);
@@ -246,13 +248,15 @@ public class LoanServiceImpl implements LoanService {
     }
 
     // Delete loan based on Loan Id
+    @Transactional
     @Override
     public void deleteLoans(Long id){
         Loan loanToDelete = loanRepository.findById(id).orElse(null);
 
         if (loanToDelete != null) {
             // Delete the loan
-            loanRepository.delete(loanToDelete);
+            loanToDelete.setDeleted(true);
+            loanRepository.save(loanToDelete);
         }
     }
 

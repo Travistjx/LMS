@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Return Books</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+    <style>
+        .nav-link:hover {
+           background-color: #2e2e2e;
+           color: white;
+        }
+
+        .nav-item a {
+           color: white;
+        }
+
+        .nav-item #seventh-link {
+           background-color: #383838;
+        }
+    </style>
+</head>
+<body>
+    <!-- include navigation bars -->
+    <div th:replace="common/admin_navbar :: #navbar"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Include a side bar -->
+            <div th:replace="common/admin_sidebar :: #navbar"></div>
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div style="margin-top: 50px;">
+                    <div class="container">
+                        <div class="row col-md-8 offset-md-2">
+                            <div>
+                                <div th:if="${param.success}">
+                                    <div class="alert alert-info">Book has been returned successfully!</div>
+                                </div>
+                                <h2 class="text-center">Return Books</h2>
+                                <div class="card-body">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label"><b>Search Existing Loans</b></label>
+                                        <form method="get" id="searchForm" th:object="${loan}">
+                                            <div class="row">
+                                                <div class="form-group mb-3">
+                                                    <select class="form-control" id="searchBookId" name="searchBookId">
+                                                        <option value="">-- Select a Book --</option>
+                                                        <option th:each="book : ${allBooks}" th:value="${book.book_id}" th:text="${book.title}"></option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <select class="form-control" id="searchMemberId" name="searchMemberId">
+                                                        <option value="">-- Select a Member --</option>
+                                                        <option th:each="member : ${allMembers}" th:value="${member.member_id}" th:text="${member.firstName + ' ' + member.lastName}"></option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <button class="btn btn-secondary" type="button" onclick="searchLoans()">Search</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="searchResults"></div>
+            </main>
+        </div>
+    </div>
+    <script>
+        function searchLoans() {
+            var bookId = document.getElementById("searchBookId").value;
+            var memberId = document.getElementById("searchMemberId").value;
+            console.log(bookId);
+            console.log(memberId);
+
+            // Perform an AJAX request to fetch existing loans
+            $.ajax({
+                url: "/adminportal/returnbooks/search",
+                type: "GET",
+                data: { searchBookId: bookId, searchMemberId: memberId },
+                success: function(data) {
+                    // Update the search results section with the fetched data
+                    $("#searchResults").html(data);
+                },
+                error: function() {
+                    alert("Error while searching for loans.");
+                }
+            });
+        }
+    </script>
+</body>
+</html>
