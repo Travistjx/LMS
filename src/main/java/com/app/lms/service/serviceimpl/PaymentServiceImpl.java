@@ -2,11 +2,9 @@ package com.app.lms.service.serviceimpl;
 
 import com.app.lms.entity.*;
 import com.app.lms.repository.FineRepository;
-import com.app.lms.repository.LoanRepository;
 import com.app.lms.repository.MemberRepository;
 import com.app.lms.repository.PaymentRepository;
 import com.app.lms.service.FineService;
-import com.app.lms.service.LoanService;
 import com.app.lms.service.MemberService;
 import com.app.lms.service.PaymentService;
 import com.app.lms.web.*;
@@ -15,7 +13,6 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;

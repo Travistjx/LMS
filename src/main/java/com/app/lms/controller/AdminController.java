@@ -1,7 +1,6 @@
 package com.app.lms.controller;
 
 import com.app.lms.entity.BookStatus;
-import com.app.lms.entity.Member;
 import com.app.lms.service.*;
 import com.app.lms.entity.IdType;
 import com.app.lms.web.*;

@@ -1,6 +1,5 @@
     package com.app.lms.entity;
 
-    import com.app.lms.web.RoleDto;
     import jakarta.persistence.*;
     import lombok.AllArgsConstructor;
     import lombok.Getter;
@@ -10,6 +9,7 @@
     import java.time.LocalDate;
     import java.util.Collection;
     import java.util.Iterator;
+
     @Getter
     @Setter
     @AllArgsConstructor

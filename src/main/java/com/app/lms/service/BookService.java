@@ -2,7 +2,6 @@ package com.app.lms.service;
 
 import com.app.lms.entity.Book;
 import com.app.lms.web.BookDto;
-import com.app.lms.web.MemberDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;

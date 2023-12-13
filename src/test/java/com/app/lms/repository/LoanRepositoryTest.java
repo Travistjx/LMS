@@ -133,12 +133,6 @@ class LoanRepositoryTest {
 
     @Test
     void itShouldNotFindOverdueLoansByDueDateTimeBefore() {
-        Loan loan = new Loan();
-        loan.setStatus(LoanStatus.OVERDUE);
-        LocalDateTime customDateTime = LocalDateTime.of(2023, 10, 30, 14, 30);
-        loan.setDueDateTime(customDateTime);
-        loanRepository.save(loan);
-
         List<Loan> loanList = loanRepository.findOverdueLoansByDueDateTimeBefore(LocalDateTime.of(2023, 8, 30, 14, 30));
 
         boolean exist = true;

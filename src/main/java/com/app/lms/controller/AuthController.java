@@ -1,12 +1,9 @@
 package com.app.lms.controller;
 
-import com.app.lms.entity.Member;
 import com.app.lms.service.MemberService;
-import com.app.lms.web.BookDto;
 import com.app.lms.web.MemberDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +11,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
 
 @Controller
 public class AuthController {

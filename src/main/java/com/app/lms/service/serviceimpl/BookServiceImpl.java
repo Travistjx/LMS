@@ -6,7 +6,6 @@ import com.app.lms.repository.BookRepository;
 import com.app.lms.service.BookService;
 import com.app.lms.web.AuthorDto;
 import com.app.lms.web.BookDto;
-import com.app.lms.web.MemberDto;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;

@@ -183,9 +183,13 @@ class FineServiceImplTest {
         when(fineRepository.findById((long)1))
                 .thenReturn(Optional.of(fine));
 
-       fineService.deleteFines((long)1);
 
-        verify(fineRepository).delete(fine);
+        fineService.deleteFines((long)1);
+        ArgumentCaptor <Fine> fineArgumentCaptor = ArgumentCaptor.forClass(Fine.class);
+        verify(fineRepository).save(fineArgumentCaptor.capture());
+        Fine capturedFine = fineArgumentCaptor.getValue();
+
+        assertThat(capturedFine.isDeleted()).isEqualTo(true);
     }
 
     @Test

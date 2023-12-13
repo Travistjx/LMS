@@ -1,7 +1,6 @@
 package com.app.lms.web;
 
 import com.app.lms.entity.Gender;
-import com.app.lms.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

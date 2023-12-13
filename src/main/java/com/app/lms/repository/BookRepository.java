@@ -2,8 +2,6 @@ package com.app.lms.repository;
 
 import com.app.lms.entity.Book;
 import com.app.lms.entity.BookStatus;
-import com.app.lms.entity.Loan;
-import com.app.lms.entity.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

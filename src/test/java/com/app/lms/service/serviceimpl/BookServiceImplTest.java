@@ -3,13 +3,11 @@ package com.app.lms.service.serviceimpl;
 import com.app.lms.entity.Author;
 import com.app.lms.entity.Book;
 import com.app.lms.entity.BookStatus;
-import com.app.lms.entity.Member;
 import com.app.lms.repository.AuthorRepository;
 import com.app.lms.repository.BookRepository;
 import com.app.lms.service.BookService;
 import com.app.lms.web.AuthorDto;
 import com.app.lms.web.BookDto;
-import com.app.lms.web.MemberDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +27,6 @@ import java.util.Collections;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -172,10 +169,10 @@ class BookServiceImplTest {
         bookService.deleteBooks((long)1);
 
         ArgumentCaptor <Book> bookArgumentCaptor = ArgumentCaptor.forClass(Book.class);
-        verify(bookRepository).delete(bookArgumentCaptor.capture());
+        verify(bookRepository).save(bookArgumentCaptor.capture());
         Book capturedBook = bookArgumentCaptor.getValue();
 
-        assertThat(capturedBook).isEqualTo(book);
+        assertThat(capturedBook.isDeleted()).isEqualTo(true);
     }
 
     @Test

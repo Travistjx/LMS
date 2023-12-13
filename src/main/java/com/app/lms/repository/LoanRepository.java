@@ -4,26 +4,26 @@ import com.app.lms.entity.Book;
 import com.app.lms.entity.Loan;
 import com.app.lms.entity.LoanStatus;
 import com.app.lms.entity.Member;
-import com.app.lms.web.MemberDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public interface LoanRepository extends JpaRepository<Loan, Long> {
 
-    @Query("SELECT l FROM Loan l WHERE l.deleted IS NULL OR l.deleted = false")
-    List<Loan> findAllByStatus(LoanStatus status);
-    @Query("SELECT l FROM Loan l WHERE l.deleted IS NULL OR l.deleted = false")
-    List <Loan> findAllByStatusAndMember(LoanStatus status, Member member);
+    @Query("SELECT l FROM Loan l WHERE l.status = :status AND (l.deleted IS NULL OR l.deleted = false)")
+    List<Loan> findAllByStatus(@Param("status") LoanStatus status);
 
-    @Query("SELECT l FROM Loan l WHERE l.deleted IS NULL OR l.deleted = false")
-    List<Loan> findOverdueLoansByDueDateTimeBefore(LocalDateTime today);
+    @Query("SELECT l FROM Loan l WHERE l.status = :status AND l.member = :member AND (l.deleted IS NULL OR l.deleted = false)")
+    List<Loan> findAllByStatusAndMember(@Param("status") LoanStatus status, @Param("member") Member member);
+
+
+    @Query("SELECT l FROM Loan l WHERE l.dueDateTime < :today AND (l.deleted IS NULL OR l.deleted = false)")
+    List<Loan> findOverdueLoansByDueDateTimeBefore(@Param("today") LocalDateTime today);
 
     @Query("SELECT l FROM Loan l WHERE l.deleted IS NULL OR l.deleted = false")
     List<Loan> findAll();

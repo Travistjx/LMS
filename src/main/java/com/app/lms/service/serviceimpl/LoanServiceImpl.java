@@ -2,7 +2,6 @@ package com.app.lms.service.serviceimpl;
 
 import com.app.lms.entity.*;
 import com.app.lms.repository.BookRepository;
-import com.app.lms.repository.FineRepository;
 import com.app.lms.repository.LoanRepository;
 import com.app.lms.repository.MemberRepository;
 import com.app.lms.service.BookService;

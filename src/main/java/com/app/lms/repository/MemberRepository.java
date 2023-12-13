@@ -1,7 +1,5 @@
 package com.app.lms.repository;
 
-import com.app.lms.entity.Loan;
-import com.app.lms.entity.LoanStatus;
 import com.app.lms.entity.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

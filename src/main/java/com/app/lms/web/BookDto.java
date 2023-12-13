@@ -1,7 +1,6 @@
 package com.app.lms.web;
 
 import com.app.lms.entity.BookStatus;
-import com.app.lms.entity.LoanStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
