@@ -21,7 +21,16 @@ This project is currently in development.
 <a href = "https://github.com/Travistjx/LMS/tree/main/src/test">Unit Tests for Repository/Service Classes</a>
 
 # INSTALLATION / SETUP
+- Run ```git clone https://github.com/Travistjx/LMS.git```<br/>
+-```cd LMS```<br/>
+Run ```mvn package```><br/>
+-Lastly, run ```docker compose up```<br/>
+-Then, you will be able to view on **localhost:8081 **<br/>
 
+For MySql Settings which can be found under application properties
+```
+
+```
 
 # REFLECTION
 This personal project took me around 4 months to complete. I wanted to build a library management system that fulfills the basic needs, which is for administrators to manage the book inventory, user accounts, the ongoing loans, fines and payments, and for regular library patrons to be able to browse books, manage loans, fines and payment. The main goal was to use this project to learn Spring Boot using the Controller-Service-Repository structure. 
