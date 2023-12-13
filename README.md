@@ -18,6 +18,7 @@ This project is currently in development.
 
 # Test
 <a href = "https://github.com/Travistjx/LMS/tree/main/Tests">Tests for website</a>
+<a href = "https://github.com/Travistjx/LMS/tree/main/src/test">Unit Tests for Repository/Service Classes</a>
 
 # INSTALLATION / SETUP
 
