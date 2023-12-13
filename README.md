@@ -20,7 +20,7 @@ The Library Management System (LMS) is a web application designed to efficiently
 # INSTALLATION / SETUP
 - Run ```git clone https://github.com/Travistjx/LMS.git```<br/>
 - ```cd LMS```<br/>
-- Run ```mvn package```<br/>
+- Run ```mvn clean package```<br/>
 - Lastly, run ```docker compose up```<br/>
 - Then, you will be able to view on **localhost:8081 **<br/><br/>
 
