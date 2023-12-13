@@ -9,9 +9,6 @@
 # ABOUT
 The Library Management System (LMS) is a web application designed to efficiently manage books in a library setting. Built with Java Spring Boot, Thymeleaf, HTML, and CSS, this system provides a user-friendly interface for librarians and library staff to handle book inventory, user accounts, and borrowing transactions, as well as for the regular users or library patrons to browse the book catalog, manage their loans, fines and payments.
 
-# PROJECT STATUS
-This project is currently in development. 
-
 # DOCUMENTATION
 <a href = "https://github.com/Travistjx/LMS/blob/main/Documentation/User%20Manual.pdf">User Manual</a> <br/>
 <a href = "https://github.com/Travistjx/LMS/blob/main/Documentation/User%20Requirements">User Requirements</a>
