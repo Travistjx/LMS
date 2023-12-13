@@ -22,7 +22,7 @@ The Library Management System (LMS) is a web application designed to efficiently
 - ```cd LMS```<br/>
 - Run ```mvn clean package```<br/>
 - Lastly, run ```docker compose up```<br/>
-- Then, you will be able to view on **localhost:8081 **<br/><br/>
+- Then, you will be able to view on **localhost:8081**<br/><br/>
 
 For datavase settings (MySql) which can be found under application properties, which can be changed accordingly
 ```
