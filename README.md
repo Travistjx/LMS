@@ -22,10 +22,10 @@ This project is currently in development.
 
 # INSTALLATION / SETUP
 - Run ```git clone https://github.com/Travistjx/LMS.git```<br/>
--```cd LMS```<br/>
-Run ```mvn package```><br/>
--Lastly, run ```docker compose up```<br/>
--Then, you will be able to view on **localhost:8081 **<br/>
+- ```cd LMS```<br/>
+- Run ```mvn package```><br/>
+- Lastly, run ```docker compose up```<br/>
+- Then, you will be able to view on **localhost:8081 **<br/>
 
 For MySql Settings which can be found under application properties
 ```
