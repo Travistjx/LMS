@@ -23,13 +23,14 @@ This project is currently in development.
 # INSTALLATION / SETUP
 - Run ```git clone https://github.com/Travistjx/LMS.git```<br/>
 - ```cd LMS```<br/>
-- Run ```mvn package```><br/>
+- Run ```mvn package```<br/>
 - Lastly, run ```docker compose up```<br/>
-- Then, you will be able to view on **localhost:8081 **<br/>
+- Then, you will be able to view on **localhost:8081 **<br/><br/>
 
-For MySql Settings which can be found under application properties
+For datavase settings (MySql) which can be found under application properties, which can be changed accordingly
 ```
-
+spring.datasource.username=root
+spring.datasource.password=password
 ```
 
 # REFLECTION
