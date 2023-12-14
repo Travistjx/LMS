@@ -36,7 +36,7 @@ Honestly, the project took me longer than I expected, mainly due to real life co
 
 One obstacle I faced when doing the project was actually the search filter which is used when managing books, accounts, loans, fines and payments. There were multiple layers of filter, namely the query, the sort order, the sort by, the search by, and the status filter. There were also some conflicts with pagination, which added an addtional layer in the URL. I had to gradually figure out how to manage them in the repositories using diffrent functions and queries.  
 
-Another issue was the dockering aspect of it. It gave me a lot of errors, especially when trying to connect the application to the backend. It took me many days to resolve it.
+Another issue was the dockerizing aspect of it. It gave me a lot of errors, especially when trying to connect the application to the backend. It took me many days to resolve it.
 
 At the end of the day, the technologies used are Java Spring Boot, Thymeleaf, HTML, CSS and MySql. I used XAMPP to run tests, as it has MySql and Apache (Web Server). It also had phpMyAdmin which was an easy way for me to manage my database. 
 
