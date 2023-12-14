@@ -38,6 +38,6 @@ One obstacle I faced when doing the project was actually the search filter which
 
 Another issue was the dockerizing aspect of it. It gave me a lot of errors, especially when trying to connect the application to the backend. It took me many days to resolve it.
 
-At the end of the day, the technologies used are Java Spring Boot, Thymeleaf, HTML, CSS and MySql. I used XAMPP to run tests, as it has MySql and Apache (Web Server). It also had phpMyAdmin which was an easy way for me to manage my database. 
+At the end of the day, the technologies used are Spring Boot, Thymeleaf, CSS and MySQL. I used XAMPP to run tests, as it has MySql and Apache (Web Server). It also had phpMyAdmin which was an easy way for me to manage my database. 
 
 
